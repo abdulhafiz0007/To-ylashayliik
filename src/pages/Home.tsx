@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom"
 import { Button } from "../components/ui/Button"
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "../components/ui/Card"
-import { Heart, Calendar, Share2, Palette } from "lucide-react"
+import { Calendar, Share2, Palette } from "lucide-react"
 
 export function Home() {
     return (
