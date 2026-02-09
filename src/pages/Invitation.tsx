@@ -149,16 +149,18 @@ export function Invitation() {
             <div
                 ref={cardRef}
                 className={cn(
-                    "w-full max-w-lg shadow-2xl overflow-hidden relative transition-all duration-500",
+                    "w-full max-w-lg shadow-2xl overflow-hidden relative transition-all duration-500 aspect-[3/4] bg-cover bg-center",
                     currentTemplate.wrapperClass
-                )}>
-                <div className="p-8 md:p-12 text-center space-y-8">
+                )}
+                style={currentTemplate.backgroundImage ? { backgroundImage: `url(${currentTemplate.backgroundImage})` } : {}}
+            >
+                <div className="h-full p-8 md:p-12 text-center flex flex-col justify-between">
                     <div className="space-y-4">
                         <p className={currentTemplate.introClass}>The Wedding Of</p>
                         <div className={currentTemplate.namesClass}>
-                            <span className="block">{invitation.brideName}</span>
+                            <span className="block leading-tight">{invitation.brideName}</span>
                             <span className={currentTemplate.ampersandClass}>&</span>
-                            <span className="block">{invitation.groomName}</span>
+                            <span className="block leading-tight">{invitation.groomName}</span>
                         </div>
                     </div>
 
@@ -169,26 +171,26 @@ export function Invitation() {
                     <div className="space-y-6">
                         <p className={currentTemplate.messageClass}>{invitation.message}</p>
 
-                        <div className={cn("grid gap-6 py-6", currentTemplate.detailsClass)}>
-                            <div className="flex flex-col items-center space-y-2">
-                                <Calendar className={cn("h-6 w-6", currentTemplate.iconClass)} />
-                                <span className="font-medium text-lg font-sans">{invitation.date}</span>
+                        <div className={cn("grid gap-4 py-4 place-items-center", currentTemplate.detailsClass)}>
+                            <div className="flex flex-col items-center space-y-1">
+                                <Calendar className={cn("h-5 w-5", currentTemplate.iconClass)} />
+                                <span className="font-semibold text-lg font-sans tracking-tight">{invitation.date}</span>
                             </div>
 
-                            <div className="flex flex-col items-center space-y-2">
-                                <Clock className={cn("h-6 w-6", currentTemplate.iconClass)} />
-                                <span className="font-medium text-lg font-sans">{invitation.time}</span>
+                            <div className="flex flex-col items-center space-y-1">
+                                <Clock className={cn("h-5 w-5", currentTemplate.iconClass)} />
+                                <span className="font-semibold text-lg font-sans tracking-tight">{invitation.time}</span>
                             </div>
 
-                            <div className="flex flex-col items-center space-y-2">
-                                <MapPin className={cn("h-6 w-6", currentTemplate.iconClass)} />
-                                <span className="font-medium text-lg text-center font-sans">{invitation.location}</span>
+                            <div className="flex flex-col items-center space-y-1">
+                                <MapPin className={cn("h-5 w-5", currentTemplate.iconClass)} />
+                                <span className="font-semibold text-base text-center font-sans leading-tight max-w-[200px]">{invitation.location}</span>
                             </div>
                         </div>
                     </div>
 
-                    <div className="pt-4">
-                        <p className="text-gray-400 text-xs mb-4">Forever & Always • {new Date().getFullYear()}</p>
+                    <div className="pt-2">
+                        <p className="opacity-40 text-[10px] uppercase tracking-[0.2em]">Forever & Always • {new Date().getFullYear()}</p>
                     </div>
                 </div>
             </div>

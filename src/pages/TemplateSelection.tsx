@@ -52,9 +52,12 @@ export function TemplateSelection() {
                                 )}
                             >
                                 {/* Card Content - Full detailed invitation preview */}
-                                <div className={cn("p-3 lg:p-8 aspect-[3/4] relative", template.wrapperClass)}>
-                                    {/* Decorative elements based on template */}
-                                    {template.id === "classic" && (
+                                <div
+                                    className={cn("p-3 lg:p-8 aspect-[3/4] relative overflow-hidden bg-cover bg-center", template.wrapperClass)}
+                                    style={template.backgroundImage ? { backgroundImage: `url(${template.backgroundImage})` } : {}}
+                                >
+                                    {/* Decorative elements based on template (only if no background image) */}
+                                    {!template.backgroundImage && template.id === "classic" && (
                                         <>
                                             <div className="absolute top-4 left-4 w-20 h-20 border-t-2 border-l-2 border-gold-400 opacity-60"></div>
                                             <div className="absolute top-4 right-4 w-20 h-20 border-t-2 border-r-2 border-gold-400 opacity-60"></div>
