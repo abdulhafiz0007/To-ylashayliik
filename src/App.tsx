@@ -5,12 +5,14 @@ import { InvitationProvider } from "./context/InvitationContext"
 import { Create } from "./pages/Create"
 import { Invitation } from "./pages/Invitation"
 import { TemplateSelection } from "./pages/TemplateSelection"
+import { Profile } from "./pages/Profile"
 
 import { useEffect, useState } from "react"
 import { useTelegram } from "./hooks/useTelegram"
 import { api } from "./lib/api"
 import { Heart, X } from "lucide-react"
 import { Button } from "./components/ui/Button"
+import { LanguageProvider } from "./context/LanguageContext"
 
 function App() {
   const { onReady, isTelegram, initData } = useTelegram()
@@ -67,18 +69,21 @@ function App() {
   }
 
   return (
-    <InvitationProvider>
-      <BrowserRouter>
-        <Layout>
-          <Routes>
-            <Route path="/" element={<Home />} />
-            <Route path="/create" element={<Create />} />
-            <Route path="/select-template" element={<TemplateSelection />} />
-            <Route path="/invitation/:id" element={<Invitation />} />
-          </Routes>
-        </Layout>
-      </BrowserRouter>
-    </InvitationProvider>
+    <LanguageProvider>
+      <InvitationProvider>
+        <BrowserRouter>
+          <Layout>
+            <Routes>
+              <Route path="/" element={<Home />} />
+              <Route path="/create" element={<Create />} />
+              <Route path="/select-template" element={<TemplateSelection />} />
+              <Route path="/invitation/:id" element={<Invitation />} />
+              <Route path="/profile" element={<Profile />} />
+            </Routes>
+          </Layout>
+        </BrowserRouter>
+      </InvitationProvider>
+    </LanguageProvider>
   )
 }
 

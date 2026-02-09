@@ -7,10 +7,12 @@ import { cn } from "../lib/utils"
 import { templates } from "../lib/templates"
 import { toPng } from 'html-to-image'
 import download from 'downloadjs'
+import { useLanguage } from "../context/LanguageContext"
 
 export function Invitation() {
     const { id } = useParams<{ id: string }>()
     const { getInvitation, updateData, saveInvitation, loading: contextLoading, error: contextError } = useInvitation()
+    const { t } = useLanguage()
     const [invitation, setInvitation] = useState<InvitationData | null>(null)
     const [loading, setLoading] = useState(true)
     const [showTemplates, setShowTemplates] = useState(false)
@@ -66,7 +68,7 @@ export function Invitation() {
         } else {
             // Fallback to clipboard copy
             navigator.clipboard.writeText(window.location.href);
-            alert('Link copied to clipboard!');
+            alert(t('linkCopied'));
         }
     }
 
@@ -75,7 +77,7 @@ export function Invitation() {
             <div className="min-h-screen flex flex-col items-center justify-center p-4 bg-background">
                 <div className="animate-pulse flex flex-col items-center space-y-4">
                     <Heart className="h-12 w-12 text-primary-300" />
-                    <p className="text-gray-400 font-medium">Yuklanmoqda...</p>
+                    <p className="text-gray-400 font-medium">{t('loading')}</p>
                 </div>
             </div>
         )
@@ -84,10 +86,10 @@ export function Invitation() {
     if (contextError || (!invitation && !loading)) {
         return (
             <div className="min-h-screen flex flex-col items-center justify-center space-y-4 p-4 text-center">
-                <h1 className="text-2xl font-serif text-gold-900 font-bold">Taklifnoma topilmadi</h1>
-                <p className="text-gold-600">{contextError || "Taklifnoma mavjud emas yoki muddati o'tgan."}</p>
+                <h1 className="text-2xl font-serif text-gold-900 font-bold">{t('notFound')}</h1>
+                <p className="text-gold-600">{contextError || t('notAvailable')}</p>
                 <Link to="/create">
-                    <Button>Yangi yaratish</Button>
+                    <Button>{t('createNew')}</Button>
                 </Link>
             </div>
         )
@@ -107,7 +109,7 @@ export function Invitation() {
                     onClick={() => setShowTemplates(!showTemplates)}
                 >
                     <Palette className="h-5 w-5" />
-                    Style
+                    {t('style')}
                 </Button>
                 <div className="w-px h-8 bg-gold-200"></div>
                 <Button
@@ -117,7 +119,7 @@ export function Invitation() {
                     onClick={handleDownload}
                 >
                     <Download className="h-5 w-5" />
-                    Save
+                    {t('save')}
                 </Button>
                 <Button
                     variant="ghost"
@@ -126,7 +128,7 @@ export function Invitation() {
                     onClick={handleShare}
                 >
                     <Share2 className="h-5 w-5" />
-                    Share
+                    {t('share')}
                 </Button>
             </div>
 
@@ -134,7 +136,7 @@ export function Invitation() {
             {showTemplates && (
                 <div className="fixed inset-x-0 bottom-0 z-40 bg-white border-t border-gold-200 rounded-t-3xl shadow-2xl p-6 pb-24 animate-slide-up max-h-[60vh] overflow-y-auto">
                     <div className="flex justify-between items-center mb-4">
-                        <h3 className="font-serif text-xl text-gold-900">Choose a Style</h3>
+                        <h3 className="font-serif text-xl text-gold-900">{t('chooseStyle')}</h3>
                         <button onClick={() => setShowTemplates(false)} className="p-2 hover:bg-gold-50 rounded-full">
                             <X className="h-5 w-5 text-gold-500" />
                         </button>
@@ -169,7 +171,7 @@ export function Invitation() {
             >
                 <div className="h-full p-8 md:p-12 text-center flex flex-col justify-between">
                     <div className="space-y-4">
-                        <p className={currentTemplate.introClass}>The Wedding Of</p>
+                        <p className={currentTemplate.introClass}>{t('weddingOf')}</p>
                         <div className={currentTemplate.namesClass}>
                             <span className="block leading-tight">{invitation.brideName}</span>
                             <span className={currentTemplate.ampersandClass}>&</span>

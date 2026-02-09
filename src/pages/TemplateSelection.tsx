@@ -5,10 +5,12 @@ import { Button } from "../components/ui/Button"
 import { templates } from "../lib/templates"
 import { cn } from "../lib/utils"
 import { Calendar, Heart, MapPin, Clock } from "lucide-react"
+import { useLanguage } from "../context/LanguageContext"
 
 export function TemplateSelection() {
     const navigate = useNavigate()
     const { data, updateData, saveInvitation, loading } = useInvitation()
+    const { t, language } = useLanguage()
     const [selectedTemplate, setSelectedTemplate] = useState(data.templateId || "classic")
 
     // Show only first 6 templates
@@ -29,10 +31,10 @@ export function TemplateSelection() {
                 {/* Header */}
                 <div className="text-center mb-16">
                     <h1 className="font-serif text-5xl md:text-6xl font-bold text-gray-900 mb-4">
-                        Choose Your Perfect Design
+                        {t('chooseStyle')}
                     </h1>
                     <p className="text-xl text-gray-600">
-                        Select a template that matches your style
+                        {t('selectTemplate')}
                     </p>
                 </div>
 
@@ -88,19 +90,19 @@ export function TemplateSelection() {
                                         {/* Top Section */}
                                         <div className="space-y-1 lg:space-y-3">
                                             <p className={cn("text-[9px] lg:text-xs tracking-widest uppercase", template.introClass)}>
-                                                The Wedding Of
+                                                {t('weddingOf')}
                                             </p>
 
                                             {/* Names */}
                                             <div className={cn("space-y-0 lg:space-y-1", template.namesClass)}>
                                                 <h3 className="text-base lg:text-3xl font-serif font-bold">
-                                                    {data.brideName || "Bride"}
+                                                    {data.brideName || (language === 'uz' ? "Kelin" : language === 'ru' ? "Невеста" : "Bride")}
                                                 </h3>
                                                 <div className={cn("text-sm lg:text-2xl font-serif", template.ampersandClass)}>
                                                     &
                                                 </div>
                                                 <h3 className="text-base lg:text-3xl font-serif font-bold">
-                                                    {data.groomName || "Groom"}
+                                                    {data.groomName || (language === 'uz' ? "Kuyov" : language === 'ru' ? "Жених" : "Groom")}
                                                 </h3>
                                             </div>
                                         </div>
@@ -115,17 +117,17 @@ export function TemplateSelection() {
                                             <div className={cn("space-y-1 lg:space-y-2 text-[9px] lg:text-sm", template.detailsClass)}>
                                                 <div className="flex items-center justify-center gap-1 lg:gap-2">
                                                     <Calendar className={cn("h-2.5 w-2.5 lg:h-4 lg:w-4", template.iconClass)} />
-                                                    <span>{data.date || "Date"}</span>
+                                                    <span>{data.date || t('date')}</span>
                                                 </div>
 
                                                 <div className="flex items-center justify-center gap-1 lg:gap-2">
                                                     <Clock className={cn("h-2.5 w-2.5 lg:h-4 lg:w-4", template.iconClass)} />
-                                                    <span>{data.time || "Time"}</span>
+                                                    <span>{data.time || t('time')}</span>
                                                 </div>
 
                                                 <div className="flex items-center justify-center gap-1 lg:gap-2">
                                                     <MapPin className={cn("h-2.5 w-2.5 lg:h-4 lg:w-4", template.iconClass)} />
-                                                    <span className="text-[8px] lg:text-xs">{data.location || "Location"}</span>
+                                                    <span className="text-[8px] lg:text-xs">{data.location || t('location')}</span>
                                                 </div>
                                             </div>
 
@@ -168,7 +170,7 @@ export function TemplateSelection() {
                         onClick={() => navigate("/create")}
                         className="px-8 text-base"
                     >
-                        ← Back to Edit
+                        ← {t('backToEdit')}
                     </Button>
                     <Button
                         size="lg"
@@ -176,7 +178,7 @@ export function TemplateSelection() {
                         disabled={loading}
                         className="px-16 text-base shadow-xl shadow-primary-200 hover:shadow-2xl hover:shadow-primary-300"
                     >
-                        {loading ? "Saqlanmoqda..." : "Saqlash va Davom etish →"}
+                        {loading ? t('saving') : `${t('saveContinue')} →`}
                     </Button>
                 </div>
             </div>

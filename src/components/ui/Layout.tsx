@@ -1,7 +1,8 @@
 import { type ReactNode } from "react"
 import { Heart } from "lucide-react"
 import { Link } from "react-router-dom"
-import { Button } from "./Button"
+import { useLanguage } from "../../context/LanguageContext"
+import { useTelegram } from "../../hooks/useTelegram"
 
 interface LayoutProps {
     children: ReactNode
@@ -9,6 +10,9 @@ interface LayoutProps {
 
 
 export function Layout({ children }: LayoutProps) {
+    const { t } = useLanguage()
+    const { user } = useTelegram()
+
     return (
         <div className="min-h-screen flex flex-col bg-background font-sans">
             <header className="sticky top-0 z-50 w-full border-b border-gold-100 bg-white/80 backdrop-blur-md">
@@ -16,22 +20,31 @@ export function Layout({ children }: LayoutProps) {
                     <Link to="/" className="flex items-center space-x-2">
                         <Heart className="h-6 w-6 text-primary-500 fill-current" />
                         <span className="font-serif text-xl font-bold text-gray-900">
-                            To'ylashaylik                     </span>
+                            {t('appName')}
+                        </span>
                     </Link>
                     <nav className="hidden md:flex items-center space-x-6">
                         <Link to="/" className="text-sm font-medium text-gray-600 hover:text-primary-600 transition-colors">
-                            Home
+                            {t('home')}
                         </Link>
                         <Link to="/create" className="text-sm font-medium text-gray-600 hover:text-primary-600 transition-colors">
-                            Templates
+                            {t('templates')}
                         </Link>
                         <Link to="/about" className="text-sm font-medium text-gray-600 hover:text-primary-600 transition-colors">
-                            About
+                            {t('about')}
                         </Link>
                     </nav>
                     <div className="flex items-center space-x-4">
-                        <Link to="/create">
-                            <Button size="sm">Create Invitation</Button>
+                        <Link to="/profile" className="group">
+                            <div className="h-10 w-10 rounded-full bg-gold-50 border border-gold-200 flex items-center justify-center overflow-hidden transition-all group-hover:border-primary-300 group-hover:ring-2 group-hover:ring-primary-100">
+                                {user?.photo_url ? (
+                                    <img src={user.photo_url} alt="Profile" className="h-full w-full object-cover" />
+                                ) : (
+                                    <div className="h-full w-full flex items-center justify-center bg-gradient-to-br from-primary-50 to-gold-50 text-primary-600 font-bold">
+                                        {user?.first_name ? user.first_name[0] : 'U'}
+                                    </div>
+                                )}
+                            </div>
                         </Link>
                     </div>
                 </div>
@@ -47,11 +60,11 @@ export function Layout({ children }: LayoutProps) {
                         <div className="flex items-center space-x-2 mb-4 md:mb-0">
                             <Heart className="h-5 w-5 text-primary-400" />
                             <span className="font-serif text-lg font-semibold text-gray-800">
-                                To'ylashaylik
+                                {t('appName')}
                             </span>
                         </div>
                         <p className="text-sm text-gold-600">
-                            © {new Date().getFullYear()} Wedding Mini App. Made with love.
+                            © {new Date().getFullYear()} {t('appName')}. Made with love.
                         </p>
                     </div>
                 </div>
