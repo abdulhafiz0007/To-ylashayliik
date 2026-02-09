@@ -10,10 +10,6 @@ export function Home() {
             <section className="relative py-20 px-4 text-center overflow-hidden">
                 <div className="absolute inset-0 -z-10 bg-custom-gradient opacity-30 blur-3xl" />
                 <div className="container mx-auto max-w-4xl space-y-6">
-                    <div className="inline-flex items-center space-x-2 bg-white/50 backdrop-blur-sm px-4 py-1.5 rounded-full border border-gold-200">
-                        <Heart className="h-4 w-4 text-primary-500 fill-current" />
-                        <span className="text-sm font-medium text-gold-800">The easiest way to invite your loved ones</span>
-                    </div>
                     <h1 className="font-serif text-5xl md:text-7xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-primary-700 via-primary-500 to-gold-600 animate-slide-up">
                         Create Elegant <br /> Wedding Invitations
                     </h1>

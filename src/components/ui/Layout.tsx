@@ -47,7 +47,7 @@ export function Layout({ children }: LayoutProps) {
                         <div className="flex items-center space-x-2 mb-4 md:mb-0">
                             <Heart className="h-5 w-5 text-primary-400" />
                             <span className="font-serif text-lg font-semibold text-gray-800">
-                                Forever & Always
+                                To'ylashaylik
                             </span>
                         </div>
                         <p className="text-sm text-gold-600">
