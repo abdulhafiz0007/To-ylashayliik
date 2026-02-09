@@ -93,6 +93,8 @@ export function Invitation() {
         )
     }
 
+    if (!invitation) return null
+
     const currentTemplate = templates.find(t => t.id === invitation.templateId) || templates[0]
 
     return (
