@@ -1,6 +1,8 @@
 import { createContext, useContext, useState, type ReactNode } from "react"
+import { api } from "../lib/api"
 
 export interface InvitationData {
+    id?: string
     brideName: string
     groomName: string
     date: string
@@ -12,10 +14,12 @@ export interface InvitationData {
 
 interface InvitationContextType {
     data: InvitationData
+    loading: boolean
+    error: string | null
     updateData: (updates: Partial<InvitationData>) => void
     resetData: () => void
-    saveInvitation: (id: string) => void
-    getInvitation: (id: string) => InvitationData | null
+    saveInvitation: () => Promise<string | null>
+    getInvitation: (id: string) => Promise<InvitationData | null>
 }
 
 const defaultData: InvitationData = {
@@ -24,14 +28,16 @@ const defaultData: InvitationData = {
     date: "",
     time: "",
     location: "",
-    message: "We invite you to celebrate our wedding...",
-    templateId: "default",
+    message: "Bizning to'yimizga taklif etamiz...",
+    templateId: "classic",
 }
 
 const InvitationContext = createContext<InvitationContextType | undefined>(undefined)
 
 export function InvitationProvider({ children }: { children: ReactNode }) {
     const [data, setData] = useState<InvitationData>(defaultData)
+    const [loading, setLoading] = useState(false)
+    const [error, setError] = useState<string | null>(null)
 
     const updateData = (updates: Partial<InvitationData>) => {
         setData((prev) => ({ ...prev, ...updates }))
@@ -39,28 +45,41 @@ export function InvitationProvider({ children }: { children: ReactNode }) {
 
     const resetData = () => {
         setData(defaultData)
+        setError(null)
     }
 
-    const saveInvitation = (id: string) => {
+    const saveInvitation = async (): Promise<string | null> => {
+        setLoading(true)
+        setError(null)
         try {
-            localStorage.setItem(`invitation_${id}`, JSON.stringify(data))
-        } catch (error) {
-            console.error("Failed to save invitation", error)
+            const result = await api.saveInvitation(data)
+            setLoading(false)
+            return result.id
+        } catch (err: any) {
+            console.error("Failed to save invitation", err)
+            setError(err.message)
+            setLoading(false)
+            return null
         }
     }
 
-    const getInvitation = (id: string): InvitationData | null => {
+    const getInvitation = async (id: string): Promise<InvitationData | null> => {
+        setLoading(true)
+        setError(null)
         try {
-            const stored = localStorage.getItem(`invitation_${id}`)
-            return stored ? JSON.parse(stored) : null
-        } catch (error) {
-            console.error("Failed to get invitation", error)
+            const result = await api.getInvitation(id)
+            setLoading(false)
+            return result
+        } catch (err: any) {
+            console.error("Failed to get invitation", err)
+            setError(err.message)
+            setLoading(false)
             return null
         }
     }
 
     return (
-        <InvitationContext.Provider value={{ data, updateData, resetData, saveInvitation, getInvitation }}>
+        <InvitationContext.Provider value={{ data, loading, error, updateData, resetData, saveInvitation, getInvitation }}>
             {children}
         </InvitationContext.Provider>
     )

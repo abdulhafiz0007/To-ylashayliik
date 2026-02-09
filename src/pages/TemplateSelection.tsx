@@ -8,18 +8,19 @@ import { Calendar, Heart, MapPin, Clock } from "lucide-react"
 
 export function TemplateSelection() {
     const navigate = useNavigate()
-    const { data, updateData, saveInvitation } = useInvitation()
+    const { data, updateData, saveInvitation, loading } = useInvitation()
     const [selectedTemplate, setSelectedTemplate] = useState(data.templateId || "classic")
 
     // Show only first 6 templates
     const displayTemplates = templates.slice(0, 6)
 
-    const handleSave = () => {
-        // Generate ID and save
-        const id = Math.random().toString(36).substring(7)
+    const handleSave = async () => {
+        if (loading) return
         updateData({ templateId: selectedTemplate })
-        saveInvitation(id)
-        navigate(`/invitation/${id}`)
+        const id = await saveInvitation()
+        if (id) {
+            navigate(`/invitation/${id}`)
+        }
     }
 
     return (
@@ -172,9 +173,10 @@ export function TemplateSelection() {
                     <Button
                         size="lg"
                         onClick={handleSave}
+                        disabled={loading}
                         className="px-16 text-base shadow-xl shadow-primary-200 hover:shadow-2xl hover:shadow-primary-300"
                     >
-                        Save & Continue →
+                        {loading ? "Saqlanmoqda..." : "Saqlash va Davom etish →"}
                     </Button>
                 </div>
             </div>

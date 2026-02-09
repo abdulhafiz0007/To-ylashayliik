@@ -34,6 +34,8 @@ export function useTelegram() {
         onExpand,
         onReady,
         tg,
+        isTelegram: !!window.Telegram?.WebApp?.initData,
+        initData: window.Telegram?.WebApp?.initData || "",
         user: tg?.initDataUnsafe?.user,
         queryId: tg?.initDataUnsafe?.query_id,
     };

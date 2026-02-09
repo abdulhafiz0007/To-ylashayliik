@@ -10,7 +10,7 @@ import download from 'downloadjs'
 
 export function Invitation() {
     const { id } = useParams<{ id: string }>()
-    const { getInvitation, updateData, saveInvitation } = useInvitation()
+    const { getInvitation, updateData, saveInvitation, loading: contextLoading, error: contextError } = useInvitation()
     const [invitation, setInvitation] = useState<InvitationData | null>(null)
     const [loading, setLoading] = useState(true)
     const [showTemplates, setShowTemplates] = useState(false)
@@ -19,20 +19,24 @@ export function Invitation() {
     const cardRef = useRef<HTMLDivElement>(null)
 
     useEffect(() => {
-        if (id) {
-            const data = getInvitation(id)
-            setInvitation(data)
+        const loadInvitation = async () => {
+            if (id) {
+                const data = await getInvitation(id)
+                setInvitation(data)
+            }
+            setLoading(false)
         }
-        setLoading(false)
+        loadInvitation()
     }, [id, getInvitation])
 
-    const handleTemplateChange = (templateId: string) => {
+    const handleTemplateChange = async (templateId: string) => {
         if (invitation && id) {
             const updated = { ...invitation, templateId }
             setInvitation(updated)
-            // Update global context and local storage
+            // Update global context
             updateData({ templateId })
-            saveInvitation(id)
+            // Save to backend
+            await saveInvitation()
         }
     }
 
@@ -66,17 +70,24 @@ export function Invitation() {
         }
     }
 
-    if (loading) {
-        return <div className="min-h-screen flex items-center justify-center">Loading...</div>
+    if (loading || contextLoading) {
+        return (
+            <div className="min-h-screen flex flex-col items-center justify-center p-4 bg-background">
+                <div className="animate-pulse flex flex-col items-center space-y-4">
+                    <Heart className="h-12 w-12 text-primary-300" />
+                    <p className="text-gray-400 font-medium">Yuklanmoqda...</p>
+                </div>
+            </div>
+        )
     }
 
-    if (!invitation) {
+    if (contextError || (!invitation && !loading)) {
         return (
             <div className="min-h-screen flex flex-col items-center justify-center space-y-4 p-4 text-center">
-                <h1 className="text-2xl font-serif text-gold-900">Invitation Not Found</h1>
-                <p className="text-gold-600">The invitation you are looking for does not exist or has expired.</p>
+                <h1 className="text-2xl font-serif text-gold-900 font-bold">Taklifnoma topilmadi</h1>
+                <p className="text-gold-600">{contextError || "Taklifnoma mavjud emas yoki muddati o'tgan."}</p>
                 <Link to="/create">
-                    <Button>Create New Invitation</Button>
+                    <Button>Yangi yaratish</Button>
                 </Link>
             </div>
         )
