@@ -23,12 +23,9 @@ export function Home() {
                     <div className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-4 animate-fade-in delay-200">
                         <Link to="/create">
                             <Button size="lg" className="w-full sm:w-auto text-lg px-8">
-                                Create Implementation
+                                Create Invitation
                             </Button>
                         </Link>
-                        <Button variant="outline" size="lg" className="w-full sm:w-auto text-lg px-8">
-                            View Examples
-                        </Button>
                     </div>
                 </div>
             </section>
