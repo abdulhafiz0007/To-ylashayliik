@@ -171,43 +171,54 @@ export function Invitation() {
                 )}
                 style={currentTemplate.backgroundImage ? { backgroundImage: `url(${currentTemplate.backgroundImage})` } : {}}
             >
-                <div className="h-full p-8 md:p-12 text-center flex flex-col justify-between">
-                    <div className="space-y-4">
-                        <p className={currentTemplate.introClass}>{t('weddingOf')}</p>
-                        <div className={currentTemplate.namesClass}>
-                            <span className="block leading-tight">{invitation.groomName}</span>
-                            <span className={currentTemplate.ampersandClass}>&</span>
-                            <span className="block leading-tight">{invitation.brideName}</span>
+                {/* Decorative Overlay */}
+                {currentTemplate.overlayClass && (
+                    <div className={currentTemplate.overlayClass} />
+                )}
+
+                <div className="h-full p-6 md:p-12 text-center flex flex-col justify-between relative z-10">
+                    <div className="space-y-4 md:space-y-6">
+                        <p className={cn("transition-all duration-500", currentTemplate.introClass)}>
+                            {t('weddingOf')}
+                        </p>
+                        <div className={cn("transition-all duration-500 break-words", currentTemplate.namesClass)}>
+                            <span className="block mb-1">{invitation.brideName}</span>
+                            <span className={cn("block font-normal", currentTemplate.ampersandClass)}>&</span>
+                            <span className="block mt-1">{invitation.groomName}</span>
                         </div>
                     </div>
 
-                    <div className="flex justify-center">
-                        <Heart className={cn("h-8 w-8 fill-current animate-pulse", currentTemplate.iconClass)} />
+                    <div className="flex justify-center flex-1 items-center py-4">
+                        <Heart className={cn("h-8 w-8 md:h-12 md:w-12 fill-current animate-pulse transition-all duration-500", currentTemplate.iconClass)} />
                     </div>
 
-                    <div className="space-y-6">
-                        <p className={currentTemplate.messageClass}>{invitation.message}</p>
+                    <div className="space-y-6 md:space-y-8">
+                        {invitation.message && (
+                            <p className={cn("whitespace-pre-wrap line-clamp-4 transition-all duration-500", currentTemplate.messageClass)}>
+                                {invitation.message}
+                            </p>
+                        )}
 
-                        <div className={cn("grid gap-4 py-4 place-items-center", currentTemplate.detailsClass)}>
+                        <div className={cn("grid gap-3 md:gap-5 py-2 md:py-4 place-items-center transition-all duration-500", currentTemplate.detailsClass)}>
                             <div className="flex flex-col items-center space-y-1">
-                                <Calendar className={cn("h-5 w-5", currentTemplate.iconClass)} />
-                                <span className="font-semibold text-lg font-sans tracking-tight">{invitation.date}</span>
+                                <Calendar className={cn("h-4 w-4 md:h-6 md:w-6 transition-colors duration-500", currentTemplate.iconClass)} />
+                                <span className="font-semibold text-base md:text-xl font-sans tracking-tight">{invitation.date}</span>
                             </div>
 
                             <div className="flex flex-col items-center space-y-1">
-                                <Clock className={cn("h-5 w-5", currentTemplate.iconClass)} />
-                                <span className="font-semibold text-lg font-sans tracking-tight">{invitation.time}</span>
+                                <Clock className={cn("h-4 w-4 md:h-6 md:w-6 transition-colors duration-500", currentTemplate.iconClass)} />
+                                <span className="font-semibold text-base md:text-xl font-sans tracking-tight">{invitation.time}</span>
                             </div>
 
                             <div className="flex flex-col items-center space-y-1">
-                                <MapPin className={cn("h-5 w-5", currentTemplate.iconClass)} />
-                                <span className="font-semibold text-base text-center font-sans leading-tight max-w-[200px]">{invitation.location}</span>
+                                <MapPin className={cn("h-4 w-4 md:h-6 md:w-6 transition-colors duration-500", currentTemplate.iconClass)} />
+                                <span className="font-semibold text-sm md:text-lg text-center font-sans tooltip leading-tight max-w-[240px] px-2">{invitation.location}</span>
                             </div>
                         </div>
                     </div>
 
-                    <div className="pt-2">
-                        <p className="opacity-40 text-[10px] uppercase tracking-[0.2em]">Forever & Always • {new Date().getFullYear()}</p>
+                    <div className="pt-4 opacity-30 text-[8px] md:text-[10px] uppercase tracking-[0.2em] dark:text-gray-500">
+                        Forever & Always • {new Date().getFullYear()}
                     </div>
                 </div>
             </div>

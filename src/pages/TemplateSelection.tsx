@@ -10,14 +10,14 @@ import { motion, AnimatePresence } from "framer-motion"
 
 export function TemplateSelection() {
     const navigate = useNavigate()
-    const { data, updateData, saveInvitation, loading } = useInvitation()
+    const { data, saveInvitation, loading } = useInvitation()
     const { t, language } = useLanguage()
     const [currentIndex, setCurrentIndex] = useState(() => {
         const idx = templates.findIndex(t => t.id === data.templateId);
         return idx !== -1 ? idx : 0;
     })
 
-    const displayTemplates = templates.slice(0, 6)
+    const displayTemplates = templates
 
     const nextTemplate = () => {
         setCurrentIndex((prev) => (prev + 1) % displayTemplates.length)
@@ -29,8 +29,8 @@ export function TemplateSelection() {
 
     const handleSave = async () => {
         if (loading) return
-        updateData({ templateId: displayTemplates[currentIndex].id })
-        const id = await saveInvitation()
+        const currentData = { ...data, templateId: displayTemplates[currentIndex].id }
+        const id = await saveInvitation(currentData)
         if (id) {
             navigate(`/invitation/${id}`)
         }
@@ -76,47 +76,52 @@ export function TemplateSelection() {
                                     className={cn("h-full w-full p-6 lg:p-10 flex flex-col justify-between text-center relative bg-cover bg-center transition-all", currentTemplate.wrapperClass)}
                                     style={currentTemplate.backgroundImage ? { backgroundImage: `url(${currentTemplate.backgroundImage})` } : {}}
                                 >
-                                    {/* Content Preview (similar logic to Invitation.tsx) */}
-                                    <div className="space-y-4 lg:space-y-6 relative z-10">
-                                        <p className={cn("text-[10px] lg:text-sm tracking-widest uppercase", currentTemplate.introClass)}>
+                                    {/* Decorative Overlay */}
+                                    {currentTemplate.overlayClass && (
+                                        <div className={currentTemplate.overlayClass} />
+                                    )}
+
+                                    {/* Content Preview */}
+                                    <div className="space-y-4 lg:space-y-6 relative z-10 mt-4 md:mt-8">
+                                        <p className={cn("transition-all", currentTemplate.introClass)}>
                                             {t('weddingOf')}
                                         </p>
-                                        <div className={cn("space-y-1 lg:space-y-2", currentTemplate.namesClass)}>
-                                            <h3 className="text-2xl lg:text-4xl font-serif font-bold">
+                                        <div className={cn("transition-all break-words", currentTemplate.namesClass)}>
+                                            <h3 className="text-xl md:text-2xl lg:text-3xl font-serif font-bold mb-1">
                                                 {data.brideName || (language === 'uz' ? "Kelin" : language === 'ru' ? "Невеста" : "Bride")}
                                             </h3>
-                                            <div className={cn("text-xl lg:text-3xl font-serif", currentTemplate.ampersandClass)}>
+                                            <div className={cn("transition-all", currentTemplate.ampersandClass)}>
                                                 &
                                             </div>
-                                            <h3 className="text-2xl lg:text-4xl font-serif font-bold">
+                                            <h3 className="text-xl md:text-2xl lg:text-3xl font-serif font-bold mt-1">
                                                 {data.groomName || (language === 'uz' ? "Kuyov" : language === 'ru' ? "Жених" : "Groom")}
                                             </h3>
                                         </div>
                                     </div>
 
-                                    <div className="flex justify-center relative z-10">
+                                    <div className="flex justify-center relative z-10 flex-1 items-center">
                                         <Heart className={cn("h-6 w-6 lg:h-10 lg:w-10 fill-current", currentTemplate.iconClass)} />
                                     </div>
 
-                                    <div className="space-y-4 lg:space-y-6 relative z-10">
-                                        <div className={cn("space-y-2 lg:space-y-3 text-xs lg:text-base", currentTemplate.detailsClass)}>
+                                    <div className="space-y-4 lg:space-y-6 relative z-10 mb-8 md:mb-12">
+                                        <div className={cn("transition-all text-[10px] md:text-sm lg:text-base", currentTemplate.detailsClass)}>
                                             <div className="flex items-center justify-center gap-2">
                                                 <Calendar className={cn("h-3 w-3 lg:h-5 lg:w-5", currentTemplate.iconClass)} />
-                                                <span>{data.date || t('date')}</span>
+                                                <span className="font-medium">{data.date || t('date')}</span>
                                             </div>
-                                            <div className="flex items-center justify-center gap-2">
+                                            <div className="flex items-center justify-center gap-2 mt-2">
                                                 <Clock className={cn("h-3 w-3 lg:h-5 lg:w-5", currentTemplate.iconClass)} />
-                                                <span>{data.time || t('time')}</span>
+                                                <span className="font-medium">{data.time || t('time')}</span>
                                             </div>
-                                            <div className="flex items-center justify-center gap-2 px-4">
+                                            <div className="flex items-center justify-center gap-2 mt-2 px-6">
                                                 <MapPin className={cn("h-3 w-3 lg:h-5 lg:w-5", currentTemplate.iconClass)} />
-                                                <span className="line-clamp-2">{data.location || t('location')}</span>
+                                                <span className="line-clamp-2 leading-tight">{data.location || t('location')}</span>
                                             </div>
                                         </div>
                                     </div>
 
                                     {/* Floating check for selected state */}
-                                    <div className="absolute top-4 right-4 bg-primary-500 text-white rounded-full p-2 shadow-lg z-20">
+                                    <div className="absolute top-6 right-6 bg-primary-500 text-white rounded-full p-2 shadow-lg z-20">
                                         <Check className="h-5 w-5" />
                                     </div>
                                 </motion.div>

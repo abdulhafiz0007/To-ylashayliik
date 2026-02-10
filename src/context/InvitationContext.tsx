@@ -18,7 +18,7 @@ interface InvitationContextType {
     error: string | null
     updateData: (updates: Partial<InvitationData>) => void
     resetData: () => void
-    saveInvitation: () => Promise<string | null>
+    saveInvitation: (data?: InvitationData) => Promise<string | null>
     getInvitation: (id: string) => Promise<InvitationData | null>
 }
 
@@ -48,13 +48,13 @@ export function InvitationProvider({ children }: { children: ReactNode }) {
         setError(null)
     }
 
-    const saveInvitation = async (): Promise<string | null> => {
+    const saveInvitation = async (overrideData?: InvitationData): Promise<string | null> => {
         setLoading(true)
         setError(null)
         try {
-            const result = await api.saveInvitation(data)
+            const result = await api.saveInvitation(overrideData || data)
             setLoading(false)
-            return result.id
+            return result._id || result.id
         } catch (err: any) {
             console.error("Failed to save invitation", err)
             setError(err.message)
