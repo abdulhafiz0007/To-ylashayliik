@@ -78,7 +78,6 @@ function App() {
               <Routes>
                 <Route path="/" element={<Home />} />
                 <Route path="/create" element={<Create />} />
-                <Route path="/select-template" element={<TemplateSelection />} />
                 <Route path="/invitation/:id" element={<Invitation />} />
                 <Route path="/profile" element={<Profile />} />
               </Routes>
