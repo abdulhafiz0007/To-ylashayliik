@@ -22,7 +22,7 @@ export interface TemplateConfig {
 
 export const templates: TemplateConfig[] = [
     {
-        id: "premium_minimal",
+        id: "classic",
         name: "Premium Minimal",
         wrapperClass: "bg-white dark:bg-slate-900 border-0 shadow-2xl relative",
         introClass: "text-gray-400 dark:text-gray-500 uppercase tracking-[0.4em] text-[10px] md:text-xs font-medium pt-12 md:pt-16",

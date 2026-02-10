@@ -23,7 +23,7 @@ export function Create() {
             // Set a default template if none selected
             const finalData = {
                 ...data,
-                templateId: data.templateId || 'premium_minimal'
+                templateId: data.templateId || 'classic'
             }
 
             const id = await saveInvitation(finalData)
@@ -31,6 +31,7 @@ export function Create() {
                 navigate(`/invitation/${id}`)
             }
         } catch (err: any) {
+            console.error("DEBUG: Create.tsx handleSubmit error:", err);
             setSaveError(err.message || "Server bilan bog'lanishda xatolik yuz berdi.")
         } finally {
             setIsSaving(false)
