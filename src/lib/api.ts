@@ -19,8 +19,19 @@ async function fetchApi(path: string, options: RequestInit = {}) {
     });
 
     if (!response.ok) {
-        const error = await response.json().catch(() => ({ message: 'An error occurred' }));
-        throw new Error(error.message || 'Network response was not ok');
+        const status = response.status;
+        const statusText = response.statusText;
+        const text = await response.text().catch(() => 'No response body');
+        console.error(`API Error: ${status} ${statusText}`, text);
+
+        let errorMessage = 'An error occurred';
+        try {
+            const error = JSON.parse(text);
+            errorMessage = error.message || error.error || `Error ${status}: ${statusText}`;
+        } catch (e) {
+            errorMessage = `Server error (${status}): ${text.substring(0, 100)}`;
+        }
+        throw new Error(errorMessage);
     }
 
     return response.json();
