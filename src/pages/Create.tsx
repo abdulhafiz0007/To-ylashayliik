@@ -9,7 +9,7 @@ import { useLanguage } from "../context/LanguageContext"
 
 export function Create() {
     const navigate = useNavigate()
-    const { data, updateData, saveInvitation } = useInvitation()
+    const { data, updateData, saveInvitation, error: contextError } = useInvitation()
     const { t } = useLanguage()
     const [isSaving, setIsSaving] = useState(false)
     const [saveError, setSaveError] = useState<string | null>(null)
@@ -29,15 +29,16 @@ export function Create() {
             const id = await saveInvitation(finalData)
             if (id) {
                 navigate(`/invitation/${id}`)
-            } else {
-                setSaveError("Ma'lumotlarni saqlashda xatolik yuz berdi. Iltimos qayta urinib ko'ring.")
             }
-        } catch (err) {
-            setSaveError("Server bilan bog'lanishda xatolik yuz berdi.")
+        } catch (err: any) {
+            setSaveError(err.message || "Server bilan bog'lanishda xatolik yuz berdi.")
         } finally {
             setIsSaving(false)
         }
     }
+
+    // Combine local error state with context error state
+    const displayError = saveError || contextError;
 
     return (
         <div className="container mx-auto px-4 py-8 max-w-2xl">
@@ -52,9 +53,9 @@ export function Create() {
                         <CardDescription className="dark:text-gray-400">{t('enterDetails')}</CardDescription>
                     </CardHeader>
                     <CardContent className="space-y-6">
-                        {saveError && (
+                        {displayError && (
                             <div className="p-3 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg text-red-600 dark:text-red-400 text-sm">
-                                {saveError}
+                                {displayError}
                             </div>
                         )}
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">

@@ -29,7 +29,7 @@ const defaultData: InvitationData = {
     time: "",
     location: "",
     message: "Bizning to'yimizga taklif etamiz...",
-    templateId: "classic",
+    templateId: "premium_minimal",
 }
 
 const InvitationContext = createContext<InvitationContextType | undefined>(undefined)
