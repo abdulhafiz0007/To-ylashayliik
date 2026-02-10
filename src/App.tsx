@@ -23,15 +23,20 @@ function App() {
     onReady()
 
     if (isTelegram && initData) {
+      console.log("DEBUG: Starting authTelegram with initData length:", initData.length);
       api.authTelegram(initData)
         .then((res) => {
-          console.log("Auth success", res)
-          setIsAuth(true)
+          console.log("DEBUG: Auth success response structure:", Object.keys(res));
+          setIsAuth(true);
         })
         .catch((err) => {
-          console.error("DEBUG: Auth failed details:", err)
-          setAuthError(`Kirishda xatolik: ${err.message}`)
-        })
+          console.error("DEBUG: Auth failed details:", err);
+          if (err.message.includes('401')) {
+            setAuthError(`Kirishda xatolik (401): Telegram ma'lumotlari server tomonidan qabul qilinmadi.`);
+          } else {
+            setAuthError(`Kirishda xatolik: ${err.message}`);
+          }
+        });
     }
   }, [onReady, isTelegram, initData])
 
@@ -54,7 +59,15 @@ function App() {
           <X className="h-12 w-12 mx-auto" />
           <h1 className="text-2xl font-serif font-bold">Xatolik yuz berdi</h1>
           <p>{authError}</p>
-          <Button onClick={() => window.location.reload()}>Qayta urinish</Button>
+          <div className="flex flex-col gap-2">
+            <Button onClick={() => window.location.reload()}>Qayta urinish</Button>
+            <Button variant="secondary" onClick={() => {
+              localStorage.removeItem('auth_token');
+              window.location.reload();
+            }}>
+              Keshni tozalash va qayta kirish
+            </Button>
+          </div>
         </div>
       </div>
     )
