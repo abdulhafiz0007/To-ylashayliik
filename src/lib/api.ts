@@ -73,11 +73,36 @@ export const api = {
     },
 
     // Invitations
-    getInvitation: (id: string) => fetchApi(`/api/invitations/${id}`),
+    getInvitation: async (id: string) => {
+        const data = await fetchApi(`/api/invitations/${id}`);
+        // Transform ISO date back to separate date and time for frontend
+        if (data.date && data.date.includes('T')) {
+            try {
+                const dateObj = new Date(data.date);
+                // Use UTC to avoid timezone shifts during string splitting
+                data.date = dateObj.toISOString().split('T')[0];
+                data.time = dateObj.toISOString().split('T')[1].substring(0, 5);
+            } catch (e) {
+                console.warn("Failed to parse date from backend", data.date);
+            }
+        }
+        return data;
+    },
 
     saveInvitation: (data: any) => {
         // Ensure we don't send empty ID which might confuse backend
         const { id, _id, ...cleanData } = data;
+
+        // Transform separate date and time into ISO date (Instant)
+        if (cleanData.date && cleanData.time) {
+            // Combine into ISO format: YYYY-MM-DDTHH:mm:00Z
+            // We assume the date/time input is local, but Instant requires a timezone.
+            // Appending 'Z' for UTC is the simplest way to satisfy Instant deserializer.
+            cleanData.date = `${cleanData.date}T${cleanData.time}:00Z`;
+        } else if (cleanData.date) {
+            cleanData.date = `${cleanData.date}T00:00:00Z`;
+        }
+
         return fetchApi('/api/invitations/init', {
             method: 'POST',
             body: JSON.stringify(cleanData),
