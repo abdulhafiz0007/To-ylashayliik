@@ -4,7 +4,6 @@ import { Home } from "./pages/Home"
 import { InvitationProvider } from "./context/InvitationContext"
 import { Create } from "./pages/Create"
 import { Invitation } from "./pages/Invitation"
-import { TemplateSelection } from "./pages/TemplateSelection"
 import { Profile } from "./pages/Profile"
 
 import { useEffect, useState } from "react"
