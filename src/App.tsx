@@ -24,10 +24,13 @@ function App() {
 
     if (isTelegram && initData) {
       api.authTelegram(initData)
-        .then(() => setIsAuth(true))
+        .then((res) => {
+          console.log("Auth success", res)
+          setIsAuth(true)
+        })
         .catch((err) => {
-          console.error("Auth failed:", err)
-          setAuthError(err.message)
+          console.error("DEBUG: Auth failed details:", err)
+          setAuthError(`Kirishda xatolik: ${err.message}`)
         })
     }
   }, [onReady, isTelegram, initData])

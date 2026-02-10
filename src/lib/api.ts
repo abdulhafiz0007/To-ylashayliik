@@ -1,12 +1,19 @@
 const BASE_URL = 'https://digital-wedding-back.onrender.com';
 
-let authToken = '';
+let authToken = localStorage.getItem('auth_token') || '';
 
 export const setAuthToken = (token: string) => {
     authToken = token;
+    localStorage.setItem('auth_token', token);
 };
 
 async function fetchApi(path: string, options: RequestInit = {}) {
+    if (authToken) {
+        console.log(`DEBUG: Sending request to ${path} with token length ${authToken.length}`);
+    } else if (path !== '/api/auth/telegram') {
+        console.warn(`DEBUG: Sending request to ${path} WITHOUT token`);
+    }
+
     const headers = {
         'Content-Type': 'application/json',
         ...(authToken ? { 'Authorization': `Bearer ${authToken}` } : {}),
