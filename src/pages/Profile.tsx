@@ -8,12 +8,13 @@ import { useEffect, useState } from "react";
 import { api } from "../lib/api";
 import { Button } from "../components/ui/Button";
 import { Link } from "react-router-dom";
+import type { InvitationData } from "../context/InvitationContext";
 
 export function Profile() {
     const { user } = useTelegram();
     const { language, setLanguage, t } = useLanguage();
     const { theme, toggleTheme } = useTheme();
-    const [invitations, setInvitations] = useState<any[]>([]);
+    const [invitations, setInvitations] = useState<InvitationData[]>([]);
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
@@ -79,7 +80,7 @@ export function Profile() {
                             {languages.map((lang) => (
                                 <button
                                     key={lang.code}
-                                    onClick={() => setLanguage(lang.code as any)}
+                                    onClick={() => setLanguage(lang.code as "uz" | "ru" | "en")}
                                     className={cn(
                                         "py-2 px-3 rounded-lg text-sm font-medium transition-all border",
                                         language === lang.code

@@ -3,6 +3,7 @@ import { api } from "../lib/api"
 
 export interface InvitationData {
     id?: string
+    _id?: string
     brideName: string
     groomName: string
     date: string
@@ -10,6 +11,7 @@ export interface InvitationData {
     location: string
     message: string
     templateId: string
+    [key: string]: unknown;
 }
 
 interface InvitationContextType {
@@ -55,6 +57,7 @@ export function InvitationProvider({ children }: { children: ReactNode }) {
             const result = await api.saveInvitation(overrideData || data)
             setLoading(false)
             return result._id || result.id
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
         } catch (err: any) {
             console.error("Failed to save invitation", err)
             setError(err.message)
@@ -70,6 +73,7 @@ export function InvitationProvider({ children }: { children: ReactNode }) {
             const result = await api.getInvitation(id)
             setLoading(false)
             return result
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
         } catch (err: any) {
             console.error("Failed to get invitation", err)
             setError(err.message)
@@ -85,6 +89,7 @@ export function InvitationProvider({ children }: { children: ReactNode }) {
     )
 }
 
+// eslint-disable-next-line react-refresh/only-export-components
 export function useInvitation() {
     const context = useContext(InvitationContext)
     if (context === undefined) {

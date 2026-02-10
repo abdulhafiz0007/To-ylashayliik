@@ -30,9 +30,10 @@ export function Create() {
             if (id) {
                 navigate(`/invitation/${id}`)
             }
-        } catch (err: any) {
+        } catch (err: unknown) {
+            const errorMsg = err instanceof Error ? err.message : "Server bilan bog'lanishda xatolik yuz berdi.";
             console.error("DEBUG: Create.tsx handleSubmit error:", err);
-            setSaveError(err.message || "Server bilan bog'lanishda xatolik yuz berdi.")
+            setSaveError(errorMsg)
         } finally {
             setIsSaving(false)
         }

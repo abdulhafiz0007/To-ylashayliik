@@ -44,7 +44,7 @@ async function fetchApi(path: string, options: RequestInit = {}) {
         try {
             const error = JSON.parse(text);
             errorMessage = error.message || error.error || `Error ${status}: ${statusText}`;
-        } catch (e) {
+        } catch {
             errorMessage = `Server error (${status}): ${text.substring(0, 100)}`;
         }
         throw new Error(errorMessage);
@@ -76,30 +76,32 @@ export const api = {
     getInvitation: async (id: string) => {
         const data = await fetchApi(`/api/invitations/${id}`);
         // Transform ISO date back to separate date and time for frontend
-        if (data.date && data.date.includes('T')) {
+        if (data.date && typeof data.date === 'string' && data.date.includes('T')) {
             try {
                 const dateObj = new Date(data.date);
                 // Use UTC to avoid timezone shifts during string splitting
                 data.date = dateObj.toISOString().split('T')[0];
                 data.time = dateObj.toISOString().split('T')[1].substring(0, 5);
-            } catch (e) {
+            } catch {
                 console.warn("Failed to parse date from backend", data.date);
             }
         }
         return data;
     },
 
-    saveInvitation: (data: any) => {
+    saveInvitation: (invData: { date?: string; time?: string;[key: string]: unknown }) => {
         // Ensure we don't send empty ID which might confuse backend
-        const { id, _id, ...cleanData } = data;
+        const cleanData = { ...invData };
+        delete cleanData.id;
+        delete cleanData._id;
 
         // Transform separate date and time into ISO date (Instant)
-        if (cleanData.date && cleanData.time) {
+        if (cleanData.date && typeof cleanData.date === 'string' && cleanData.time && typeof cleanData.time === 'string') {
             // Combine into ISO format: YYYY-MM-DDTHH:mm:00Z
             // We assume the date/time input is local, but Instant requires a timezone.
             // Appending 'Z' for UTC is the simplest way to satisfy Instant deserializer.
             cleanData.date = `${cleanData.date}T${cleanData.time}:00Z`;
-        } else if (cleanData.date) {
+        } else if (cleanData.date && typeof cleanData.date === 'string') {
             cleanData.date = `${cleanData.date}T00:00:00Z`;
         }
 

@@ -3,19 +3,27 @@ import { useEffect, useState } from 'react';
 declare global {
     interface Window {
         Telegram: {
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
             WebApp: any;
         };
     }
 }
 
 export function useTelegram() {
-    const [tg, setTg] = useState<any>(null);
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const [tg, setTg] = useState<any>(() => {
+        if (typeof window !== 'undefined' && window.Telegram && window.Telegram.WebApp) {
+            return window.Telegram.WebApp;
+        }
+        return null;
+    });
 
     useEffect(() => {
-        if (window.Telegram && window.Telegram.WebApp) {
+        if (!tg && typeof window !== 'undefined' && window.Telegram && window.Telegram.WebApp) {
+            // eslint-disable-next-line react-hooks/set-state-in-effect
             setTg(window.Telegram.WebApp);
         }
-    }, []);
+    }, [tg]);
 
     const onClose = () => {
         tg?.close();

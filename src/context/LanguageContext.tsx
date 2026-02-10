@@ -4,7 +4,8 @@ import { translations, type Language } from "../lib/translations";
 interface LanguageContextType {
     language: Language;
     setLanguage: (lang: Language) => void;
-    t: (key: string) => any;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    t: (key: string) => string;
 }
 
 const LanguageContext = createContext<LanguageContextType | undefined>(undefined);
@@ -19,15 +20,17 @@ export function LanguageProvider({ children }: { children: ReactNode }) {
         localStorage.setItem('app_lang', language);
     }, [language]);
 
-    const t = (path: string) => {
-        const keys = path.split('.');
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const t = (key: string): string => {
+        const keys = key.split('.');
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         let current: any = translations[language];
 
-        for (const key of keys) {
-            if (current && current[key] !== undefined) {
-                current = current[key];
+        for (const k of keys) {
+            if (current && current[k] !== undefined) {
+                current = current[k];
             } else {
-                return path;
+                return key;
             }
         }
         return current;
@@ -40,6 +43,7 @@ export function LanguageProvider({ children }: { children: ReactNode }) {
     );
 }
 
+// eslint-disable-next-line react-refresh/only-export-components
 export function useLanguage() {
     const context = useContext(LanguageContext);
     if (context === undefined) {
