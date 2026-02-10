@@ -74,10 +74,10 @@ export function Invitation() {
 
     if (loading || contextLoading) {
         return (
-            <div className="min-h-screen flex flex-col items-center justify-center p-4 bg-background">
+            <div className="min-h-screen flex flex-col items-center justify-center p-4 bg-background dark:bg-slate-950">
                 <div className="animate-pulse flex flex-col items-center space-y-4">
                     <Heart className="h-12 w-12 text-primary-300" />
-                    <p className="text-gray-400 font-medium">{t('loading')}</p>
+                    <p className="text-gray-400 dark:text-gray-500 font-medium">{t('loading')}</p>
                 </div>
             </div>
         )
@@ -85,9 +85,9 @@ export function Invitation() {
 
     if (contextError || (!invitation && !loading)) {
         return (
-            <div className="min-h-screen flex flex-col items-center justify-center space-y-4 p-4 text-center">
-                <h1 className="text-2xl font-serif text-gold-900 font-bold">{t('notFound')}</h1>
-                <p className="text-gold-600">{contextError || t('notAvailable')}</p>
+            <div className="min-h-screen flex flex-col items-center justify-center space-y-4 p-4 text-center bg-background dark:bg-slate-950">
+                <h1 className="text-2xl font-serif text-gold-900 dark:text-gold-200 font-bold">{t('notFound')}</h1>
+                <p className="text-gold-600 dark:text-gold-400">{contextError || t('notAvailable')}</p>
                 <Link to="/create">
                     <Button>{t('createNew')}</Button>
                 </Link>
@@ -100,22 +100,22 @@ export function Invitation() {
     const currentTemplate = templates.find(t => t.id === invitation.templateId) || templates[0]
 
     return (
-        <div className="min-h-screen bg-[#fbf9f1] py-8 px-4 flex flex-col items-center relative">
+        <div className="min-h-screen bg-[#fbf9f1] dark:bg-slate-950 py-8 px-4 flex flex-col items-center relative">
 
             {/* Toolbar */}
-            <div className="fixed bottom-6 z-50 flex items-center gap-4 bg-white/90 backdrop-blur-md p-3 rounded-full shadow-xl border border-gold-200">
+            <div className="fixed bottom-6 z-50 flex items-center gap-4 bg-white/90 dark:bg-slate-900/90 backdrop-blur-md p-3 rounded-full shadow-xl border border-gold-200 dark:border-slate-800">
                 <Button
-                    className="flex flex-col h-auto gap-1 p-2 text-xs bg-primary-600 text-white hover:bg-primary-700 shadow-lg shadow-primary-200"
+                    className="flex flex-col h-auto gap-1 p-2 text-xs bg-primary-600 text-white hover:bg-primary-700 shadow-lg shadow-primary-200 dark:shadow-primary-900/20"
                     onClick={() => setShowTemplates(!showTemplates)}
                 >
                     <Palette className="h-5 w-5" />
                     {t('style')}
                 </Button>
-                <div className="w-px h-8 bg-gold-200"></div>
+                <div className="w-px h-8 bg-gold-200 dark:bg-slate-800"></div>
                 <Button
                     variant="ghost"
                     size="sm"
-                    className="flex flex-col h-auto gap-1 p-2 text-xs"
+                    className="flex flex-col h-auto gap-1 p-2 text-xs dark:text-gray-300 dark:hover:bg-slate-800"
                     onClick={handleDownload}
                 >
                     <Download className="h-5 w-5" />
@@ -124,7 +124,7 @@ export function Invitation() {
                 <Button
                     variant="ghost"
                     size="sm"
-                    className="flex flex-col h-auto gap-1 p-2 text-xs"
+                    className="flex flex-col h-auto gap-1 p-2 text-xs dark:text-gray-300 dark:hover:bg-slate-800"
                     onClick={handleShare}
                 >
                     <Share2 className="h-5 w-5" />
@@ -134,11 +134,11 @@ export function Invitation() {
 
             {/* Template Selection Drawer */}
             {showTemplates && (
-                <div className="fixed inset-x-0 bottom-0 z-40 bg-white border-t border-gold-200 rounded-t-3xl shadow-2xl p-6 pb-24 animate-slide-up max-h-[60vh] overflow-y-auto">
+                <div className="fixed inset-x-0 bottom-0 z-40 bg-white dark:bg-slate-900 border-t border-gold-200 dark:border-slate-800 rounded-t-3xl shadow-2xl p-6 pb-24 animate-slide-up max-h-[60vh] overflow-y-auto">
                     <div className="flex justify-between items-center mb-4">
-                        <h3 className="font-serif text-xl text-gold-900">{t('chooseStyle')}</h3>
-                        <button onClick={() => setShowTemplates(false)} className="p-2 hover:bg-gold-50 rounded-full">
-                            <X className="h-5 w-5 text-gold-500" />
+                        <h3 className="font-serif text-xl text-gold-900 dark:text-gold-200">{t('chooseStyle')}</h3>
+                        <button onClick={() => setShowTemplates(false)} className="p-2 hover:bg-gold-50 dark:hover:bg-slate-800 rounded-full transition-colors">
+                            <X className="h-5 w-5 text-gold-500 dark:text-gold-400" />
                         </button>
                     </div>
                     <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
@@ -148,10 +148,12 @@ export function Invitation() {
                                 onClick={() => handleTemplateChange(t.id)}
                                 className={cn(
                                     "text-left p-3 rounded-xl border border-transparent transition-all hover:scale-105",
-                                    invitation.templateId === t.id ? "ring-2 ring-primary-500 border-primary-200 bg-primary-50" : "hover:bg-gold-50 border-gold-100"
+                                    invitation.templateId === t.id
+                                        ? "ring-2 ring-primary-500 border-primary-200 bg-primary-50 dark:bg-primary-900/20 dark:border-primary-800"
+                                        : "hover:bg-gold-50 dark:hover:bg-slate-800 border-gold-100 dark:border-slate-800"
                                 )}
                             >
-                                <div className={cn("text-sm font-medium", invitation.templateId === t.id ? "text-primary-700" : "text-gray-700")}>
+                                <div className={cn("text-sm font-medium", invitation.templateId === t.id ? "text-primary-700 dark:text-primary-300" : "text-gray-700 dark:text-gray-300")}>
                                     {t.name}
                                 </div>
                             </button>
@@ -173,9 +175,9 @@ export function Invitation() {
                     <div className="space-y-4">
                         <p className={currentTemplate.introClass}>{t('weddingOf')}</p>
                         <div className={currentTemplate.namesClass}>
-                            <span className="block leading-tight">{invitation.brideName}</span>
-                            <span className={currentTemplate.ampersandClass}>&</span>
                             <span className="block leading-tight">{invitation.groomName}</span>
+                            <span className={currentTemplate.ampersandClass}>&</span>
+                            <span className="block leading-tight">{invitation.brideName}</span>
                         </div>
                     </div>
 

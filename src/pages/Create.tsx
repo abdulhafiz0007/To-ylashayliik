@@ -19,20 +19,20 @@ export function Create() {
 
     return (
         <div className="container mx-auto px-4 py-8 max-w-2xl">
-            <h1 className="text-3xl font-serif font-bold text-center text-primary-800 mb-8">
+            <h1 className="text-3xl font-serif font-bold text-center text-primary-800 dark:text-primary-300 mb-8">
                 {t('createTitle')}
             </h1>
 
             <form onSubmit={handleSubmit}>
-                <Card className="border-gold-200 shadow-lg">
+                <Card className="border-gold-200 dark:border-slate-700 shadow-lg dark:bg-slate-800">
                     <CardHeader>
-                        <CardTitle>{t('weddingDetails')}</CardTitle>
-                        <CardDescription>{t('enterDetails')}</CardDescription>
+                        <CardTitle className="dark:text-white">{t('weddingDetails')}</CardTitle>
+                        <CardDescription className="dark:text-gray-400">{t('enterDetails')}</CardDescription>
                     </CardHeader>
                     <CardContent className="space-y-6">
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                             <div className="space-y-2">
-                                <label className="text-sm font-medium text-gold-900 flex items-center gap-2">
+                                <label className="text-sm font-medium text-gold-900 dark:text-gold-200 flex items-center gap-2">
                                     <Users className="h-4 w-4" /> {t('brideName')}
                                 </label>
                                 <Input
@@ -40,10 +40,11 @@ export function Create() {
                                     value={data.brideName}
                                     onChange={(e) => updateData({ brideName: e.target.value })}
                                     required
+                                    className="dark:bg-slate-900 dark:border-slate-700 dark:text-white"
                                 />
                             </div>
                             <div className="space-y-2">
-                                <label className="text-sm font-medium text-gold-900 flex items-center gap-2">
+                                <label className="text-sm font-medium text-gold-900 dark:text-gold-200 flex items-center gap-2">
                                     <Users className="h-4 w-4" /> {t('groomName')}
                                 </label>
                                 <Input
@@ -51,13 +52,14 @@ export function Create() {
                                     value={data.groomName}
                                     onChange={(e) => updateData({ groomName: e.target.value })}
                                     required
+                                    className="dark:bg-slate-900 dark:border-slate-700 dark:text-white"
                                 />
                             </div>
                         </div>
 
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                             <div className="space-y-2">
-                                <label className="text-sm font-medium text-gold-900 flex items-center gap-2">
+                                <label className="text-sm font-medium text-gold-900 dark:text-gold-200 flex items-center gap-2">
                                     <Calendar className="h-4 w-4" /> {t('date')}
                                 </label>
                                 <Input
@@ -65,10 +67,11 @@ export function Create() {
                                     value={data.date}
                                     onChange={(e) => updateData({ date: e.target.value })}
                                     required
+                                    className="dark:bg-slate-900 dark:border-slate-700 dark:text-white"
                                 />
                             </div>
                             <div className="space-y-2">
-                                <label className="text-sm font-medium text-gold-900 flex items-center gap-2">
+                                <label className="text-sm font-medium text-gold-900 dark:text-gold-200 flex items-center gap-2">
                                     <Clock className="h-4 w-4" /> {t('time')}
                                 </label>
                                 <Input
@@ -76,12 +79,13 @@ export function Create() {
                                     value={data.time}
                                     onChange={(e) => updateData({ time: e.target.value })}
                                     required
+                                    className="dark:bg-slate-900 dark:border-slate-700 dark:text-white"
                                 />
                             </div>
                         </div>
 
                         <div className="space-y-2">
-                            <label className="text-sm font-medium text-gold-900 flex items-center gap-2">
+                            <label className="text-sm font-medium text-gold-900 dark:text-gold-200 flex items-center gap-2">
                                 <MapPin className="h-4 w-4" /> {t('location')}
                             </label>
                             <Input
@@ -89,23 +93,24 @@ export function Create() {
                                 value={data.location}
                                 onChange={(e) => updateData({ location: e.target.value })}
                                 required
+                                className="dark:bg-slate-900 dark:border-slate-700 dark:text-white"
                             />
                         </div>
 
                         <div className="space-y-2">
-                            <label className="text-sm font-medium text-gold-900 flex items-center gap-2">
+                            <label className="text-sm font-medium text-gold-900 dark:text-gold-200 flex items-center gap-2">
                                 <MessageSquare className="h-4 w-4" /> {t('message')}
                             </label>
                             <textarea
-                                className="flex min-h-[100px] w-full rounded-md border border-gold-200 bg-white px-3 py-2 text-sm placeholder:text-gold-400 focus:outline-none focus:ring-2 focus:ring-primary-400 focus:border-transparent disabled:cursor-not-allowed disabled:opacity-50 transition-all shadow-sm"
+                                className="flex min-h-[100px] w-full rounded-md border border-gold-200 dark:border-slate-700 bg-white dark:bg-slate-900 px-3 py-2 text-sm placeholder:text-gold-400 dark:placeholder:text-gray-500 focus:outline-none focus:ring-2 focus:ring-primary-400 focus:border-transparent disabled:cursor-not-allowed disabled:opacity-50 transition-all shadow-sm dark:text-white"
                                 placeholder={t('message')}
                                 value={data.message}
                                 onChange={(e) => updateData({ message: e.target.value })}
                             />
                         </div>
                     </CardContent>
-                    <CardFooter className="flex justify-end gap-4 border-t border-gold-100 bg-gold-50/30 p-6">
-                        <Button type="button" variant="secondary" onClick={() => navigate("/")}>
+                    <CardFooter className="flex justify-end gap-4 border-t border-gold-100 dark:border-slate-700 bg-gold-50/30 dark:bg-slate-900/30 p-6">
+                        <Button type="button" variant="secondary" onClick={() => navigate("/")} className="dark:bg-slate-700 dark:text-white dark:hover:bg-slate-600">
                             {t('cancel')}
                         </Button>
                         <Button type="submit">

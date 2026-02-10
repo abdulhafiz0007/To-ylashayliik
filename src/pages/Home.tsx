@@ -13,10 +13,10 @@ export function Home() {
             <section className="relative py-20 px-4 text-center overflow-hidden">
                 <div className="absolute inset-0 -z-10 bg-custom-gradient opacity-30 blur-3xl" />
                 <div className="container mx-auto max-w-4xl space-y-6">
-                    <h1 className="font-serif text-5xl md:text-7xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-primary-700 via-primary-500 to-gold-600 animate-slide-up">
+                    <h1 className="font-serif text-5xl md:text-7xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-primary-700 via-primary-500 to-gold-600 dark:from-primary-400 dark:to-gold-400 animate-slide-up">
                         {t('heroTitle')}
                     </h1>
-                    <p className="text-xl md:text-2xl text-gold-800 max-w-2xl mx-auto font-light animate-fade-in delay-100">
+                    <p className="text-xl md:text-2xl text-gold-800 dark:text-gold-200 max-w-2xl mx-auto font-light animate-fade-in delay-100">
                         {t('heroSubtitle')}
                     </p>
                     <div className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-4 animate-fade-in delay-200">
@@ -32,40 +32,40 @@ export function Home() {
             {/* Features Grid */}
             <section className="container mx-auto px-4">
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-                    <Card className="hover:shadow-2xl transition-shadow bg-white/80 backdrop-blur-sm border-gold-200">
+                    <Card className="hover:shadow-2xl transition-shadow bg-white/80 dark:bg-slate-800/80 backdrop-blur-sm border-gold-200 dark:border-slate-700">
                         <CardHeader>
-                            <div className="h-12 w-12 rounded-xl bg-primary-100 flex items-center justify-center mb-4">
-                                <Palette className="h-6 w-6 text-primary-600" />
+                            <div className="h-12 w-12 rounded-xl bg-primary-100 dark:bg-primary-900/40 flex items-center justify-center mb-4">
+                                <Palette className="h-6 w-6 text-primary-600 dark:text-primary-400" />
                             </div>
-                            <CardTitle>{t('features.templates.title')}</CardTitle>
-                            <CardDescription>{t('features.templates.desc')}</CardDescription>
+                            <CardTitle className="dark:text-white">{t('features.templates.title')}</CardTitle>
+                            <CardDescription className="dark:text-gray-400">{t('features.templates.desc')}</CardDescription>
                         </CardHeader>
                         <CardContent>
-                            <p className="text-gray-600">{t('features.templates.desc')}</p>
+                            <p className="text-gray-600 dark:text-gray-300">{t('features.templates.desc')}</p>
                         </CardContent>
                     </Card>
-                    <Card className="hover:shadow-2xl transition-shadow bg-white/80 backdrop-blur-sm border-gold-200">
+                    <Card className="hover:shadow-2xl transition-shadow bg-white/80 dark:bg-slate-800/80 backdrop-blur-sm border-gold-200 dark:border-slate-700">
                         <CardHeader>
-                            <div className="h-12 w-12 rounded-xl bg-gold-100 flex items-center justify-center mb-4">
-                                <Share2 className="h-6 w-6 text-gold-600" />
+                            <div className="h-12 w-12 rounded-xl bg-gold-100 dark:bg-gold-900/40 flex items-center justify-center mb-4">
+                                <Share2 className="h-6 w-6 text-gold-600 dark:text-gold-400" />
                             </div>
-                            <CardTitle>{t('features.sharing.title')}</CardTitle>
-                            <CardDescription>{t('features.sharing.desc')}</CardDescription>
+                            <CardTitle className="dark:text-white">{t('features.sharing.title')}</CardTitle>
+                            <CardDescription className="dark:text-gray-400">{t('features.sharing.desc')}</CardDescription>
                         </CardHeader>
                         <CardContent>
-                            <p className="text-gray-600">{t('features.sharing.desc')}</p>
+                            <p className="text-gray-600 dark:text-gray-300">{t('features.sharing.desc')}</p>
                         </CardContent>
                     </Card>
-                    <Card className="hover:shadow-2xl transition-shadow bg-white/80 backdrop-blur-sm border-gold-200">
+                    <Card className="hover:shadow-2xl transition-shadow bg-white/80 dark:bg-slate-800/80 backdrop-blur-sm border-gold-200 dark:border-slate-700">
                         <CardHeader>
-                            <div className="h-12 w-12 rounded-xl bg-primary-100 flex items-center justify-center mb-4">
-                                <Calendar className="h-6 w-6 text-primary-600" />
+                            <div className="h-12 w-12 rounded-xl bg-primary-100 dark:bg-primary-900/40 flex items-center justify-center mb-4">
+                                <Calendar className="h-6 w-6 text-primary-600 dark:text-primary-400" />
                             </div>
-                            <CardTitle>{t('features.details.title')}</CardTitle>
-                            <CardDescription>{t('features.details.desc')}</CardDescription>
+                            <CardTitle className="dark:text-white">{t('features.details.title')}</CardTitle>
+                            <CardDescription className="dark:text-gray-400">{t('features.details.desc')}</CardDescription>
                         </CardHeader>
                         <CardContent>
-                            <p className="text-gray-600">{t('features.details.desc')}</p>
+                            <p className="text-gray-600 dark:text-gray-300">{t('features.details.desc')}</p>
                         </CardContent>
                     </Card>
                 </div>

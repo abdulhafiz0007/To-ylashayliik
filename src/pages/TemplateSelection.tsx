@@ -4,184 +4,195 @@ import { useInvitation } from "../context/InvitationContext"
 import { Button } from "../components/ui/Button"
 import { templates } from "../lib/templates"
 import { cn } from "../lib/utils"
-import { Calendar, Heart, MapPin, Clock } from "lucide-react"
+import { Calendar, Heart, MapPin, Clock, ChevronLeft, ChevronRight, Check } from "lucide-react"
 import { useLanguage } from "../context/LanguageContext"
+import { motion, AnimatePresence } from "framer-motion"
 
 export function TemplateSelection() {
     const navigate = useNavigate()
     const { data, updateData, saveInvitation, loading } = useInvitation()
     const { t, language } = useLanguage()
-    const [selectedTemplate, setSelectedTemplate] = useState(data.templateId || "classic")
+    const [currentIndex, setCurrentIndex] = useState(() => {
+        const idx = templates.findIndex(t => t.id === data.templateId);
+        return idx !== -1 ? idx : 0;
+    })
 
-    // Show only first 6 templates
     const displayTemplates = templates.slice(0, 6)
+
+    const nextTemplate = () => {
+        setCurrentIndex((prev) => (prev + 1) % displayTemplates.length)
+    }
+
+    const prevTemplate = () => {
+        setCurrentIndex((prev) => (prev - 1 + displayTemplates.length) % displayTemplates.length)
+    }
 
     const handleSave = async () => {
         if (loading) return
-        updateData({ templateId: selectedTemplate })
+        updateData({ templateId: displayTemplates[currentIndex].id })
         const id = await saveInvitation()
         if (id) {
             navigate(`/invitation/${id}`)
         }
     }
 
+    const currentTemplate = displayTemplates[currentIndex]
+
     return (
-        <div className="min-h-screen bg-gradient-to-br from-amber-50 via-stone-100 to-amber-100 py-16 px-4">
-            <div className="max-w-7xl mx-auto">
+        <div className="min-h-[calc(100-64px)] bg-gradient-to-b from-amber-50/50 to-white dark:from-slate-900 dark:to-slate-950 py-8 lg:py-16 px-4 overflow-hidden">
+            <div className="max-w-6xl mx-auto">
                 {/* Header */}
-                <div className="text-center mb-16">
-                    <h1 className="font-serif text-5xl md:text-6xl font-bold text-gray-900 mb-4">
+                <div className="text-center mb-8 lg:mb-12">
+                    <motion.h1
+                        initial={{ opacity: 0, y: -20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        className="font-serif text-3xl lg:text-5xl font-bold text-gray-900 dark:text-white mb-2"
+                    >
                         {t('chooseStyle')}
-                    </h1>
-                    <p className="text-xl text-gray-600">
+                    </motion.h1>
+                    <motion.p
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        transition={{ delay: 0.2 }}
+                        className="text-gray-500 dark:text-gray-400"
+                    >
                         {t('selectTemplate')}
-                    </p>
+                    </motion.p>
                 </div>
 
-                {/* Template Grid - Styled like physical cards on a table */}
-                <div className="grid grid-cols-2 lg:grid-cols-3 gap-4 lg:gap-12 mb-16">
-                    {displayTemplates.map((template) => {
-                        const isSelected = selectedTemplate === template.id
+                {/* Immersive Mobile-First Preview Area */}
+                <div className="relative flex flex-col items-center">
+                    {/* Main Stage */}
+                    <div className="relative w-full max-w-[320px] lg:max-w-md aspect-[9/19] lg:aspect-[9/16] mb-12">
+                        {/* Phone Frame wrapper */}
+                        <div className="absolute inset-0 border-8 border-gray-900 dark:border-slate-800 rounded-[3rem] shadow-2xl overflow-hidden bg-white dark:bg-slate-900 z-10 transition-colors">
+                            <AnimatePresence mode="wait">
+                                <motion.div
+                                    key={currentTemplate.id}
+                                    initial={{ opacity: 0, x: 100 }}
+                                    animate={{ opacity: 1, x: 0 }}
+                                    exit={{ opacity: 0, x: -100 }}
+                                    transition={{ type: "spring", stiffness: 300, damping: 300 }}
+                                    className={cn("h-full w-full p-6 lg:p-10 flex flex-col justify-between text-center relative bg-cover bg-center transition-all", currentTemplate.wrapperClass)}
+                                    style={currentTemplate.backgroundImage ? { backgroundImage: `url(${currentTemplate.backgroundImage})` } : {}}
+                                >
+                                    {/* Content Preview (similar logic to Invitation.tsx) */}
+                                    <div className="space-y-4 lg:space-y-6 relative z-10">
+                                        <p className={cn("text-[10px] lg:text-sm tracking-widest uppercase", currentTemplate.introClass)}>
+                                            {t('weddingOf')}
+                                        </p>
+                                        <div className={cn("space-y-1 lg:space-y-2", currentTemplate.namesClass)}>
+                                            <h3 className="text-2xl lg:text-4xl font-serif font-bold">
+                                                {data.brideName || (language === 'uz' ? "Kelin" : language === 'ru' ? "Невеста" : "Bride")}
+                                            </h3>
+                                            <div className={cn("text-xl lg:text-3xl font-serif", currentTemplate.ampersandClass)}>
+                                                &
+                                            </div>
+                                            <h3 className="text-2xl lg:text-4xl font-serif font-bold">
+                                                {data.groomName || (language === 'uz' ? "Kuyov" : language === 'ru' ? "Жених" : "Groom")}
+                                            </h3>
+                                        </div>
+                                    </div>
 
-                        return (
+                                    <div className="flex justify-center relative z-10">
+                                        <Heart className={cn("h-6 w-6 lg:h-10 lg:w-10 fill-current", currentTemplate.iconClass)} />
+                                    </div>
+
+                                    <div className="space-y-4 lg:space-y-6 relative z-10">
+                                        <div className={cn("space-y-2 lg:space-y-3 text-xs lg:text-base", currentTemplate.detailsClass)}>
+                                            <div className="flex items-center justify-center gap-2">
+                                                <Calendar className={cn("h-3 w-3 lg:h-5 lg:w-5", currentTemplate.iconClass)} />
+                                                <span>{data.date || t('date')}</span>
+                                            </div>
+                                            <div className="flex items-center justify-center gap-2">
+                                                <Clock className={cn("h-3 w-3 lg:h-5 lg:w-5", currentTemplate.iconClass)} />
+                                                <span>{data.time || t('time')}</span>
+                                            </div>
+                                            <div className="flex items-center justify-center gap-2 px-4">
+                                                <MapPin className={cn("h-3 w-3 lg:h-5 lg:w-5", currentTemplate.iconClass)} />
+                                                <span className="line-clamp-2">{data.location || t('location')}</span>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    {/* Floating check for selected state */}
+                                    <div className="absolute top-4 right-4 bg-primary-500 text-white rounded-full p-2 shadow-lg z-20">
+                                        <Check className="h-5 w-5" />
+                                    </div>
+                                </motion.div>
+                            </AnimatePresence>
+                        </div>
+
+                        {/* Navigation Arrows */}
+                        <div className="absolute top-1/2 -translate-y-1/2 -left-16 lg:-left-24 z-20 hidden lg:block">
+                            <button
+                                onClick={prevTemplate}
+                                className="p-4 rounded-full bg-white dark:bg-slate-800 shadow-xl border border-gray-100 dark:border-slate-700 hover:scale-110 transition-transform dark:text-gray-200"
+                            >
+                                <ChevronLeft className="h-8 w-8" />
+                            </button>
+                        </div>
+                        <div className="absolute top-1/2 -translate-y-1/2 -right-16 lg:-right-24 z-20 hidden lg:block">
+                            <button
+                                onClick={nextTemplate}
+                                className="p-4 rounded-full bg-white dark:bg-slate-800 shadow-xl border border-gray-100 dark:border-slate-700 hover:scale-110 transition-transform dark:text-gray-200"
+                            >
+                                <ChevronRight className="h-8 w-8" />
+                            </button>
+                        </div>
+                    </div>
+
+                    {/* Small Thumbnails Carousel for Mobile */}
+                    <div className="flex items-center gap-4 mb-12 overflow-x-auto pb-4 px-4 w-full justify-start lg:justify-center no-scrollbar">
+                        {displayTemplates.map((template, idx) => (
                             <button
                                 key={template.id}
-                                onClick={() => setSelectedTemplate(template.id)}
+                                onClick={() => setCurrentIndex(idx)}
                                 className={cn(
-                                    "group relative bg-white rounded-lg overflow-hidden transition-all duration-300",
-                                    "shadow-[0_8px_30px_rgb(0,0,0,0.12)] hover:shadow-[0_20px_60px_rgb(0,0,0,0.2)]",
-                                    "hover:-translate-y-2 transform",
-                                    isSelected && "ring-4 ring-primary-500 shadow-[0_20px_60px_rgba(219,39,119,0.3)]"
+                                    "flex-shrink-0 w-24 aspect-[2/3] rounded-lg border-2 transition-all p-1 overflow-hidden relative grayscale hover:grayscale-0",
+                                    currentIndex === idx
+                                        ? "border-primary-500 ring-2 ring-primary-500/20 grayscale-0 scale-110 z-10"
+                                        : "border-transparent opacity-60"
                                 )}
                             >
-                                {/* Card Content - Full detailed invitation preview */}
                                 <div
-                                    className={cn("p-3 lg:p-8 aspect-[3/4] relative overflow-hidden bg-cover bg-center", template.wrapperClass)}
+                                    className={cn("h-full w-full rounded p-1 flex flex-col justify-center text-[6px]", template.wrapperClass)}
                                     style={template.backgroundImage ? { backgroundImage: `url(${template.backgroundImage})` } : {}}
                                 >
-                                    {/* Decorative elements based on template (only if no background image) */}
-                                    {!template.backgroundImage && template.id === "classic" && (
-                                        <>
-                                            <div className="absolute top-4 left-4 w-20 h-20 border-t-2 border-l-2 border-gold-400 opacity-60"></div>
-                                            <div className="absolute top-4 right-4 w-20 h-20 border-t-2 border-r-2 border-gold-400 opacity-60"></div>
-                                            <div className="absolute bottom-4 left-4 w-20 h-20 border-b-2 border-l-2 border-gold-400 opacity-60"></div>
-                                            <div className="absolute bottom-4 right-4 w-20 h-20 border-b-2 border-r-2 border-gold-400 opacity-60"></div>
-                                        </>
-                                    )}
-
-                                    {template.id === "floral" && (
-                                        <div className="absolute inset-0 opacity-20">
-                                            <div className="absolute top-0 left-0 w-32 h-32 bg-gradient-to-br from-pink-300 to-transparent rounded-full blur-2xl"></div>
-                                            <div className="absolute bottom-0 right-0 w-32 h-32 bg-gradient-to-tl from-pink-300 to-transparent rounded-full blur-2xl"></div>
-                                        </div>
-                                    )}
-
-                                    {template.id === "midnight" && (
-                                        <div className="absolute inset-0">
-                                            <div className="absolute top-8 right-8 w-2 h-2 bg-gold-300 rounded-full animate-pulse"></div>
-                                            <div className="absolute top-16 right-16 w-1 h-1 bg-gold-400 rounded-full animate-pulse delay-100"></div>
-                                            <div className="absolute top-12 right-24 w-1.5 h-1.5 bg-gold-200 rounded-full animate-pulse delay-200"></div>
-                                            <div className="absolute bottom-16 left-12 w-2 h-2 bg-gold-300 rounded-full animate-pulse delay-300"></div>
-                                            <div className="absolute bottom-24 left-20 w-1 h-1 bg-gold-400 rounded-full animate-pulse delay-400"></div>
-                                        </div>
-                                    )}
-
-                                    <div className="h-full flex flex-col justify-between text-center relative z-10">
-                                        {/* Top Section */}
-                                        <div className="space-y-1 lg:space-y-3">
-                                            <p className={cn("text-[9px] lg:text-xs tracking-widest uppercase", template.introClass)}>
-                                                {t('weddingOf')}
-                                            </p>
-
-                                            {/* Names */}
-                                            <div className={cn("space-y-0 lg:space-y-1", template.namesClass)}>
-                                                <h3 className="text-base lg:text-3xl font-serif font-bold">
-                                                    {data.brideName || (language === 'uz' ? "Kelin" : language === 'ru' ? "Невеста" : "Bride")}
-                                                </h3>
-                                                <div className={cn("text-sm lg:text-2xl font-serif", template.ampersandClass)}>
-                                                    &
-                                                </div>
-                                                <h3 className="text-base lg:text-3xl font-serif font-bold">
-                                                    {data.groomName || (language === 'uz' ? "Kuyov" : language === 'ru' ? "Жених" : "Groom")}
-                                                </h3>
-                                            </div>
-                                        </div>
-
-                                        {/* Center Heart */}
-                                        <div className="flex justify-center">
-                                            <Heart className={cn("h-4 w-4 lg:h-8 lg:w-8 fill-current", template.iconClass)} />
-                                        </div>
-
-                                        {/* Bottom Details */}
-                                        <div className="space-y-1 lg:space-y-4">
-                                            <div className={cn("space-y-1 lg:space-y-2 text-[9px] lg:text-sm", template.detailsClass)}>
-                                                <div className="flex items-center justify-center gap-1 lg:gap-2">
-                                                    <Calendar className={cn("h-2.5 w-2.5 lg:h-4 lg:w-4", template.iconClass)} />
-                                                    <span>{data.date || t('date')}</span>
-                                                </div>
-
-                                                <div className="flex items-center justify-center gap-1 lg:gap-2">
-                                                    <Clock className={cn("h-2.5 w-2.5 lg:h-4 lg:w-4", template.iconClass)} />
-                                                    <span>{data.time || t('time')}</span>
-                                                </div>
-
-                                                <div className="flex items-center justify-center gap-1 lg:gap-2">
-                                                    <MapPin className={cn("h-2.5 w-2.5 lg:h-4 lg:w-4", template.iconClass)} />
-                                                    <span className="text-[8px] lg:text-xs">{data.location || t('location')}</span>
-                                                </div>
-                                            </div>
-
-                                            {/* Footer tagline */}
-                                            <p className={cn("text-[8px] lg:text-xs italic opacity-70", template.detailsClass)}>
-                                                Forever & Always • {new Date().getFullYear()}
-                                            </p>
-                                        </div>
+                                    <div className={template.namesClass}>
+                                        <p>Preview</p>
                                     </div>
                                 </div>
-
-                                {/* Template Name Label */}
-                                <div className={cn(
-                                    "py-2 lg:py-4 px-3 lg:px-6 text-center font-semibold text-xs lg:text-base transition-all",
-                                    isSelected
-                                        ? "bg-primary-600 text-white"
-                                        : "bg-gradient-to-r from-gray-50 to-gray-100 text-gray-800 group-hover:from-primary-50 group-hover:to-primary-100"
-                                )}>
-                                    {template.name}
-                                </div>
-
-                                {/* Selection Checkmark */}
-                                {isSelected && (
-                                    <div className="absolute top-2 right-2 lg:top-6 lg:right-6 bg-primary-600 text-white rounded-full p-1 lg:p-2.5 shadow-xl z-20 animate-scale-in">
-                                        <svg className="w-3 h-3 lg:w-6 lg:h-6" fill="currentColor" viewBox="0 0 20 20">
-                                            <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
-                                        </svg>
-                                    </div>
-                                )}
                             </button>
-                        )
-                    })}
+                        ))}
+                    </div>
                 </div>
 
-                {/* Action Buttons */}
-                <div className="flex justify-center gap-6">
-                    <Button
-                        variant="outline"
-                        size="lg"
+                {/* Footer Controls */}
+                <motion.div
+                    layout
+                    className="flex flex-col lg:flex-row items-center justify-center gap-4 lg:gap-8"
+                >
+                    <button
                         onClick={() => navigate("/create")}
-                        className="px-8 text-base"
+                        className="text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white font-medium transition-colors"
                     >
                         ← {t('backToEdit')}
-                    </Button>
+                    </button>
                     <Button
                         size="lg"
                         onClick={handleSave}
                         disabled={loading}
-                        className="px-16 text-base shadow-xl shadow-primary-200 hover:shadow-2xl hover:shadow-primary-300"
+                        className="w-full lg:w-72 h-14 text-lg font-bold shadow-[0_20px_50px_rgba(236,72,153,0.3)] dark:shadow-[0_20px_50px_rgba(236,72,153,0.1)] rounded-2xl"
                     >
                         {loading ? t('saving') : `${t('saveContinue')} →`}
                     </Button>
-                </div>
+                </motion.div>
             </div>
+
+            {/* Background Decorative Blobs */}
+            <div className="fixed -top-1/4 -right-1/4 w-1/2 h-1/2 bg-primary-100 dark:bg-primary-900/10 rounded-full blur-[120px] -z-10" />
+            <div className="fixed -bottom-1/4 -left-1/4 w-1/2 h-1/2 bg-gold-100 dark:bg-gold-900/10 rounded-full blur-[120px] -z-10" />
         </div>
     )
 }

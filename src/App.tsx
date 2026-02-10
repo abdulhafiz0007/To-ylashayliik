@@ -13,6 +13,7 @@ import { api } from "./lib/api"
 import { Heart, X } from "lucide-react"
 import { Button } from "./components/ui/Button"
 import { LanguageProvider } from "./context/LanguageContext"
+import { ThemeProvider } from "./context/ThemeContext"
 
 function App() {
   const { onReady, isTelegram, initData } = useTelegram()
@@ -69,21 +70,23 @@ function App() {
   }
 
   return (
-    <LanguageProvider>
-      <InvitationProvider>
-        <BrowserRouter>
-          <Layout>
-            <Routes>
-              <Route path="/" element={<Home />} />
-              <Route path="/create" element={<Create />} />
-              <Route path="/select-template" element={<TemplateSelection />} />
-              <Route path="/invitation/:id" element={<Invitation />} />
-              <Route path="/profile" element={<Profile />} />
-            </Routes>
-          </Layout>
-        </BrowserRouter>
-      </InvitationProvider>
-    </LanguageProvider>
+    <ThemeProvider>
+      <LanguageProvider>
+        <InvitationProvider>
+          <BrowserRouter>
+            <Layout>
+              <Routes>
+                <Route path="/" element={<Home />} />
+                <Route path="/create" element={<Create />} />
+                <Route path="/select-template" element={<TemplateSelection />} />
+                <Route path="/invitation/:id" element={<Invitation />} />
+                <Route path="/profile" element={<Profile />} />
+              </Routes>
+            </Layout>
+          </BrowserRouter>
+        </InvitationProvider>
+      </LanguageProvider>
+    </ThemeProvider>
   )
 }
 
