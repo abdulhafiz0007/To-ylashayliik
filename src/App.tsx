@@ -50,10 +50,22 @@ function App() {
       // For development outside Telegram, check if token exists
       const token = localStorage.getItem('auth_token');
       if (token) {
+        console.log("DEBUG: Found existing token in localStorage, authenticating...");
         setIsAuth(true);
+      } else {
+        console.log("DEBUG: No token found. In development, you can use the dev bypass button.");
       }
     }
   }, [onReady, isTelegram, initData])
+
+  // Development helper function
+  const handleDevBypass = () => {
+    // Set a fake token for development testing (ONLY for dev, remove in production)
+    const devToken = 'dev_token_' + Date.now();
+    localStorage.setItem('auth_token', devToken);
+    setIsAuth(true);
+    console.log("DEBUG: Dev bypass activated with fake token");
+  }
 
   /*
     if (!isTelegram) {
@@ -98,9 +110,28 @@ function App() {
           {isTelegram ? "Kirish amalga oshirilmoqda..." : "Iltimos, Telegram orqali kiring."}
         </p>
         {!isTelegram && (
-          <p className="text-xs text-gray-400 mt-2 max-w-xs text-center">
-            Ushbu xabar faqat brauzerda ko'rinadi. Telegram Mini App ichida bu avtomatik o'tadi.
-          </p>
+          <>
+            <p className="text-xs text-gray-400 mt-2 max-w-xs text-center">
+              Ushbu xabar faqat brauzerda ko'rinadi. Telegram Mini App ichida bu avtomatik o'tadi.
+            </p>
+            {/* Development bypass button - REMOVE IN PRODUCTION */}
+            <div className="mt-6 p-4 bg-yellow-50 dark:bg-yellow-900/20 rounded-lg border border-yellow-200 dark:border-yellow-800">
+              <p className="text-xs text-yellow-800 dark:text-yellow-200 mb-2 text-center font-semibold">
+                Development Mode
+              </p>
+              <Button
+                variant="secondary"
+                size="sm"
+                onClick={handleDevBypass}
+                className="w-full"
+              >
+                🔧 Dev Bypass (Testlash uchun)
+              </Button>
+              <p className="text-[10px] text-yellow-700 dark:text-yellow-300 mt-2 text-center">
+                Produksiyada bu tugma ko'rinmaydi
+              </p>
+            </div>
+          </>
         )}
       </div>
     )

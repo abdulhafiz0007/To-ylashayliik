@@ -8,24 +8,38 @@ export const setAuthToken = (token: string) => {
     localStorage.setItem('auth_token', token);
 };
 
+// Helper to ensure token is fresh (useful during hot reload in dev)
+export const getAuthToken = () => {
+    // If module token is empty but localStorage has it, reload it
+    if (!authToken && localStorage.getItem('auth_token')) {
+        authToken = localStorage.getItem('auth_token') || '';
+        console.log('DEBUG: Reloaded token from localStorage after hot reload');
+    }
+    return authToken;
+};
+
+
 async function fetchApi(path: string, options: RequestInit = {}) {
-    if (authToken) {
-        console.log(`DEBUG: Sending request to ${path} with token length ${authToken.length}`);
+    // Always get fresh token (helps with hot reload in dev)
+    const currentToken = getAuthToken();
+
+    if (currentToken) {
+        console.log(`DEBUG: Sending request to ${path} with token length ${currentToken.length}`);
     } else if (path !== '/api/auth/telegram') {
         console.warn(`DEBUG: Sending request to ${path} WITHOUT token`);
     }
 
     const headers = {
         'Content-Type': 'application/json',
-        ...(authToken && path !== '/api/auth/telegram' ? {
-            'Authorization': `Bearer ${authToken}`
+        ...(currentToken && path !== '/api/auth/telegram' ? {
+            'Authorization': `Bearer ${currentToken}`
         } : {}),
         ...options.headers,
     };
 
-    if (authToken && path !== '/api/auth/telegram') {
+    if (currentToken && path !== '/api/auth/telegram') {
         // Also send as x-auth-token for legacy compatibility
-        (headers as any)['x-auth-token'] = authToken;
+        (headers as any)['x-auth-token'] = currentToken;
     }
 
     const response = await fetch(`${BASE_URL}${path}`, {

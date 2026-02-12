@@ -29,7 +29,8 @@ export function Invitation() {
             setLoading(false)
         }
         loadInvitation()
-    }, [id, getInvitation])
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [id])  // Only depend on id, not getInvitation (it's stable from context)
 
     const handleTemplateChange = async (template: string) => {
         if (invitation && id) {
