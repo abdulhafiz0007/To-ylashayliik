@@ -1,3 +1,4 @@
+// Version: 1.0.1 (Build trigger after lint fix)
 import { BrowserRouter, Routes, Route } from "react-router-dom"
 import { Layout } from "./components/ui/Layout"
 import { Home } from "./pages/Home"
