@@ -11,7 +11,7 @@ import { useEffect, useState } from "react"
 import { useTelegram } from "./hooks/useTelegram"
 import { api } from "./lib/api"
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-import { Heart as _Heart, X } from "lucide-react"
+import { Heart, X } from "lucide-react"
 import { Button } from "./components/ui/Button"
 import { LanguageProvider } from "./context/LanguageContext"
 import { ThemeProvider } from "./context/ThemeContext"
@@ -90,17 +90,18 @@ function App() {
     )
   }
 
-  if (!_isAuth && isTelegram) {
+  if (!_isAuth) {
     return (
-      <div className="min-h-screen flex items-center justify-center p-4 bg-background">
-        <div className="animate-pulse flex flex-col items-center space-y-4">
-          <div className="h-12 w-12 text-primary-300">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="animate-spin w-full h-full opacity-20">
-              <circle cx="12" cy="12" r="10" />
-            </svg>
-          </div>
-          <p className="text-gray-400 font-medium">Kirish amalga oshirilmoqda...</p>
-        </div>
+      <div className="min-h-screen flex flex-col items-center justify-center p-4 bg-background">
+        <Heart className="h-12 w-12 text-primary-300 animate-pulse mb-4" />
+        <p className="text-gray-500 font-medium">
+          {isTelegram ? "Kirish amalga oshirilmoqda..." : "Iltimos, Telegram orqali kiring."}
+        </p>
+        {!isTelegram && (
+          <p className="text-xs text-gray-400 mt-2 max-w-xs text-center">
+            Ushbu xabar faqat brauzerda ko'rinadi. Telegram Mini App ichida bu avtomatik o'tadi.
+          </p>
+        )}
       </div>
     )
   }

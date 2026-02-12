@@ -3,6 +3,7 @@ const BASE_URL = 'https://digital-wedding-back.onrender.com';
 let authToken = localStorage.getItem('auth_token') || '';
 
 export const setAuthToken = (token: string) => {
+    console.log(`DEBUG: setAuthToken called. Token length: ${token.length}`);
     authToken = token;
     localStorage.setItem('auth_token', token);
 };
@@ -17,11 +18,15 @@ async function fetchApi(path: string, options: RequestInit = {}) {
     const headers = {
         'Content-Type': 'application/json',
         ...(authToken && path !== '/api/auth/telegram' ? {
-            'Authorization': `Bearer ${authToken}`,
-            'x-auth-token': authToken
+            'Authorization': `Bearer ${authToken}`
         } : {}),
         ...options.headers,
     };
+
+    if (authToken && path !== '/api/auth/telegram') {
+        // Also send as x-auth-token for legacy compatibility
+        (headers as any)['x-auth-token'] = authToken;
+    }
 
     const response = await fetch(`${BASE_URL}${path}`, {
         ...options,
@@ -107,22 +112,42 @@ export const api = {
             cleanData.date = `${cleanData.date}T00:00:00Z`;
         }
 
-        // Ensure template and text are sent correctly as per backend schema
-        if (cleanData.templateId) {
-            cleanData.template = cleanData.templateId;
-            delete cleanData.templateId;
+        // Mapping for template to match backend enum InvitationTemplate [TEMPLATE_1, TEMPLATE_2]
+        const templateMapping: Record<string, string> = {
+            'classic': 'TEMPLATE_1',
+            'royal_gold': 'TEMPLATE_1',
+            'modern_slate': 'TEMPLATE_2',
+            'flower': 'TEMPLATE_2',
+            'pastel': 'TEMPLATE_1',
+            'dark': 'TEMPLATE_2',
+            'minimal': 'TEMPLATE_1'
+        };
+
+        const currentTemplate = (cleanData.template || cleanData.templateId) as string;
+        if (currentTemplate && templateMapping[currentTemplate]) {
+            cleanData.template = templateMapping[currentTemplate];
+        } else if (currentTemplate && !currentTemplate.startsWith('TEMPLATE_')) {
+            cleanData.template = 'TEMPLATE_1';
         }
+
+        // Cleanup: Backend expects 'template' (enum) and 'text'
+        delete cleanData.templateId;
         if (cleanData.message) {
             cleanData.text = cleanData.message;
             delete cleanData.message;
         }
 
-        // Mapping for template and music to match backend enum-like strings if necessary
-        // (Assuming backend might be strict about TEMPLATE_1 format, but keeping flexibility)
-        if (cleanData.template === 'classic' || cleanData.template === 'modern') {
-            // Optional: convert to uppercase if backend expects TEMPLATE_1 types
-            // cleanData.template = `TEMPLATE_${cleanData.template.toUpperCase()}`;
+        // Mapping for music to match backend enum backgroundMusic
+        // If frontend has MUSIC_1, and backend expects it, we keep it.
+        // But let's make it robust.
+        if (cleanData.backgroundMusic === 'MUSIC_1' || cleanData.backgroundMusic === 'MUSIC_2') {
+            // OK
+        } else {
+            cleanData.backgroundMusic = 'MUSIC_1';
         }
+
+        console.log(`DEBUG: Final saveInvitation payload:`, JSON.stringify(cleanData));
+
 
         return fetchApi('/api/invitations/init', {
             method: 'POST',
@@ -131,6 +156,7 @@ export const api = {
     },
 
     getMyInvitations: async () => {
+        console.log("DEBUG: getMyInvitations called. Token present:", !!authToken);
         const response = await fetchApi('/api/invitations/self');
         // Handle paginated response structure { content: [], totalElements: ... }
         return Array.isArray(response) ? response : (response.content || []);
