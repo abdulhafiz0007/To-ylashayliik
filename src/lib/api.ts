@@ -170,10 +170,14 @@ export const api = {
     },
 
     getMyInvitations: async () => {
-        console.log("DEBUG: getMyInvitations called. Token present:", !!authToken);
+        const currentToken = getAuthToken();
+        console.log("DEBUG: getMyInvitations called. Token present:", !!currentToken);
         const response = await fetchApi('/api/invitations/self');
+        console.log("DEBUG: getMyInvitations raw response:", response);
         // Handle paginated response structure { content: [], totalElements: ... }
-        return Array.isArray(response) ? response : (response.content || []);
+        const list = Array.isArray(response) ? response : (response.content || []);
+        console.log("DEBUG: getMyInvitations processed list:", list);
+        return list;
     },
 
     getCount: () => fetchApi('/api/invitations/self/count'),

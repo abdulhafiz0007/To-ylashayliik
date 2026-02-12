@@ -19,11 +19,13 @@ export function Profile() {
 
     useEffect(() => {
         const fetchInvitations = async () => {
+            console.log("DEBUG: Profile.tsx fetching invitations...");
             try {
                 const data = await api.getMyInvitations();
+                console.log("DEBUG: Profile.tsx received invitations:", data);
                 setInvitations(data || []);
             } catch (err) {
-                console.error("Failed to fetch invitations:", err);
+                console.error("DEBUG: Profile.tsx failed to fetch invitations:", err);
             } finally {
                 setLoading(false);
             }

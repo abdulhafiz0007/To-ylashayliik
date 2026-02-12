@@ -101,7 +101,7 @@ export function Invitation() {
     const currentTemplate = templates.find(t => t.id === invitation.template) || templates[0]
 
     return (
-        <div className="min-h-screen bg-background dark:bg-[#0f172a]/50 py-8 px-4 flex flex-col items-center relative transition-colors duration-500">
+        <div className="min-h-screen bg-background dark:bg-[#0f172a]/50 py-8 px-4 pb-32 flex flex-col items-center relative transition-colors duration-500 overflow-y-auto">
 
             {/* Toolbar */}
             <div className="fixed bottom-6 z-50 flex items-center gap-4 bg-white/90 dark:bg-slate-900/90 backdrop-blur-md p-3 rounded-full shadow-xl border border-gold-200 dark:border-slate-800">
@@ -167,7 +167,7 @@ export function Invitation() {
             <div
                 ref={cardRef}
                 className={cn(
-                    "w-full max-w-lg shadow-2xl overflow-hidden relative transition-all duration-500 aspect-[3/4] bg-cover bg-center",
+                    "w-full max-w-lg shadow-2xl overflow-hidden relative transition-all duration-500 bg-cover bg-center min-h-[600px] flex flex-col",
                     currentTemplate.wrapperClass
                 )}
                 style={currentTemplate.backgroundImage ? { backgroundImage: `url(${currentTemplate.backgroundImage})` } : {}}
@@ -193,9 +193,9 @@ export function Invitation() {
                         <Heart className={cn("h-8 w-8 md:h-12 md:w-12 fill-current animate-pulse transition-all duration-500", currentTemplate.iconClass)} />
                     </div>
 
-                    <div className="space-y-6 md:space-y-8">
+                    <div className="space-y-4 md:space-y-8 mt-auto">
                         {invitation.text && (
-                            <p className={cn("whitespace-pre-wrap line-clamp-4 transition-all duration-500", currentTemplate.messageClass)}>
+                            <p className={cn("whitespace-pre-wrap line-clamp-6 md:line-clamp-4 transition-all duration-500", currentTemplate.messageClass)}>
                                 {invitation.text}
                             </p>
                         )}
