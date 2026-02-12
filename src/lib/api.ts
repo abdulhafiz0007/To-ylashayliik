@@ -20,27 +20,16 @@ export const getAuthToken = () => {
 
 
 async function fetchApi(path: string, options: RequestInit = {}) {
-    // Always get fresh token (helps with hot reload in dev)
     const currentToken = getAuthToken();
-
-    if (currentToken) {
-        console.log(`DEBUG: Sending request to ${path} with token length ${currentToken.length}`);
-    } else if (path !== '/api/auth/telegram') {
-        console.warn(`DEBUG: Sending request to ${path} WITHOUT token`);
-    }
 
     const headers = {
         'Content-Type': 'application/json',
         ...(currentToken && path !== '/api/auth/telegram' ? {
-            'Authorization': `Bearer ${currentToken}`
+            'Authorization': `Bearer ${currentToken}`,
+            'x-auth-token': currentToken
         } : {}),
         ...options.headers,
     };
-
-    if (currentToken && path !== '/api/auth/telegram') {
-        // Also send as x-auth-token for legacy compatibility
-        (headers as any)['x-auth-token'] = currentToken;
-    }
 
     const response = await fetch(`${BASE_URL}${path}`, {
         ...options,
@@ -110,20 +99,24 @@ export const api = {
         return data;
     },
 
-    saveInvitation: (invData: { date?: string; time?: string;[key: string]: unknown }) => {
-        // Ensure we don't send empty ID which might confuse backend
+    saveInvitation: (invData: { id?: string | number; _id?: string; date?: string; time?: string;[key: string]: unknown }) => {
+        // Ensure we match backend schema for init (usually id: 0 for new)
         const cleanData = { ...invData };
-        delete cleanData.id;
-        delete cleanData._id;
+
+        // If it's a new invitation, backend schema shows id: 0 in example
+        if (!cleanData.id && !cleanData._id) {
+            cleanData.id = 0;
+        } else {
+            cleanData.id = cleanData.id || cleanData._id;
+        }
+        delete cleanData._id; // Backend schema shows 'id'
 
         // Transform separate date and time into ISO date (Instant)
         if (cleanData.date && typeof cleanData.date === 'string' && cleanData.time && typeof cleanData.time === 'string') {
-            // Combine into ISO format: YYYY-MM-DDTHH:mm:00Z
-            // We assume the date/time input is local, but Instant requires a timezone.
-            // Appending 'Z' for UTC is the simplest way to satisfy Instant deserializer.
-            cleanData.date = `${cleanData.date}T${cleanData.time}:00Z`;
+            // Combine into ISO format: YYYY-MM-DDTHH:mm:00.000Z
+            cleanData.date = `${cleanData.date}T${cleanData.time}:00.000Z`;
         } else if (cleanData.date && typeof cleanData.date === 'string') {
-            cleanData.date = `${cleanData.date}T00:00:00Z`;
+            cleanData.date = `${cleanData.date}T00:00:00.000Z`;
         }
 
         // Mapping for template to match backend enum InvitationTemplate [TEMPLATE_1, TEMPLATE_2]
@@ -170,13 +163,10 @@ export const api = {
     },
 
     getMyInvitations: async () => {
-        const currentToken = getAuthToken();
-        console.log("DEBUG: getMyInvitations called. Token present:", !!currentToken);
-        const response = await fetchApi('/api/invitations/self');
-        console.log("DEBUG: getMyInvitations raw response:", response);
-        // Handle paginated response structure { content: [], totalElements: ... }
+        // Backend screenshot shows pageable is required. Defaulting to first 50 items.
+        const response = await fetchApi('/api/invitations/self?page=0&size=50');
+        console.log("DEBUG: Profile invitations response:", response);
         const list = Array.isArray(response) ? response : (response.content || []);
-        console.log("DEBUG: getMyInvitations processed list:", list);
         return list;
     },
 
