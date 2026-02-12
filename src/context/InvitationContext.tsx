@@ -63,14 +63,19 @@ export function InvitationProvider({ children }: { children: ReactNode }) {
         setError(null)
         try {
             const result = await api.saveInvitation(overrideData || data)
-            console.log("DEBUG: saveInvitation result:", result);
+            console.log("DEBUG: saveInvitation success. Raw result:", result);
+
+            // Extract ID from result (might be {id: 123} or just 123 or {data: {id: 123}})
+            const id = result?.id || result?._id || (typeof result === 'string' || typeof result === 'number' ? result : null);
+
+            console.log("DEBUG: Extracted ID for navigation:", id);
             setLoading(false)
-            const id = result.id || result._id
-            if (id) {
+            if (id !== undefined && id !== null) {
                 // Return as string to satisfy navigate calls
                 return id.toString()
             }
-            return null
+            console.warn("DEBUG: No ID found in save result!");
+            return null;
         } catch (err: any) {
             console.error("Failed to save invitation", err)
             setError(err.message)
