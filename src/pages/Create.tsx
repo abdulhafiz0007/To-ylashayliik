@@ -23,7 +23,7 @@ export function Create() {
             // Set a default template if none selected
             const finalData = {
                 ...data,
-                templateId: data.templateId || 'classic'
+                template: data.template || 'classic'
             }
 
             const id = await saveInvitation(finalData)
@@ -66,23 +66,46 @@ export function Create() {
                                     <Users className="h-4 w-4" /> {t('brideName')}
                                 </label>
                                 <Input
-                                    placeholder="e.g. Sarah Algorithm"
+                                    placeholder="Sarah"
                                     value={data.brideName}
                                     onChange={(e) => updateData({ brideName: e.target.value })}
                                     required
-                                    className="dark:bg-slate-900 dark:border-slate-700 dark:text-white"
                                 />
                             </div>
+                            <div className="space-y-2">
+                                <label className="text-sm font-medium text-gold-900 dark:text-gold-200 flex items-center gap-2">
+                                    <Users className="h-4 w-4" /> {t('brideLastname')}
+                                </label>
+                                <Input
+                                    placeholder="Algorithm"
+                                    value={data.brideLastname}
+                                    onChange={(e) => updateData({ brideLastname: e.target.value })}
+                                    required
+                                />
+                            </div>
+                        </div>
+
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                             <div className="space-y-2">
                                 <label className="text-sm font-medium text-gold-900 dark:text-gold-200 flex items-center gap-2">
                                     <Users className="h-4 w-4" /> {t('groomName')}
                                 </label>
                                 <Input
-                                    placeholder="e.g. John Coder"
+                                    placeholder="John"
                                     value={data.groomName}
                                     onChange={(e) => updateData({ groomName: e.target.value })}
                                     required
-                                    className="dark:bg-slate-900 dark:border-slate-700 dark:text-white"
+                                />
+                            </div>
+                            <div className="space-y-2">
+                                <label className="text-sm font-medium text-gold-900 dark:text-gold-200 flex items-center gap-2">
+                                    <Users className="h-4 w-4" /> {t('groomLastname')}
+                                </label>
+                                <Input
+                                    placeholder="Coder"
+                                    value={data.groomLastname}
+                                    onChange={(e) => updateData({ groomLastname: e.target.value })}
+                                    required
                                 />
                             </div>
                         </div>
@@ -114,17 +137,29 @@ export function Create() {
                             </div>
                         </div>
 
-                        <div className="space-y-2">
-                            <label className="text-sm font-medium text-gold-900 dark:text-gold-200 flex items-center gap-2">
-                                <MapPin className="h-4 w-4" /> {t('location')}
-                            </label>
-                            <Input
-                                placeholder="e.g. Grand Hotel, Tashkent"
-                                value={data.location}
-                                onChange={(e) => updateData({ location: e.target.value })}
-                                required
-                                className="dark:bg-slate-900 dark:border-slate-700 dark:text-white"
-                            />
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div className="space-y-2">
+                                <label className="text-sm font-medium text-gold-900 dark:text-gold-200 flex items-center gap-2">
+                                    <MapPin className="h-4 w-4" /> {t('hall')}
+                                </label>
+                                <Input
+                                    placeholder="e.g. Grand Hotel"
+                                    value={data.hall}
+                                    onChange={(e) => updateData({ hall: e.target.value })}
+                                    required
+                                />
+                            </div>
+                            <div className="space-y-2">
+                                <label className="text-sm font-medium text-gold-900 dark:text-gold-200 flex items-center gap-2">
+                                    <MapPin className="h-4 w-4" /> {t('location')}
+                                </label>
+                                <Input
+                                    placeholder="e.g. Tashkent, buyuk ipak yo'li"
+                                    value={data.location}
+                                    onChange={(e) => updateData({ location: e.target.value })}
+                                    required
+                                />
+                            </div>
                         </div>
 
                         <div className="space-y-2">
@@ -134,8 +169,8 @@ export function Create() {
                             <textarea
                                 className="flex min-h-[100px] w-full rounded-md border border-gold-200 dark:border-slate-700 bg-white dark:bg-slate-900 px-3 py-2 text-sm placeholder:text-gold-400 dark:placeholder:text-gray-500 focus:outline-none focus:ring-2 focus:ring-primary-400 focus:border-transparent disabled:cursor-not-allowed disabled:opacity-50 transition-all shadow-sm dark:text-white"
                                 placeholder={t('message')}
-                                value={data.message}
-                                onChange={(e) => updateData({ message: e.target.value })}
+                                value={data.text}
+                                onChange={(e) => updateData({ text: e.target.value })}
                             />
                         </div>
                     </CardContent>

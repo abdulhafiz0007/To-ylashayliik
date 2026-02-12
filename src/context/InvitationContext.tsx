@@ -2,15 +2,19 @@ import { createContext, useContext, useState, type ReactNode } from "react"
 import { api } from "../lib/api"
 
 export interface InvitationData {
-    id?: string
+    id?: string | number
     _id?: string
     brideName: string
+    brideLastname: string
     groomName: string
+    groomLastname: string
     date: string
     time: string
     location: string
-    message: string
-    templateId: string
+    hall: string
+    text: string
+    backgroundMusic: string
+    template: string
     [key: string]: unknown;
 }
 
@@ -26,12 +30,16 @@ interface InvitationContextType {
 
 const defaultData: InvitationData = {
     brideName: "",
+    brideLastname: "",
     groomName: "",
+    groomLastname: "",
     date: "",
     time: "",
     location: "",
-    message: "Bizning to'yimizga taklif etamiz...",
-    templateId: "classic",
+    hall: "",
+    text: "Bizning to'yimizga taklif etamiz...",
+    backgroundMusic: "MUSIC_1",
+    template: "classic",
 }
 
 const InvitationContext = createContext<InvitationContextType | undefined>(undefined)
@@ -55,9 +63,14 @@ export function InvitationProvider({ children }: { children: ReactNode }) {
         setError(null)
         try {
             const result = await api.saveInvitation(overrideData || data)
+            console.log("DEBUG: saveInvitation result:", result);
             setLoading(false)
-            return result._id || result.id
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            const id = result.id || result._id
+            if (id) {
+                // Return as string to satisfy navigate calls
+                return id.toString()
+            }
+            return null
         } catch (err: any) {
             console.error("Failed to save invitation", err)
             setError(err.message)
@@ -71,9 +84,13 @@ export function InvitationProvider({ children }: { children: ReactNode }) {
         setError(null)
         try {
             const result = await api.getInvitation(id)
+            if (result) {
+                // Backend might not return the ID in the body sometimes
+                result.id = result.id || id
+                setData(result)
+            }
             setLoading(false)
             return result
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
         } catch (err: any) {
             console.error("Failed to get invitation", err)
             setError(err.message)

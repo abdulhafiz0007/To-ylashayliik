@@ -28,9 +28,15 @@ function App() {
     if (isTelegram && initData) {
       console.log("DEBUG: Starting authTelegram with initData length:", initData.length);
       api.authTelegram(initData)
-        .then((res) => {
-          console.log("DEBUG: Auth success response structure:", Object.keys(res));
-          setIsAuth(true);
+        .then(() => {
+          // Check if token was actually set in localStorage by setAuthToken
+          const token = localStorage.getItem('auth_token');
+          if (token) {
+            console.log("DEBUG: Auth success and token verified.");
+            setIsAuth(true);
+          } else {
+            setAuthError("Auth success but token missing in storage.");
+          }
         })
         .catch((err) => {
           console.error("DEBUG: Auth failed details:", err);
@@ -40,6 +46,12 @@ function App() {
             setAuthError(`Kirishda xatolik: ${err.message}`);
           }
         });
+    } else if (!isTelegram) {
+      // For development outside Telegram, check if token exists
+      const token = localStorage.getItem('auth_token');
+      if (token) {
+        setIsAuth(true);
+      }
     }
   }, [onReady, isTelegram, initData])
 
@@ -62,8 +74,8 @@ function App() {
       <div className="min-h-screen flex items-center justify-center p-4 bg-background text-center">
         <div className="max-w-md space-y-4 text-red-600">
           <X className="h-12 w-12 mx-auto" />
-          <h1 className="text-2xl font-serif font-bold">Xatolik yuz berdi</h1>
-          <p>{authError}</p>
+          <h1 className="text-2xl font-serif font-bold text-gray-900 dark:text-gray-100">Xatolik yuz berdi</h1>
+          <p className="text-gray-600 dark:text-gray-400">{authError}</p>
           <div className="flex flex-col gap-2">
             <Button onClick={() => window.location.reload()}>Qayta urinish</Button>
             <Button variant="secondary" onClick={() => {
@@ -78,18 +90,20 @@ function App() {
     )
   }
 
-  /*
-    if (!isAuth) {
-      return (
-        <div className="min-h-screen flex items-center justify-center p-4 bg-background">
-          <div className="animate-pulse flex flex-col items-center space-y-4">
-            <Heart className="h-12 w-12 text-primary-300" />
-            <p className="text-gray-400 font-medium">Yuklanmoqda...</p>
+  if (!_isAuth && isTelegram) {
+    return (
+      <div className="min-h-screen flex items-center justify-center p-4 bg-background">
+        <div className="animate-pulse flex flex-col items-center space-y-4">
+          <div className="h-12 w-12 text-primary-300">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="animate-spin w-full h-full opacity-20">
+              <circle cx="12" cy="12" r="10" />
+            </svg>
           </div>
+          <p className="text-gray-400 font-medium">Kirish amalga oshirilmoqda...</p>
         </div>
-      )
-    }
-  */
+      </div>
+    )
+  }
 
   return (
     <ThemeProvider>

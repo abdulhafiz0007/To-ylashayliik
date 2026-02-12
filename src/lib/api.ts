@@ -62,12 +62,13 @@ export const api = {
         });
 
         // Aggressive token extraction
-        const token = result.token || result.data?.token || result.accessToken;
+        const token = result.accessToken || result.token || result.data?.token;
         if (token) {
             setAuthToken(token);
-            console.log("DEBUG: Auth token set successfully");
+            console.log("DEBUG: Auth token set successfully. Length:", token.length);
         } else {
-            console.warn("DEBUG: Auth success but NO token found in response", result);
+            console.error("DEBUG: Auth success but NO token found in response keys:", Object.keys(result));
+            throw new Error("Serverdan kirish kaliti (token) olinmadi. Iltimos, qaytadan urinib ko'ring.");
         }
         return result;
     },
@@ -75,15 +76,16 @@ export const api = {
     // Invitations
     getInvitation: async (id: string) => {
         const data = await fetchApi(`/api/invitations/${id}`);
-        // Transform ISO date back to separate date and time for frontend
+        // Match backend's date format (Instant ISO 8601)
         if (data.date && typeof data.date === 'string' && data.date.includes('T')) {
             try {
                 const dateObj = new Date(data.date);
-                // Use UTC to avoid timezone shifts during string splitting
-                data.date = dateObj.toISOString().split('T')[0];
-                data.time = dateObj.toISOString().split('T')[1].substring(0, 5);
-            } catch {
-                console.warn("Failed to parse date from backend", data.date);
+                // Extract just the part before T
+                const fullIso = dateObj.toISOString();
+                data.date = fullIso.split('T')[0];
+                data.time = fullIso.split('T')[1].substring(0, 5);
+            } catch (err) {
+                console.warn("Failed to parse date from backend", data.date, err);
             }
         }
         return data;
@@ -105,13 +107,34 @@ export const api = {
             cleanData.date = `${cleanData.date}T00:00:00Z`;
         }
 
+        // Ensure template and text are sent correctly as per backend schema
+        if (cleanData.templateId) {
+            cleanData.template = cleanData.templateId;
+            delete cleanData.templateId;
+        }
+        if (cleanData.message) {
+            cleanData.text = cleanData.message;
+            delete cleanData.message;
+        }
+
+        // Mapping for template and music to match backend enum-like strings if necessary
+        // (Assuming backend might be strict about TEMPLATE_1 format, but keeping flexibility)
+        if (cleanData.template === 'classic' || cleanData.template === 'modern') {
+            // Optional: convert to uppercase if backend expects TEMPLATE_1 types
+            // cleanData.template = `TEMPLATE_${cleanData.template.toUpperCase()}`;
+        }
+
         return fetchApi('/api/invitations/init', {
             method: 'POST',
             body: JSON.stringify(cleanData),
         });
     },
 
-    getMyInvitations: () => fetchApi('/api/invitations/self'),
+    getMyInvitations: async () => {
+        const response = await fetchApi('/api/invitations/self');
+        // Handle paginated response structure { content: [], totalElements: ... }
+        return Array.isArray(response) ? response : (response.content || []);
+    },
 
     getCount: () => fetchApi('/api/invitations/self/count'),
 

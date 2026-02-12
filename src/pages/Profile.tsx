@@ -144,8 +144,8 @@ export function Profile() {
                         <div className="divide-y divide-gold-50 dark:divide-slate-700">
                             {invitations.map((inv) => (
                                 <Link
-                                    key={inv._id}
-                                    to={`/invitation/${inv._id}`}
+                                    key={inv.id || inv._id}
+                                    to={`/invitation/${inv.id || inv._id}`}
                                     className="p-4 flex items-center justify-between hover:bg-gold-50 dark:hover:bg-slate-700/50 transition-colors group"
                                 >
                                     <div className="flex items-start gap-3">
@@ -154,14 +154,14 @@ export function Profile() {
                                         </div>
                                         <div>
                                             <h4 className="font-bold text-gray-900 dark:text-white line-clamp-1">
-                                                {inv.brideName} & {inv.groomName}
+                                                {inv.brideName} {inv.brideLastname} & {inv.groomName} {inv.groomLastname}
                                             </h4>
                                             <div className="flex items-center gap-2 text-xs text-gray-500 dark:text-gray-400 mt-1">
                                                 <span className="flex items-center gap-1">
                                                     <Calendar className="h-3 w-3" /> {inv.date}
                                                 </span>
                                                 <span className="flex items-center gap-1">
-                                                    <MapPin className="h-3 w-3" /> {inv.location}
+                                                    <MapPin className="h-3 w-3" /> {inv.hall || inv.location}
                                                 </span>
                                             </div>
                                         </div>

@@ -31,14 +31,14 @@ export function Invitation() {
         loadInvitation()
     }, [id, getInvitation])
 
-    const handleTemplateChange = async (templateId: string) => {
+    const handleTemplateChange = async (template: string) => {
         if (invitation && id) {
-            const updated = { ...invitation, templateId }
+            const updated = { ...invitation, template }
             setInvitation(updated)
             // Update global context
-            updateData({ templateId })
+            updateData({ template })
             // Save to backend
-            await saveInvitation()
+            await saveInvitation(updated)
         }
     }
 
@@ -59,7 +59,7 @@ export function Invitation() {
             try {
                 await navigator.share({
                     title: 'Wedding Invitation',
-                    text: `You are invited to the wedding of ${invitation?.brideName} & ${invitation?.groomName}`,
+                    text: `You are invited to the wedding of ${invitation?.brideName} ${invitation?.brideLastname} & ${invitation?.groomName} ${invitation?.groomLastname}`,
                     url: window.location.href,
                 });
             } catch (err) {
@@ -97,7 +97,7 @@ export function Invitation() {
 
     if (!invitation) return null
 
-    const currentTemplate = templates.find(t => t.id === invitation.templateId) || templates[0]
+    const currentTemplate = templates.find(t => t.id === invitation.template) || templates[0]
 
     return (
         <div className="min-h-screen bg-background dark:bg-[#0f172a]/50 py-8 px-4 flex flex-col items-center relative transition-colors duration-500">
@@ -148,7 +148,7 @@ export function Invitation() {
                                 onClick={() => handleTemplateChange(t.id)}
                                 className={cn(
                                     "text-left p-3 rounded-xl border border-transparent transition-all hover:scale-105",
-                                    invitation.templateId === t.id
+                                    invitation.template === t.id
                                         ? "ring-2 ring-primary-500 border-primary-200 bg-primary-50 dark:bg-primary-900/20 dark:border-primary-800"
                                         : "hover:bg-gold-50 dark:hover:bg-slate-800 border-gold-100 dark:border-slate-800"
                                 )}
@@ -182,9 +182,9 @@ export function Invitation() {
                             {t('weddingOf')}
                         </p>
                         <div className={cn("transition-all duration-500 break-words", currentTemplate.namesClass)}>
-                            <span className="block mb-1">{invitation.brideName}</span>
+                            <span className="block mb-1">{invitation.brideName} {invitation.brideLastname}</span>
                             <span className={cn("block font-normal", currentTemplate.ampersandClass)}>&</span>
-                            <span className="block mt-1">{invitation.groomName}</span>
+                            <span className="block mt-1">{invitation.groomName} {invitation.groomLastname}</span>
                         </div>
                     </div>
 
@@ -193,9 +193,9 @@ export function Invitation() {
                     </div>
 
                     <div className="space-y-6 md:space-y-8">
-                        {invitation.message && (
+                        {invitation.text && (
                             <p className={cn("whitespace-pre-wrap line-clamp-4 transition-all duration-500", currentTemplate.messageClass)}>
-                                {invitation.message}
+                                {invitation.text}
                             </p>
                         )}
 
@@ -212,7 +212,7 @@ export function Invitation() {
 
                             <div className="flex flex-col items-center space-y-1">
                                 <MapPin className={cn("h-4 w-4 md:h-6 md:w-6 transition-colors duration-500", currentTemplate.iconClass)} />
-                                <span className="font-semibold text-sm md:text-lg text-center font-sans tooltip leading-tight max-w-[240px] px-2">{invitation.location}</span>
+                                <span className="font-semibold text-sm md:text-lg text-center font-sans tooltip leading-tight max-w-[240px] px-2">{invitation.hall && <span className="block border-b border-white/20 pb-0.5 mb-0.5">{invitation.hall}</span>} {invitation.location}</span>
                             </div>
                         </div>
                     </div>
