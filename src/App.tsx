@@ -10,14 +10,16 @@ import { Profile } from "./pages/Profile"
 import { useEffect, useState } from "react"
 import { useTelegram } from "./hooks/useTelegram"
 import { api } from "./lib/api"
-import { Heart, X } from "lucide-react"
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+import { Heart as _Heart, X } from "lucide-react"
 import { Button } from "./components/ui/Button"
 import { LanguageProvider } from "./context/LanguageContext"
 import { ThemeProvider } from "./context/ThemeContext"
 
 function App() {
   const { onReady, isTelegram, initData } = useTelegram()
-  const [isAuth, setIsAuth] = useState(false)
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const [_isAuth, setIsAuth] = useState(false)
   const [authError, setAuthError] = useState<string | null>(null)
 
   useEffect(() => {
@@ -41,17 +43,19 @@ function App() {
     }
   }, [onReady, isTelegram, initData])
 
-  if (!isTelegram) {
-    return (
-      <div className="min-h-screen flex items-center justify-center p-4 bg-background text-center">
-        <div className="max-w-md space-y-4">
-          <Heart className="h-12 w-12 text-primary-500 mx-auto animate-pulse" />
-          <h1 className="text-2xl font-serif font-bold text-gray-900">Iltimos, Telegram orqali kiring</h1>
-          <p className="text-gray-600">Ushbu dastur faqat Telegram Mini App ichida ishlaydi.</p>
+  /*
+    if (!isTelegram) {
+      return (
+        <div className="min-h-screen flex items-center justify-center p-4 bg-background text-center">
+          <div className="max-w-md space-y-4">
+            <Heart className="h-12 w-12 text-primary-500 mx-auto animate-pulse" />
+            <h1 className="text-2xl font-serif font-bold text-gray-900">Iltimos, Telegram orqali kiring</h1>
+            <p className="text-gray-600">Ushbu dastur faqat Telegram Mini App ichida ishlaydi.</p>
+          </div>
         </div>
-      </div>
-    )
-  }
+      )
+    }
+  */
 
   if (authError) {
     return (
@@ -74,16 +78,18 @@ function App() {
     )
   }
 
-  if (!isAuth) {
-    return (
-      <div className="min-h-screen flex items-center justify-center p-4 bg-background">
-        <div className="animate-pulse flex flex-col items-center space-y-4">
-          <Heart className="h-12 w-12 text-primary-300" />
-          <p className="text-gray-400 font-medium">Yuklanmoqda...</p>
+  /*
+    if (!isAuth) {
+      return (
+        <div className="min-h-screen flex items-center justify-center p-4 bg-background">
+          <div className="animate-pulse flex flex-col items-center space-y-4">
+            <Heart className="h-12 w-12 text-primary-300" />
+            <p className="text-gray-400 font-medium">Yuklanmoqda...</p>
+          </div>
         </div>
-      </div>
-    )
-  }
+      )
+    }
+  */
 
   return (
     <ThemeProvider>

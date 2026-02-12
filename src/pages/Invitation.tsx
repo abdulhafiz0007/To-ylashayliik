@@ -74,7 +74,7 @@ export function Invitation() {
 
     if (loading || contextLoading) {
         return (
-            <div className="min-h-screen flex flex-col items-center justify-center p-4 bg-background dark:bg-slate-950">
+            <div className="min-h-screen flex flex-col items-center justify-center p-4 bg-background transition-colors duration-500">
                 <div className="animate-pulse flex flex-col items-center space-y-4">
                     <Heart className="h-12 w-12 text-primary-300" />
                     <p className="text-gray-400 dark:text-gray-500 font-medium">{t('loading')}</p>
@@ -85,7 +85,7 @@ export function Invitation() {
 
     if (contextError || (!invitation && !loading)) {
         return (
-            <div className="min-h-screen flex flex-col items-center justify-center space-y-4 p-4 text-center bg-background dark:bg-slate-950">
+            <div className="min-h-screen flex flex-col items-center justify-center space-y-4 p-4 text-center bg-background transition-colors duration-500">
                 <h1 className="text-2xl font-serif text-gold-900 dark:text-gold-200 font-bold">{t('notFound')}</h1>
                 <p className="text-gold-600 dark:text-gold-400">{contextError || t('notAvailable')}</p>
                 <Link to="/create">
@@ -100,7 +100,7 @@ export function Invitation() {
     const currentTemplate = templates.find(t => t.id === invitation.templateId) || templates[0]
 
     return (
-        <div className="min-h-screen bg-[#fbf9f1] dark:bg-slate-950 py-8 px-4 flex flex-col items-center relative">
+        <div className="min-h-screen bg-background dark:bg-[#0f172a]/50 py-8 px-4 flex flex-col items-center relative transition-colors duration-500">
 
             {/* Toolbar */}
             <div className="fixed bottom-6 z-50 flex items-center gap-4 bg-white/90 dark:bg-slate-900/90 backdrop-blur-md p-3 rounded-full shadow-xl border border-gold-200 dark:border-slate-800">
@@ -134,7 +134,7 @@ export function Invitation() {
 
             {/* Template Selection Drawer */}
             {showTemplates && (
-                <div className="fixed inset-x-0 bottom-0 z-40 bg-white dark:bg-slate-900 border-t border-gold-200 dark:border-slate-800 rounded-t-3xl shadow-2xl p-6 pb-24 animate-slide-up max-h-[60vh] overflow-y-auto">
+                <div className="fixed inset-x-0 bottom-0 z-40 bg-card border-t border-border rounded-t-3xl shadow-2xl p-6 pb-24 animate-slide-up max-h-[60vh] overflow-y-auto">
                     <div className="flex justify-between items-center mb-4">
                         <h3 className="font-serif text-xl text-gold-900 dark:text-gold-200">{t('chooseStyle')}</h3>
                         <button onClick={() => setShowTemplates(false)} className="p-2 hover:bg-gold-50 dark:hover:bg-slate-800 rounded-full transition-colors">

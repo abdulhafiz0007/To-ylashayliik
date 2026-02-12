@@ -4,7 +4,6 @@ import { translations, type Language } from "../lib/translations";
 interface LanguageContextType {
     language: Language;
     setLanguage: (lang: Language) => void;
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     t: (key: string) => string;
 }
 
@@ -20,7 +19,6 @@ export function LanguageProvider({ children }: { children: ReactNode }) {
         localStorage.setItem('app_lang', language);
     }, [language]);
 
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const t = (key: string): string => {
         const keys = key.split('.');
         // eslint-disable-next-line @typescript-eslint/no-explicit-any

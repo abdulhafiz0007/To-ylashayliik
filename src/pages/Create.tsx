@@ -49,10 +49,10 @@ export function Create() {
             </h1>
 
             <form onSubmit={handleSubmit}>
-                <Card className="border-gold-200 dark:border-slate-700 shadow-lg dark:bg-slate-800">
+                <Card className="shadow-lg">
                     <CardHeader>
-                        <CardTitle className="dark:text-white">{t('weddingDetails')}</CardTitle>
-                        <CardDescription className="dark:text-gray-400">{t('enterDetails')}</CardDescription>
+                        <CardTitle>{t('weddingDetails')}</CardTitle>
+                        <CardDescription>{t('enterDetails')}</CardDescription>
                     </CardHeader>
                     <CardContent className="space-y-6">
                         {displayError && (
@@ -139,8 +139,8 @@ export function Create() {
                             />
                         </div>
                     </CardContent>
-                    <CardFooter className="flex justify-end gap-4 border-t border-gold-100 dark:border-slate-700 bg-gold-50/30 dark:bg-slate-900/30 p-6">
-                        <Button type="button" variant="secondary" onClick={() => navigate("/")} className="dark:bg-slate-700 dark:text-white dark:hover:bg-slate-600">
+                    <CardFooter className="flex justify-end gap-4 border-t bg-gold-50/30 dark:bg-slate-900/10 p-6">
+                        <Button type="button" variant="secondary" onClick={() => navigate("/")}>
                             {t('cancel')}
                         </Button>
                         <Button type="submit" disabled={isSaving}>

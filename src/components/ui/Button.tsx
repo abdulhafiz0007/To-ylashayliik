@@ -17,10 +17,10 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>(
                 className={cn(
                     "inline-flex items-center justify-center rounded-full font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-400 disabled:pointer-events-none disabled:opacity-50",
                     {
-                        "bg-primary-600 text-white hover:bg-primary-700 shadow-md shadow-primary-200": variant === "primary",
-                        "bg-gold-100 text-gold-900 hover:bg-gold-200": variant === "secondary",
-                        "border border-gold-200 bg-transparent hover:bg-gold-50 text-gold-800": variant === "outline",
-                        "hover:bg-primary-50 text-primary-700 hover:text-primary-800": variant === "ghost",
+                        "bg-primary-600 text-white hover:bg-primary-700 shadow-md shadow-primary-200/50 dark:shadow-none": variant === "primary",
+                        "bg-gold-100 dark:bg-slate-800 text-gold-900 dark:text-gold-200 hover:bg-gold-200 dark:hover:bg-slate-700": variant === "secondary",
+                        "border border-gold-200 dark:border-slate-700 bg-transparent hover:bg-gold-50 dark:hover:bg-slate-800 text-gold-800 dark:text-gold-200": variant === "outline",
+                        "hover:bg-primary-50 dark:hover:bg-primary-900/20 text-primary-700 dark:text-primary-400 hover:text-primary-800 dark:hover:text-primary-300": variant === "ghost",
                         "h-8 px-4 text-sm": size === "sm",
                         "h-10 px-6 text-base": size === "md",
                         "h-12 px-8 text-lg": size === "lg",

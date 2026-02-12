@@ -12,9 +12,8 @@ const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
 export function ThemeProvider({ children }: { children: React.ReactNode }) {
     const [theme, setTheme] = useState<Theme>(() => {
         if (typeof window !== "undefined") {
-            const saved = localStorage.getItem("app_theme") as Theme;
+            const saved = localStorage.getItem("app_theme_v2") as Theme;
             if (saved) return saved;
-            return window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
         }
         return "light";
     });
@@ -23,7 +22,8 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
         const root = window.document.documentElement;
         root.classList.remove("light", "dark");
         root.classList.add(theme);
-        localStorage.setItem("app_theme", theme);
+        root.style.colorScheme = theme;
+        localStorage.setItem("app_theme_v2", theme);
     }, [theme]);
 
     const toggleTheme = () => {
