@@ -4,7 +4,7 @@ import { useInvitation, type InvitationData } from "../context/InvitationContext
 import { Button } from "../components/ui/Button"
 import { Input } from "../components/ui/Input"
 import { Card } from "../components/ui/Card"
-import { Heart, Download, Share2, Palette, X, MessageSquare, Send, Music2, Music } from "lucide-react"
+import { Heart, Download, Palette, X, MessageSquare, Send, Music } from "lucide-react"
 import { cn } from "../lib/utils"
 import { templates } from "../lib/templates"
 import { toPng } from 'html-to-image'
@@ -135,7 +135,7 @@ export function Invitation() {
     const currentTemplate = templates.find(t => t.id === (invitation.template || 'classic')) || templates[0]
 
     return (
-        <div className="min-h-screen bg-background dark:bg-slate-950 py-8 px-4 pb-64 flex flex-col items-center relative transition-colors duration-500">
+        <div className="min-h-screen bg-[#faf9f6] dark:bg-slate-950 py-12 px-4 pb-64 flex flex-col items-center relative transition-colors duration-500">
             {/* Background Music Audio Element */}
             <audio
                 ref={audioRef}
@@ -145,46 +145,42 @@ export function Invitation() {
 
             {/* Toolbar */}
             <motion.div
-                initial={{ y: 100, opacity: 0 }}
+                initial={{ y: 50, opacity: 0 }}
                 animate={{ y: 0, opacity: 1 }}
-                className="fixed bottom-24 z-50 flex items-center gap-3 bg-white/90 dark:bg-slate-900/90 backdrop-blur-md p-3 rounded-full shadow-2xl border border-gold-200 dark:border-slate-800"
+                className="fixed bottom-24 z-50 flex items-center gap-2 bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl p-2 rounded-2xl shadow-2xl border border-gray-100 dark:border-slate-800"
             >
                 <Button
                     variant="ghost"
                     size="sm"
                     className={cn(
-                        "flex flex-col h-auto gap-1 p-2 text-[10px] uppercase font-bold transition-all",
-                        isMusicPlaying ? "text-primary-600 dark:text-primary-400" : "text-gray-400"
+                        "flex flex-col h-auto gap-1 p-2 text-[9px] uppercase font-bold transition-all",
+                        isMusicPlaying ? "text-primary-600" : "text-gray-400"
                     )}
                     onClick={toggleMusic}
                 >
-                    {isMusicPlaying ? <Music2 className="h-5 w-5 animate-bounce" /> : <Music className="h-5 w-5" />}
-                    {t('backgroundMusic')}
+                    <Music className={cn("h-4 w-4", isMusicPlaying && "animate-pulse")} />
                 </Button>
-                <div className="w-px h-8 bg-gold-200 dark:bg-slate-800"></div>
+                <div className="w-px h-6 bg-gray-100 dark:bg-slate-800"></div>
                 <Button
                     variant="ghost"
                     size="sm"
-                    className="flex flex-col h-auto gap-1 p-2 text-[10px] uppercase font-bold text-gray-500"
+                    className="flex flex-col h-auto gap-1 p-2 text-[9px] uppercase font-bold text-gray-400"
                     onClick={() => setShowTemplates(!showTemplates)}
                 >
-                    <Palette className="h-5 w-5" />
-                    {t('style')}
+                    <Palette className="h-4 w-4" />
                 </Button>
                 <Button
                     variant="ghost"
                     size="sm"
-                    className="flex flex-col h-auto gap-1 p-2 text-[10px] uppercase font-bold text-gray-500"
+                    className="flex flex-col h-auto gap-1 p-2 text-[9px] uppercase font-bold text-gray-400"
                     onClick={handleDownload}
                 >
-                    <Download className="h-5 w-5" />
-                    {t('save')}
+                    <Download className="h-4 w-4" />
                 </Button>
                 <Button
-                    className="flex flex-col h-auto gap-1 p-2 text-[10px] uppercase font-bold bg-primary-600 text-white rounded-full px-6"
+                    className="h-10 px-6 rounded-xl bg-primary-600 text-white font-bold text-xs shadow-lg shadow-primary-200"
                     onClick={handleShare}
                 >
-                    <Share2 className="h-5 w-5" />
                     {t('share')}
                 </Button>
             </motion.div>
@@ -197,19 +193,19 @@ export function Invitation() {
                             initial={{ opacity: 0 }}
                             animate={{ opacity: 1 }}
                             exit={{ opacity: 0 }}
-                            className="fixed inset-0 bg-black/40 z-30 backdrop-blur-sm"
+                            className="fixed inset-0 bg-black/20 z-[60] backdrop-blur-sm"
                             onClick={() => setShowTemplates(false)}
                         />
                         <motion.div
                             initial={{ y: "100%" }}
                             animate={{ y: 0 }}
                             exit={{ y: "100%" }}
-                            className="fixed inset-x-0 bottom-16 z-40 bg-white dark:bg-slate-900 rounded-t-[32px] shadow-2xl p-6 pb-24 max-h-[70vh] overflow-y-auto"
+                            className="fixed inset-x-0 bottom-16 z-[70] bg-white dark:bg-slate-900 rounded-t-[40px] shadow-2xl p-8 pb-32 max-h-[60vh] overflow-y-auto"
                         >
-                            <div className="flex justify-between items-center mb-6">
-                                <h3 className="font-serif text-2xl font-bold dark:text-white">{t('chooseStyle')}</h3>
-                                <button onClick={() => setShowTemplates(false)} className="p-2 bg-gray-100 dark:bg-slate-800 rounded-full">
-                                    <X className="h-5 w-5 text-gray-500" />
+                            <div className="flex justify-between items-center mb-6 px-2">
+                                <h3 className="font-serif text-xl font-bold dark:text-white">{t('chooseStyle')}</h3>
+                                <button onClick={() => setShowTemplates(false)} className="p-2 hover:bg-gray-100 dark:hover:bg-slate-800 rounded-full transition-colors">
+                                    <X className="h-5 w-5 text-gray-400" />
                                 </button>
                             </div>
                             <div className="grid grid-cols-2 gap-4">
@@ -218,14 +214,15 @@ export function Invitation() {
                                         key={t.id}
                                         onClick={() => handleTemplateChange(t.id)}
                                         className={cn(
-                                            "relative overflow-hidden group rounded-2xl border-2 transition-all aspect-[4/3]",
+                                            "relative overflow-hidden rounded-2xl border-2 transition-all aspect-[3/4] group",
                                             (invitation.template || 'classic') === t.id
-                                                ? "border-primary-500 scale-[1.02]"
-                                                : "border-transparent opacity-80"
+                                                ? "border-primary-500 ring-4 ring-primary-50"
+                                                : "border-transparent opacity-70 grayscale hover:grayscale-0 hover:opacity-100"
                                         )}
                                     >
-                                        <img src={t.thumbnail} alt={t.name} className="h-full w-full object-cover" />
-                                        <div className="absolute inset-x-0 bottom-0 bg-black/60 p-2 text-white text-[10px] font-bold uppercase truncate">
+                                        <img src={t.thumbnail} alt={t.name} className="h-full w-full object-cover transition-transform group-hover:scale-110" />
+                                        <div className="absolute inset-0 bg-black/20" />
+                                        <div className="absolute bottom-3 left-3 text-white text-[10px] font-bold uppercase tracking-widest drop-shadow-md">
                                             {t.name}
                                         </div>
                                     </button>
@@ -236,85 +233,95 @@ export function Invitation() {
                 )}
             </AnimatePresence>
 
-            {/* Main Invitation Card */}
+            {/* Main Invitation Card (Redesigned Compact Version) */}
             <motion.div
-                initial={{ opacity: 0, scale: 0.95 }}
+                initial={{ opacity: 0, scale: 0.9 }}
                 animate={{ opacity: 1, scale: 1 }}
                 ref={cardRef}
                 className={cn(
-                    "w-full max-w-lg shadow-2xl overflow-hidden relative transition-all duration-700 bg-cover bg-center min-h-[700px] flex flex-col rounded-3xl",
+                    "w-full max-w-[380px] min-h-[580px] bg-white dark:bg-slate-900 shadow-[0_32px_64px_-16px_rgba(0,0,0,0.1)] rounded-[40px] overflow-hidden relative border border-gray-100/50 dark:border-slate-800",
                     currentTemplate.wrapperClass
                 )}
-                style={currentTemplate.backgroundImage ? { backgroundImage: `url(${currentTemplate.backgroundImage})` } : {}}
             >
-                {/* Decorative Overlay */}
-                {currentTemplate.overlayClass && (
-                    <div className={currentTemplate.overlayClass} />
-                )}
+                {/* Decorative Elements */}
+                <div className="absolute top-0 left-0 w-full h-2 bg-gradient-to-r from-primary-200 via-primary-500 to-primary-200 opacity-20" />
 
-                <div className="h-full p-8 md:p-14 text-center flex flex-col justify-between relative z-10 flex-1">
-                    <div className="space-y-6 md:space-y-8 mt-12">
-                        <motion.p
-                            initial={{ y: 20, opacity: 0 }}
-                            whileInView={{ y: 0, opacity: 1 }}
-                            viewport={{ once: true }}
-                            className={cn("transition-all duration-500 font-serif italic tracking-widest", currentTemplate.introClass)}
-                        >
+                <div className="p-10 flex flex-col items-center text-center h-full relative z-10">
+                    <motion.div
+                        initial={{ y: 20, opacity: 0 }}
+                        animate={{ y: 0, opacity: 1 }}
+                        transition={{ delay: 0.2 }}
+                        className="mb-8"
+                    >
+                        <div className="inline-block p-1 border border-primary-100 rounded-full mb-4">
+                            <div className="bg-primary-50 dark:bg-primary-900/20 p-2 rounded-full">
+                                <Heart className="h-5 w-5 text-primary-500 fill-primary-500" />
+                            </div>
+                        </div>
+                        <p className={cn("text-[10px] uppercase tracking-[0.4em] font-bold text-gray-400 dark:text-gray-500", currentTemplate.introClass)}>
                             {t('weddingOf')}
+                        </p>
+                    </motion.div>
+
+                    <motion.div
+                        initial={{ y: 20, opacity: 0 }}
+                        animate={{ y: 0, opacity: 1 }}
+                        transition={{ delay: 0.4 }}
+                        className="space-y-1 mb-8 w-full"
+                    >
+                        <h1 className={cn("font-serif text-3xl md:text-4xl text-gray-900 dark:text-white leading-tight", currentTemplate.namesClass)}>
+                            {invitation.brideName}
+                        </h1>
+                        <span className={cn("block text-primary-400 font-serif italic text-2xl", currentTemplate.ampersandClass)}>&</span>
+                        <h1 className={cn("font-serif text-3xl md:text-4xl text-gray-900 dark:text-white leading-tight", currentTemplate.namesClass)}>
+                            {invitation.groomName}
+                        </h1>
+                    </motion.div>
+
+                    {invitation.text && (
+                        <motion.p
+                            initial={{ opacity: 0 }}
+                            animate={{ opacity: 1 }}
+                            transition={{ delay: 0.6 }}
+                            className={cn("text-gray-600 dark:text-gray-400 text-sm leading-relaxed mb-10 px-4 font-light italic", currentTemplate.messageClass)}
+                        >
+                            "{invitation.text}"
                         </motion.p>
-                        <motion.div
-                            initial={{ scale: 0.9, opacity: 0 }}
-                            whileInView={{ scale: 1, opacity: 1 }}
-                            viewport={{ once: true }}
-                            transition={{ delay: 0.3 }}
-                            className={cn("transition-all duration-500 break-words font-serif", currentTemplate.namesClass)}
-                        >
-                            <span className="block mb-2">{invitation.brideName} {invitation.brideLastname}</span>
-                            <span className={cn("block font-normal", currentTemplate.ampersandClass)}>&</span>
-                            <span className="block mt-2">{invitation.groomName} {invitation.groomLastname}</span>
-                        </motion.div>
-                    </div>
+                    )}
 
-                    <div className="flex justify-center flex-1 items-center py-6">
-                        <Heart className={cn("h-10 w-10 md:h-16 md:w-16 fill-current animate-pulse transition-all duration-500 opacity-60", currentTemplate.iconClass)} />
-                    </div>
-
-                    <div className="space-y-6 md:space-y-10 mt-auto mb-16 px-4">
-                        {invitation.text && (
-                            <motion.p
-                                initial={{ opacity: 0 }}
-                                whileInView={{ opacity: 1 }}
-                                className={cn("whitespace-pre-wrap transition-all duration-500 text-sm leading-relaxed overflow-hidden line-clamp-6 max-h-[120px]", currentTemplate.messageClass)}
-                            >
-                                {invitation.text}
-                            </motion.p>
-                        )}
-
-                        <motion.div
-                            initial={{ y: 30, opacity: 0 }}
-                            whileInView={{ y: 0, opacity: 1 }}
-                            className={cn("grid gap-4 py-6 border-t border-b border-primary-500/10 transition-all duration-500", currentTemplate.detailsClass)}
-                        >
-                            <div className="flex flex-col items-center space-y-1">
-                                <span className="text-[10px] uppercase font-bold tracking-widest opacity-40">Date</span>
-                                <span className="font-bold text-xl md:text-2xl font-serif">{invitation.date}</span>
+                    <motion.div
+                        initial={{ scale: 0.9, opacity: 0 }}
+                        animate={{ scale: 1, opacity: 1 }}
+                        transition={{ delay: 0.8 }}
+                        className={cn("w-full py-8 border-y border-gray-50 dark:border-slate-800 space-y-6", currentTemplate.detailsClass)}
+                    >
+                        <div className="flex justify-between px-4">
+                            <div className="text-left">
+                                <span className="block text-[8px] uppercase tracking-[0.3em] text-gray-400 mb-1">KUN</span>
+                                <span className="text-lg font-serif font-bold text-gray-800 dark:text-white">{invitation.date}</span>
                             </div>
-
-                            <div className="flex flex-col items-center space-y-1">
-                                <span className="text-[10px] uppercase font-bold tracking-widest opacity-40">Time</span>
-                                <span className="font-bold text-xl md:text-2xl font-serif">{invitation.time}</span>
+                            <div className="text-right">
+                                <span className="block text-[8px] uppercase tracking-[0.3em] text-gray-400 mb-1">VAQT</span>
+                                <span className="text-lg font-serif font-bold text-gray-800 dark:text-white">{invitation.time}</span>
                             </div>
+                        </div>
 
-                            <div className="flex flex-col items-center space-y-1 px-4">
-                                <span className="text-[10px] uppercase font-bold tracking-widest opacity-40">Location</span>
-                                <span className="font-bold text-lg md:text-xl text-center font-serif leading-tight">
-                                    {invitation.hall && <span className="block mb-1 text-primary-600 dark:text-primary-400">{invitation.hall}</span>}
-                                    <span className="text-gray-600 dark:text-gray-400 text-sm font-normal">{invitation.location}</span>
-                                </span>
-                            </div>
-                        </motion.div>
+                        <div className="px-4 text-center">
+                            <span className="block text-[8px] uppercase tracking-[0.3em] text-gray-400 mb-1">MANZIL</span>
+                            <p className="text-sm font-medium text-gray-700 dark:text-gray-300">
+                                {invitation.hall && <span className="block text-primary-600 font-bold mb-0.5">{invitation.hall}</span>}
+                                {invitation.location}
+                            </p>
+                        </div>
+                    </motion.div>
+
+                    <div className="mt-10 opacity-30">
+                        <Heart className="h-4 w-4 text-gray-300" />
                     </div>
                 </div>
+
+                {/* Background Pattern/Texture overlay */}
+                <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/clean-gray-paper.png')] opacity-10 pointer-events-none" />
             </motion.div>
 
             {/* Comments Section */}
