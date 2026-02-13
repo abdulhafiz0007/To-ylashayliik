@@ -58,6 +58,15 @@ export const translations = {
             darkMode: "Tungi rejim",
             logout: "Chiqish"
         },
+        management: "Boshqaruv",
+        myEvents: "Mening tadbirlarim",
+        receivedInvitations: "Taklifnomalar",
+        createPrompt: "O'z taklifnomangizni yarating",
+        congratulations: "Tabriklar",
+        addComment: "Tabrik yozish",
+        send: "Yuborish",
+        name: "Ismingiz",
+        backgroundMusic: "Musiqa",
         loading: "Yuklanmoqda...",
         error: "Xatolik yuz berdi"
     },
@@ -118,6 +127,15 @@ export const translations = {
             darkMode: "Темная тема",
             logout: "Выйти"
         },
+        management: "Управление",
+        myEvents: "Мои события",
+        receivedInvitations: "Приглашения",
+        createPrompt: "Создайте свое приглашение",
+        congratulations: "Поздравления",
+        addComment: "Написать пожелание",
+        send: "Отправить",
+        name: "Ваше имя",
+        backgroundMusic: "Музыка",
         loading: "Загрузка...",
         error: "Произошла ошибка"
     },
@@ -178,7 +196,16 @@ export const translations = {
             darkMode: "Dark Mode",
             logout: "Logout"
         },
+        management: "Management",
+        myEvents: "My Events",
+        receivedInvitations: "Invitations",
+        createPrompt: "Create your own invitation",
+        congratulations: "Congratulations",
+        addComment: "Write a wish",
+        send: "Send",
+        name: "Your Name",
+        backgroundMusic: "Music",
         loading: "Loading...",
         error: "An error occurred"
-    }
+    },
 };

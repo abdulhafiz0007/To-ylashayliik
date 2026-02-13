@@ -6,6 +6,7 @@ import { InvitationProvider } from "./context/InvitationContext"
 import { Create } from "./pages/Create"
 import { Invitation } from "./pages/Invitation"
 import { Profile } from "./pages/Profile"
+import { Templates } from "./pages/Templates"
 
 import { useEffect, useState } from "react"
 import { useTelegram } from "./hooks/useTelegram"
@@ -125,7 +126,9 @@ function App() {
     )
   }
 
-  if (!_isAuth) {
+  const isInvitationPath = window.location.pathname.startsWith('/invitation/');
+
+  if (!_isAuth && !isInvitationPath) {
     return (
       <div className="min-h-screen flex flex-col items-center justify-center p-4 bg-background">
         <Heart className="h-12 w-12 text-primary-300 animate-pulse mb-4" />
@@ -170,6 +173,7 @@ function App() {
               <Routes>
                 <Route path="/" element={<Home />} />
                 <Route path="/create" element={<Create />} />
+                <Route path="/templates" element={<Templates />} />
                 <Route path="/invitation/:id" element={<Invitation />} />
                 <Route path="/profile" element={<Profile />} />
               </Routes>

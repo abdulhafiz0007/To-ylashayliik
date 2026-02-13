@@ -1,6 +1,8 @@
 export interface TemplateConfig {
     id: string
     name: string
+    type?: string
+    thumbnail?: string
     backgroundImage?: string
     // Wrapper classes for the main card container
     wrapperClass: string
@@ -24,6 +26,8 @@ export const templates: TemplateConfig[] = [
     {
         id: "classic",
         name: "Premium Minimal",
+        type: "Modern",
+        thumbnail: "https://images.unsplash.com/photo-1549416878-b9ca35c2d4ac?w=800&auto=format&fit=crop&q=60",
         wrapperClass: "bg-white dark:bg-slate-900 border-0 shadow-2xl relative",
         introClass: "text-gray-400 dark:text-gray-500 uppercase tracking-[0.4em] text-[10px] md:text-xs font-medium pt-12 md:pt-16",
         namesClass: "font-serif text-3xl md:text-5xl lg:text-6xl text-gray-900 dark:text-white font-bold leading-tight px-4",
@@ -36,6 +40,8 @@ export const templates: TemplateConfig[] = [
     {
         id: "royal_gold",
         name: "Royal Gold",
+        type: "Premium",
+        thumbnail: "https://images.unsplash.com/photo-1522673607200-1648832cee98?w=800&auto=format&fit=crop&q=60",
         wrapperClass: "bg-[#fdfcf5] dark:bg-slate-950 border-0 shadow-2xl relative",
         introClass: "text-gold-600 dark:text-gold-400 uppercase tracking-widest text-[10px] font-bold pt-12 md:pt-16",
         namesClass: "font-serif text-3xl md:text-5xl text-[#361d11] dark:text-gold-100 font-bold px-6",
@@ -48,6 +54,8 @@ export const templates: TemplateConfig[] = [
     {
         id: "modern_slate",
         name: "Modern Slate",
+        type: "Minimalist",
+        thumbnail: "https://images.unsplash.com/photo-1519741497674-611481863552?w=800&auto=format&fit=crop&q=60",
         wrapperClass: "bg-slate-900 border-0 text-white shadow-2xl relative",
         introClass: "text-slate-400 uppercase tracking-[0.5em] text-[10px] pt-12 md:pt-16",
         namesClass: "font-sans text-4xl md:text-6xl font-light tracking-tighter text-white px-4",
