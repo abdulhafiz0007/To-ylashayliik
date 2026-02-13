@@ -3,8 +3,7 @@ import { useParams, Link } from "react-router-dom"
 import { useInvitation, type InvitationData } from "../context/InvitationContext"
 import { Button } from "../components/ui/Button"
 import { Input } from "../components/ui/Input"
-import { Card } from "../components/ui/Card"
-import { Heart, Download, Palette, X, MessageSquare, Send, Music } from "lucide-react"
+import { Heart, Download, Palette, X, MessageSquare, Send, Music, Sparkles, Clock, User, MapPin, Calendar } from "lucide-react"
 import { cn } from "../lib/utils"
 import { templates } from "../lib/templates"
 import { toPng } from 'html-to-image'
@@ -20,6 +19,7 @@ export function Invitation() {
     const [invitation, setInvitation] = useState<InvitationData | null>(null)
     const [loading, setLoading] = useState(true)
     const [showTemplates, setShowTemplates] = useState(false)
+    const [showComments, setShowComments] = useState(false)
     const [comments, setComments] = useState<any[]>([])
     const [newComment, setNewComment] = useState("")
     const [senderName, setSenderName] = useState("")
@@ -130,12 +130,11 @@ export function Invitation() {
         )
     }
 
+
     if (!invitation) return null
 
-    const currentTemplate = templates.find(t => t.id === (invitation.template || 'classic')) || templates[0]
-
     return (
-        <div className="min-h-screen bg-[#faf9f6] dark:bg-slate-950 py-12 px-4 pb-64 flex flex-col items-center relative transition-colors duration-500">
+        <div className="h-[100dvh] flex flex-col items-center relative overflow-hidden bg-gradient-to-b from-[#fff5f5] via-[#fffdf9] to-[#fffef2] dark:from-slate-950 dark:to-slate-900 transition-colors duration-500">
             {/* Background Music Audio Element */}
             <audio
                 ref={audioRef}
@@ -147,7 +146,7 @@ export function Invitation() {
             <motion.div
                 initial={{ y: 50, opacity: 0 }}
                 animate={{ y: 0, opacity: 1 }}
-                className="fixed bottom-24 z-50 flex items-center gap-2 bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl p-2 rounded-2xl shadow-2xl border border-gray-100 dark:border-slate-800"
+                className="fixed bottom-6 z-50 flex items-center gap-2 bg-white/70 dark:bg-slate-900/80 backdrop-blur-xl p-2 rounded-2xl shadow-2xl border border-gray-100 dark:border-slate-800"
             >
                 <Button
                     variant="ghost"
@@ -161,14 +160,31 @@ export function Invitation() {
                     <Music className={cn("h-4 w-4", isMusicPlaying && "animate-pulse")} />
                 </Button>
                 <div className="w-px h-6 bg-gray-100 dark:bg-slate-800"></div>
+
+                <Button
+                    variant="ghost"
+                    size="sm"
+                    className={cn(
+                        "flex flex-col h-auto gap-1 p-2 text-[9px] uppercase font-bold transition-all",
+                        showComments ? "text-primary-600" : "text-gray-400"
+                    )}
+                    onClick={() => setShowComments(!showComments)}
+                >
+                    <MessageSquare className="h-4 w-4" />
+                </Button>
+
                 <Button
                     variant="ghost"
                     size="sm"
                     className="flex flex-col h-auto gap-1 p-2 text-[9px] uppercase font-bold text-gray-400"
-                    onClick={() => setShowTemplates(!showTemplates)}
+                    onClick={() => {
+                        setShowTemplates(!showTemplates)
+                        setShowComments(false)
+                    }}
                 >
                     <Palette className="h-4 w-4" />
                 </Button>
+
                 <Button
                     variant="ghost"
                     size="sm"
@@ -177,15 +193,16 @@ export function Invitation() {
                 >
                     <Download className="h-4 w-4" />
                 </Button>
+
                 <Button
-                    className="h-10 px-6 rounded-xl bg-primary-600 text-white font-bold text-xs shadow-lg shadow-primary-200"
+                    className="h-10 px-6 rounded-xl bg-[#ec4899] hover:bg-[#db2777] text-white font-bold text-xs shadow-lg shadow-pink-200"
                     onClick={handleShare}
                 >
                     {t('share')}
                 </Button>
             </motion.div>
 
-            {/* Template Selection Drawer */}
+            {/* Drawers */}
             <AnimatePresence>
                 {showTemplates && (
                     <>
@@ -200,7 +217,7 @@ export function Invitation() {
                             initial={{ y: "100%" }}
                             animate={{ y: 0 }}
                             exit={{ y: "100%" }}
-                            className="fixed inset-x-0 bottom-16 z-[70] bg-white dark:bg-slate-900 rounded-t-[40px] shadow-2xl p-8 pb-32 max-h-[60vh] overflow-y-auto"
+                            className="fixed inset-x-0 bottom-0 z-[70] bg-white dark:bg-slate-900 rounded-t-[40px] shadow-2xl p-8 pb-32 max-h-[60vh] overflow-y-auto"
                         >
                             <div className="flex justify-between items-center mb-6 px-2">
                                 <h3 className="font-serif text-xl font-bold dark:text-white">{t('chooseStyle')}</h3>
@@ -231,159 +248,182 @@ export function Invitation() {
                         </motion.div>
                     </>
                 )}
-            </AnimatePresence>
 
-            {/* Main Invitation Card (Redesigned Compact Version) */}
-            <motion.div
-                initial={{ opacity: 0, scale: 0.9 }}
-                animate={{ opacity: 1, scale: 1 }}
-                ref={cardRef}
-                className={cn(
-                    "w-full max-w-[380px] min-h-[580px] bg-white dark:bg-slate-900 shadow-[0_32px_64px_-16px_rgba(0,0,0,0.1)] rounded-[40px] overflow-hidden relative border border-gray-100/50 dark:border-slate-800",
-                    currentTemplate.wrapperClass
-                )}
-            >
-                {/* Decorative Elements */}
-                <div className="absolute top-0 left-0 w-full h-2 bg-gradient-to-r from-primary-200 via-primary-500 to-primary-200 opacity-20" />
-
-                <div className="p-10 flex flex-col items-center text-center h-full relative z-10">
-                    <motion.div
-                        initial={{ y: 20, opacity: 0 }}
-                        animate={{ y: 0, opacity: 1 }}
-                        transition={{ delay: 0.2 }}
-                        className="mb-8"
-                    >
-                        <div className="inline-block p-1 border border-primary-100 rounded-full mb-4">
-                            <div className="bg-primary-50 dark:bg-primary-900/20 p-2 rounded-full">
-                                <Heart className="h-5 w-5 text-primary-500 fill-primary-500" />
-                            </div>
-                        </div>
-                        <p className={cn("text-[10px] uppercase tracking-[0.4em] font-bold text-gray-400 dark:text-gray-500", currentTemplate.introClass)}>
-                            {t('weddingOf')}
-                        </p>
-                    </motion.div>
-
-                    <motion.div
-                        initial={{ y: 20, opacity: 0 }}
-                        animate={{ y: 0, opacity: 1 }}
-                        transition={{ delay: 0.4 }}
-                        className="space-y-1 mb-8 w-full"
-                    >
-                        <h1 className={cn("font-serif text-3xl md:text-4xl text-gray-900 dark:text-white leading-tight", currentTemplate.namesClass)}>
-                            {invitation.brideName}
-                        </h1>
-                        <span className={cn("block text-primary-400 font-serif italic text-2xl", currentTemplate.ampersandClass)}>&</span>
-                        <h1 className={cn("font-serif text-3xl md:text-4xl text-gray-900 dark:text-white leading-tight", currentTemplate.namesClass)}>
-                            {invitation.groomName}
-                        </h1>
-                    </motion.div>
-
-                    {invitation.text && (
-                        <motion.p
+                {showComments && (
+                    <>
+                        <motion.div
                             initial={{ opacity: 0 }}
                             animate={{ opacity: 1 }}
-                            transition={{ delay: 0.6 }}
-                            className={cn("text-gray-600 dark:text-gray-400 text-sm leading-relaxed mb-10 px-4 font-light italic", currentTemplate.messageClass)}
+                            exit={{ opacity: 0 }}
+                            className="fixed inset-0 bg-black/20 z-[60] backdrop-blur-sm"
+                            onClick={() => setShowComments(false)}
+                        />
+                        <motion.div
+                            initial={{ y: "100%" }}
+                            animate={{ y: 0 }}
+                            exit={{ y: "100%" }}
+                            className="fixed inset-x-0 bottom-0 z-[70] bg-white dark:bg-slate-900 rounded-t-[40px] shadow-2xl p-8 pb-10 max-h-[80vh] overflow-hidden flex flex-col"
                         >
-                            "{invitation.text}"
-                        </motion.p>
-                    )}
-
-                    <motion.div
-                        initial={{ scale: 0.9, opacity: 0 }}
-                        animate={{ scale: 1, opacity: 1 }}
-                        transition={{ delay: 0.8 }}
-                        className={cn("w-full py-8 border-y border-gray-50 dark:border-slate-800 space-y-6", currentTemplate.detailsClass)}
-                    >
-                        <div className="flex justify-between px-4">
-                            <div className="text-left">
-                                <span className="block text-[8px] uppercase tracking-[0.3em] text-gray-400 mb-1">KUN</span>
-                                <span className="text-lg font-serif font-bold text-gray-800 dark:text-white">{invitation.date}</span>
+                            <div className="flex justify-between items-center mb-6 px-2 shrink-0">
+                                <h3 className="font-serif text-xl font-bold dark:text-white">{t('congratulations')}</h3>
+                                <button onClick={() => setShowComments(false)} className="p-2 rounded-full transition-colors">
+                                    <X className="h-5 w-5 text-gray-400" />
+                                </button>
                             </div>
-                            <div className="text-right">
-                                <span className="block text-[8px] uppercase tracking-[0.3em] text-gray-400 mb-1">VAQT</span>
-                                <span className="text-lg font-serif font-bold text-gray-800 dark:text-white">{invitation.time}</span>
+
+                            <div className="flex-1 overflow-y-auto space-y-4 mb-6 pr-2 custom-scrollbar">
+                                {comments.length === 0 ? (
+                                    <div className="text-center py-10 opacity-40 italic text-sm">Hali tabriklar yo'q. Birinchilardan bo'ling!</div>
+                                ) : (
+                                    comments.map((comment, i) => (
+                                        <div key={i} className="p-4 bg-gray-50 dark:bg-slate-800/50 rounded-2xl border border-gray-100 dark:border-slate-800 flex items-start gap-4">
+                                            <div className="h-10 w-10 shrink-0 bg-pink-100 text-pink-500 rounded-full flex items-center justify-center font-bold">
+                                                {comment.senderName?.[0]?.toUpperCase() || 'G'}
+                                            </div>
+                                            <div>
+                                                <p className="font-bold text-sm text-gray-900 dark:text-white">{comment.senderName}</p>
+                                                <p className="text-sm text-gray-600 dark:text-gray-400 mt-1 italic leading-relaxed">"{comment.text}"</p>
+                                            </div>
+                                        </div>
+                                    ))
+                                )}
+                            </div>
+
+                            <div className="space-y-3 shrink-0 bg-gray-50 dark:bg-slate-800/50 p-4 rounded-3xl border border-gray-100 dark:border-slate-800">
+                                <Input
+                                    placeholder={t('name')}
+                                    value={senderName}
+                                    onChange={(e) => setSenderName(e.target.value)}
+                                    className="rounded-xl border-none shadow-sm h-11"
+                                />
+                                <div className="flex gap-2">
+                                    <Input
+                                        placeholder={t('addComment')}
+                                        value={newComment}
+                                        onChange={(e) => setNewComment(e.target.value)}
+                                        className="rounded-xl border-none shadow-sm flex-1 h-11"
+                                    />
+                                    <Button
+                                        onClick={handlePostComment}
+                                        className="rounded-xl bg-pink-500 hover:bg-pink-600 h-11 w-11 p-0 shadow-lg shadow-pink-100"
+                                        disabled={!newComment.trim() || !senderName.trim()}
+                                    >
+                                        <Send className="h-4 w-4" />
+                                    </Button>
+                                </div>
+                            </div>
+                        </motion.div>
+                    </>
+                )}
+            </AnimatePresence>
+
+            {/* Main Content View (v3 No-Scroll) */}
+            <div
+                ref={cardRef}
+                className="flex-1 w-full max-w-[420px] flex flex-col items-center py-6 md:py-10 px-6 relative z-10"
+            >
+                {/* Header Decoration */}
+                <div className="mb-4 text-center">
+                    <div className="flex justify-center mb-1">
+                        <Sparkles className="h-6 w-6 text-[#f472b6] opacity-60" />
+                    </div>
+                    <p className="text-[10px] tracking-[0.6em] text-gray-400 uppercase ml-2">
+                        TO'Y TAKLIFI
+                    </p>
+                </div>
+
+                {/* Avatar Section */}
+                <div className="flex items-center justify-center mb-8 gap-2">
+                    <div className="flex flex-col items-center">
+                        <div className="relative p-1 bg-white dark:bg-slate-800 rounded-full shadow-[0_10px_20px_-5px_rgba(0,0,0,0.1)]">
+                            <div className="h-24 w-24 rounded-full border-4 border-[#ffdde1] overflow-hidden bg-gray-50 dark:bg-slate-900 flex items-center justify-center">
+                                <User className="h-12 w-12 text-gray-200" />
+                            </div>
+                            <div className="absolute -bottom-2 left-1/2 -translate-x-1/2 bg-[#f472b6] text-white text-[8px] font-bold px-3 py-1 rounded-full whitespace-nowrap shadow-sm">
+                                Kuyov
                             </div>
                         </div>
+                    </div>
 
-                        <div className="px-4 text-center">
-                            <span className="block text-[8px] uppercase tracking-[0.3em] text-gray-400 mb-1">MANZIL</span>
-                            <p className="text-sm font-medium text-gray-700 dark:text-gray-300">
-                                {invitation.hall && <span className="block text-primary-600 font-bold mb-0.5">{invitation.hall}</span>}
-                                {invitation.location}
+                    <div className="px-1 text-[#f472b6] animate-pulse">
+                        <Heart className="h-8 w-8 fill-current" />
+                    </div>
+
+                    <div className="flex flex-col items-center">
+                        <div className="relative p-1 bg-white dark:bg-slate-800 rounded-full shadow-[0_10px_20px_-5px_rgba(0,0,0,0.1)]">
+                            <div className="h-24 w-24 rounded-full border-4 border-[#ffdde1] overflow-hidden bg-gray-50 dark:bg-slate-900 flex items-center justify-center">
+                                <User className="h-12 w-12 text-gray-200" />
+                            </div>
+                            <div className="absolute -bottom-2 left-1/2 -translate-x-1/2 bg-[#f472b6] text-white text-[8px] font-bold px-3 py-1 rounded-full whitespace-nowrap shadow-sm">
+                                Kelin
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                {/* Names & Subtext */}
+                <div className="text-center space-y-1 mb-8">
+                    <h1 className="font-serif text-3xl md:text-4xl text-[#7e22ce] dark:text-white flex items-center justify-center gap-2">
+                        {invitation?.brideName} <span className="text-[#f472b6] italic">&</span> {invitation?.groomName}
+                    </h1>
+                    <p className="text-[11px] text-pink-600/70 dark:text-pink-400/70 font-medium italic">
+                        Oilalari sizni to'yga taklif qiladi
+                    </p>
+                </div>
+
+                {/* Main Info Card */}
+                <div className="w-full bg-white dark:bg-slate-900 rounded-[32px] p-6 shadow-[0_20px_40px_-10px_rgba(244,114,182,0.15)] space-y-5 border border-white dark:border-slate-800">
+                    <div className="flex flex-col items-center gap-1 mb-1">
+                        <div className="h-10 w-10 bg-gradient-to-br from-orange-400 to-red-500 rounded-2xl flex items-center justify-center shadow-lg transform rotate-3">
+                            <Calendar className="h-5 w-5 text-white" />
+                        </div>
+                        <h3 className="text-xs font-bold text-gray-800 dark:text-white mt-1 uppercase tracking-widest">To'y marosimi</h3>
+                    </div>
+
+                    {/* Date/Time Row */}
+                    <div className="flex justify-between items-center bg-[#fff5f7] dark:bg-pink-900/10 rounded-3xl p-5 px-10">
+                        <div className="text-center">
+                            <p className="text-2xl font-serif font-black text-[#ec4899] leading-none mb-1">
+                                {invitation?.date?.split(' ')[0] || '28'}
+                            </p>
+                            <p className="text-[10px] uppercase font-bold tracking-widest text-[#f87171]">
+                                {invitation?.date?.split(' ')[1] || 'February'}
+                            </p>
+                            <p className="text-[8px] text-gray-400 mt-0.5">2026</p>
+                        </div>
+                        <div className="w-px h-10 bg-pink-200/50 dark:bg-pink-800/20" />
+                        <div className="flex flex-col items-center gap-1">
+                            <Clock className="h-4 w-4 text-[#ec4899] opacity-40 mb-1" />
+                            <span className="text-xl font-black text-[#ec4899]">
+                                {invitation?.time || '18:00'}
+                            </span>
+                        </div>
+                    </div>
+
+                    {/* Location Box */}
+                    <div className="bg-[#fffbeb] dark:bg-orange-900/10 rounded-2xl p-4 flex items-center gap-4 border border-orange-50 dark:border-orange-900/20">
+                        <div className="h-10 w-10 bg-orange-100 dark:bg-orange-900/30 rounded-full flex items-center justify-center shrink-0">
+                            <MapPin className="h-5 w-5 text-orange-500" />
+                        </div>
+                        <div className="flex-1 min-w-0">
+                            <p className="text-sm font-bold text-gray-800 dark:text-white truncate">
+                                {invitation?.hall || 'Mumtoz to\'yxonasi'}
+                            </p>
+                            <p className="text-[10px] text-gray-500 dark:text-gray-400 truncate leading-tight mt-0.5">
+                                {invitation?.location}
                             </p>
                         </div>
-                    </motion.div>
-
-                    <div className="mt-10 opacity-30">
-                        <Heart className="h-4 w-4 text-gray-300" />
                     </div>
                 </div>
 
-                {/* Background Pattern/Texture overlay */}
-                <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/clean-gray-paper.png')] opacity-10 pointer-events-none" />
-            </motion.div>
-
-            {/* Comments Section */}
-            <div className="w-full max-w-lg mt-12 space-y-6 animate-slide-up">
-                <div className="flex items-center gap-2 px-2">
-                    <MessageSquare className="h-6 w-6 text-primary-500" />
-                    <h2 className="text-2xl font-serif font-bold dark:text-white">{t('congratulations')}</h2>
-                </div>
-
-                {/* Comment Box */}
-                <Card className="p-6 bg-white dark:bg-slate-900 border-none shadow-lg rounded-[24px]">
-                    <div className="space-y-4">
-                        <Input
-                            placeholder={t('name')}
-                            value={senderName}
-                            onChange={(e) => setSenderName(e.target.value)}
-                            className="bg-gray-50 border-none rounded-xl"
-                        />
-                        <div className="relative">
-                            <textarea
-                                placeholder={t('addComment')}
-                                value={newComment}
-                                onChange={(e) => setNewComment(e.target.value)}
-                                className="w-full min-h-[100px] p-4 bg-gray-50 dark:bg-slate-800 rounded-2xl resize-none border-none focus:ring-2 focus:ring-primary-500 outline-none transition-all dark:text-white"
-                            />
-                            <Button
-                                onClick={handlePostComment}
-                                disabled={!newComment.trim() || !senderName.trim()}
-                                className="absolute bottom-4 right-4 h-10 w-10 p-0 rounded-full shadow-lg"
-                            >
-                                <Send className="h-5 w-5" />
-                            </Button>
-                        </div>
-                    </div>
-                </Card>
-
-                {/* Comments List */}
-                <div className="space-y-4">
-                    {comments.map((comment, i) => (
-                        <motion.div
-                            key={comment.id || i}
-                            initial={{ opacity: 0, x: -10 }}
-                            animate={{ opacity: 1, x: 0 }}
-                        >
-                            <Card className="p-4 bg-white/50 dark:bg-slate-900/50 backdrop-blur-sm border-none rounded-2xl">
-                                <div className="flex justify-between items-start mb-2">
-                                    <span className="font-bold text-gray-900 dark:text-white">{comment.senderName}</span>
-                                    <span className="text-[10px] text-gray-400 capitalize">
-                                        {new Date(comment.createdAt || Date.now()).toLocaleDateString()}
-                                    </span>
-                                </div>
-                                <p className="text-gray-600 dark:text-gray-400 text-sm italic">
-                                    "{comment.text}"
-                                </p>
-                            </Card>
-                        </motion.div>
-                    ))}
-                    {comments.length === 0 && (
-                        <p className="text-center text-gray-400 font-light italic">Hozircha tabriklar yo'q. Birinchilardan bo'ling!</p>
-                    )}
+                {/* Bottom Graphic */}
+                <div className="mt-auto opacity-10 py-4">
+                    <Heart className="h-8 w-8 text-[#f472b6]" />
                 </div>
             </div>
+
+            {/* Background Texture Overlay */}
+            <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/clean-gray-paper.png')] opacity-20 pointer-events-none" />
         </div>
     )
 }
