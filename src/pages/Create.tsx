@@ -7,10 +7,13 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter }
 import { Calendar, MapPin, MessageSquare, Users, Clock } from "lucide-react"
 import { useLanguage } from "../context/LanguageContext"
 
+import { useTelegram } from "../hooks/useTelegram"
+
 export function Create() {
     const navigate = useNavigate()
     const { data, updateData, saveInvitation, error: contextError } = useInvitation()
     const { t } = useLanguage()
+    const { user: tgUser } = useTelegram()
     const [isSaving, setIsSaving] = useState(false)
     const [saveError, setSaveError] = useState<string | null>(null)
 
@@ -23,7 +26,8 @@ export function Create() {
             // Set a default template if none selected
             const finalData = {
                 ...data,
-                template: data.template || 'classic'
+                template: data.template || 'classic',
+                creatorUser: tgUser // Pass the telegram user object
             }
 
             const id = await saveInvitation(finalData)

@@ -58,10 +58,11 @@ export function InvitationProvider({ children }: { children: ReactNode }) {
         setError(null)
     }
 
-    const saveInvitation = async (overrideData?: InvitationData): Promise<string | null> => {
+    const saveInvitation = async (overrideData?: any): Promise<string | null> => {
         setLoading(true)
         setError(null)
         try {
+            console.log("DEBUG: InvitationContext saving with data:", overrideData || data);
             const result = await api.saveInvitation(overrideData || data)
             console.log("DEBUG: saveInvitation success. Raw result:", result);
 

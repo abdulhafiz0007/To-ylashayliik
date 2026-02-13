@@ -35,10 +35,11 @@ async function fetchApi(path: string, options: RequestInit = {}) {
         headers,
     });
 
+    const status = response.status;
+    const statusText = response.statusText;
+    const text = await response.text().catch(() => '');
+
     if (!response.ok) {
-        const status = response.status;
-        const statusText = response.statusText;
-        const text = await response.text().catch(() => 'No response body');
         console.error(`API Error: ${status} ${statusText}`, text);
 
         if (status === 401) {
@@ -57,7 +58,6 @@ async function fetchApi(path: string, options: RequestInit = {}) {
         throw new Error(errorMessage);
     }
 
-    const text = await response.text().catch(() => '');
     if (!text) return null;
 
     try {
@@ -145,49 +145,50 @@ export const api = {
         return mapBackendToFrontend(data);
     },
 
-    saveInvitation: async (invData: { id?: string | number; _id?: string; date?: string; time?: string;[key: string]: unknown }) => {
-        const cleanData = { ...invData };
+    saveInvitation: async (invData: any) => {
+        // Strict mapping based on backend documentation screenshot
+        const currentTemplate = invData.template || invData.templateId || 'classic';
+        const templateEnum = templateMapping[currentTemplate] || (currentTemplate.startsWith('TEMPLATE_') ? currentTemplate : 'TEMPLATE_1');
 
-        // New invitation should have id: 0 as per schema
-        if (!cleanData.id && !cleanData._id) {
-            cleanData.id = 0;
-        } else {
-            cleanData.id = cleanData.id || cleanData._id;
-        }
-        delete cleanData._id;
-
-        // Transform date/time to ISO Instant
-        if (cleanData.date && typeof cleanData.date === 'string' && cleanData.time && typeof cleanData.time === 'string') {
-            cleanData.date = `${cleanData.date}T${cleanData.time}:00.000Z`;
-        } else if (cleanData.date && typeof cleanData.date === 'string') {
-            cleanData.date = `${cleanData.date}T00:00:00.000Z`;
+        // Date transformation strictly to ISO Instant with milliseconds
+        let dateISO = invData.date || "";
+        if (invData.date && typeof invData.date === 'string' && invData.time && typeof invData.time === 'string') {
+            dateISO = `${invData.date}T${invData.time}:00.000Z`;
+        } else if (invData.date && typeof invData.date === 'string' && !invData.date.includes('T')) {
+            dateISO = `${invData.date}T12:00:00.000Z`;
         }
 
-        // Template mapping
-        const currentTemplate = (cleanData.template || cleanData.templateId) as string;
-        if (currentTemplate && templateMapping[currentTemplate]) {
-            cleanData.template = templateMapping[currentTemplate];
-        } else if (currentTemplate && !currentTemplate.startsWith('TEMPLATE_')) {
-            cleanData.template = 'TEMPLATE_1';
+        const payload: any = {
+            id: Number(invData.id) || 0,
+            groomName: invData.groomName || "",
+            groomLastname: invData.groomLastname || "",
+            brideName: invData.brideName || "",
+            brideLastname: invData.brideLastname || "",
+            date: dateISO,
+            hall: invData.hall || "",
+            text: invData.text || invData.message || "",
+            location: invData.location || "",
+            backgroundMusic: invData.backgroundMusic || 'MUSIC_1',
+            template: templateEnum
+        };
+
+        // Explicit creator object if telegram user data is provided
+        if (invData.creatorUser) {
+            payload.creator = {
+                id: 0,
+                telegramId: Number(invData.creatorUser.id),
+                telegramUsername: invData.creatorUser.username || "",
+                first_name: invData.creatorUser.first_name || "",
+                lastname: invData.creatorUser.last_name || "",
+                photoUrl: invData.creatorUser.photo_url || ""
+            };
         }
 
-        // Cleanup
-        delete cleanData.templateId;
-        if (cleanData.message) {
-            cleanData.text = cleanData.message;
-            delete cleanData.message;
-        }
-
-        // Music mapping
-        if (cleanData.backgroundMusic !== 'MUSIC_1' && cleanData.backgroundMusic !== 'MUSIC_2') {
-            cleanData.backgroundMusic = 'MUSIC_1';
-        }
-
-        console.log(`DEBUG: Final saveInvitation payload:`, JSON.stringify(cleanData));
+        console.log(`DEBUG: Final saveInvitation payload:`, JSON.stringify(payload));
 
         return fetchApi('/api/invitations/init', {
             method: 'POST',
-            body: JSON.stringify(cleanData),
+            body: JSON.stringify(payload),
         });
     },
 
