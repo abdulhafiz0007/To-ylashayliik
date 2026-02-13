@@ -96,18 +96,7 @@ export function Home() {
     }, [])
 
     return (
-        <div className="container mx-auto px-4 py-6 space-y-8 animate-fade-in">
-            {/* Header Title */}
-            <div className="flex items-center justify-between">
-                <h1 className="text-3xl font-serif font-bold text-gray-900 dark:text-white">
-                    {t('management')}
-                </h1>
-                <button className="relative p-2 rounded-full bg-white dark:bg-slate-800 shadow-sm border dark:border-slate-700 text-gray-500 hover:text-primary-500 transition-colors">
-                    <Bell className="h-6 w-6" />
-                    <span className="absolute top-2 right-2 w-2 h-2 bg-red-500 rounded-full border-2 border-white dark:border-slate-800" />
-                </button>
-            </div>
-
+        <div className="container mx-auto px-4 py-12 space-y-8 animate-fade-in">
             {/* Create Invitation Card */}
             <Link to="/create">
                 <motion.div
@@ -135,7 +124,7 @@ export function Home() {
             </Link>
 
             {/* Tabs */}
-            <div className="bg-gray-100 dark:bg-slate-900 p-1.5 rounded-2xl flex gap-1 relative overflow-hidden">
+            <div className="bg-gray-100 dark:bg-slate-900 p-1.5 rounded-2xl flex gap-1 relative overflow-hidden mt-3">
                 <button
                     onClick={() => setActiveTab('myEvents')}
                     className={cn(

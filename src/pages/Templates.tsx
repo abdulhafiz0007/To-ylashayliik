@@ -5,7 +5,6 @@ import { useLanguage } from "../context/LanguageContext"
 import { useInvitation } from "../context/InvitationContext"
 import { Card, CardContent } from "../components/ui/Card"
 import { Button } from "../components/ui/Button"
-import { Heart, Sparkles } from "lucide-react"
 
 export function Templates() {
     const navigate = useNavigate()
@@ -28,47 +27,40 @@ export function Templates() {
                 </p>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
                 {templates.map((template, index) => (
                     <motion.div
                         key={template.id}
                         initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ delay: index * 0.1 }}
-                        whileHover={{ y: -5 }}
+                        className="group"
                     >
-                        <Card className="overflow-hidden border-gold-100 dark:border-slate-800 shadow-lg dark:bg-slate-900">
-                            <div className="aspect-[3/4] relative group">
+                        <Card className="overflow-hidden border-gold-100 dark:border-slate-800 shadow-md hover:shadow-xl dark:bg-slate-900 rounded-2xl transition-all duration-300">
+                            <div className="aspect-[3/4.5] relative overflow-hidden">
                                 <img
                                     src={template.thumbnail}
                                     alt={template.name}
-                                    className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-110"
+                                    className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
                                 />
-                                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex flex-col justify-end p-6 space-y-4">
-                                    <div className="flex gap-2">
-                                        <div className="p-2 bg-white/20 backdrop-blur-md rounded-lg text-white">
-                                            <Sparkles className="h-5 w-5" />
-                                        </div>
-                                        <div className="p-2 bg-white/20 backdrop-blur-md rounded-lg text-white">
-                                            <Heart className="h-5 w-5" />
-                                        </div>
-                                    </div>
+                                <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-all duration-300 flex items-center justify-center p-4">
                                     <Button
-                                        className="w-full bg-white text-gray-900 hover:bg-gold-50"
+                                        size="sm"
+                                        className="bg-white text-gray-900 hover:bg-gold-50 shadow-xl scale-90 group-hover:scale-100 transition-all duration-300"
                                         onClick={() => handleSelectTemplate(template.id)}
                                     >
                                         Tanlash
                                     </Button>
                                 </div>
                                 {template.id === 'royal_gold' && (
-                                    <div className="absolute top-4 right-4 bg-gold-500 text-white text-[10px] font-bold px-3 py-1 rounded-full shadow-lg uppercase tracking-widest">
-                                        Premium
+                                    <div className="absolute top-2 right-2 bg-gold-500 text-white text-[8px] font-bold px-2 py-0.5 rounded-full shadow-lg uppercase tracking-widest z-10">
+                                        Vip
                                     </div>
                                 )}
                             </div>
-                            <CardContent className="p-4 text-center">
-                                <h3 className="font-bold text-gray-900 dark:text-white">{template.name}</h3>
-                                <p className="text-xs text-gray-500 dark:text-gray-400 mt-1 uppercase tracking-tighter">
+                            <CardContent className="p-3 text-center border-t border-gold-50 dark:border-slate-800">
+                                <h3 className="font-bold text-gray-900 dark:text-white text-xs truncate">{template.name}</h3>
+                                <p className="text-[8px] text-gray-500 dark:text-gray-400 mt-0.5 uppercase tracking-tighter">
                                     {template.type || 'Wedding Style'}
                                 </p>
                             </CardContent>

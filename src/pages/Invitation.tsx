@@ -135,7 +135,7 @@ export function Invitation() {
     const currentTemplate = templates.find(t => t.id === (invitation.template || 'classic')) || templates[0]
 
     return (
-        <div className="min-h-screen bg-background dark:bg-slate-950 py-8 px-4 pb-48 flex flex-col items-center relative transition-colors duration-500">
+        <div className="min-h-screen bg-background dark:bg-slate-950 py-8 px-4 pb-64 flex flex-col items-center relative transition-colors duration-500">
             {/* Background Music Audio Element */}
             <audio
                 ref={audioRef}
@@ -147,7 +147,7 @@ export function Invitation() {
             <motion.div
                 initial={{ y: 100, opacity: 0 }}
                 animate={{ y: 0, opacity: 1 }}
-                className="fixed bottom-6 z-50 flex items-center gap-3 bg-white/90 dark:bg-slate-900/90 backdrop-blur-md p-3 rounded-full shadow-2xl border border-gold-200 dark:border-slate-800"
+                className="fixed bottom-24 z-50 flex items-center gap-3 bg-white/90 dark:bg-slate-900/90 backdrop-blur-md p-3 rounded-full shadow-2xl border border-gold-200 dark:border-slate-800"
             >
                 <Button
                     variant="ghost"
@@ -204,7 +204,7 @@ export function Invitation() {
                             initial={{ y: "100%" }}
                             animate={{ y: 0 }}
                             exit={{ y: "100%" }}
-                            className="fixed inset-x-0 bottom-0 z-40 bg-white dark:bg-slate-900 rounded-t-[32px] shadow-2xl p-6 pb-24 max-h-[70vh] overflow-y-auto"
+                            className="fixed inset-x-0 bottom-16 z-40 bg-white dark:bg-slate-900 rounded-t-[32px] shadow-2xl p-6 pb-24 max-h-[70vh] overflow-y-auto"
                         >
                             <div className="flex justify-between items-center mb-6">
                                 <h3 className="font-serif text-2xl font-bold dark:text-white">{t('chooseStyle')}</h3>
@@ -284,7 +284,7 @@ export function Invitation() {
                             <motion.p
                                 initial={{ opacity: 0 }}
                                 whileInView={{ opacity: 1 }}
-                                className={cn("whitespace-pre-wrap transition-all duration-500 text-sm leading-relaxed", currentTemplate.messageClass)}
+                                className={cn("whitespace-pre-wrap transition-all duration-500 text-sm leading-relaxed overflow-hidden line-clamp-6 max-h-[120px]", currentTemplate.messageClass)}
                             >
                                 {invitation.text}
                             </motion.p>
