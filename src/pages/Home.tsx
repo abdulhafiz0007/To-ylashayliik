@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react"
 import { Link } from "react-router-dom"
 import { motion, AnimatePresence } from "framer-motion"
-import { Plus, Calendar, MapPin, ChevronRight, Bell, Heart } from "lucide-react"
+import { Plus, Calendar, MapPin, ChevronRight, Heart } from "lucide-react"
 import { useLanguage } from "../context/LanguageContext"
 import { api } from "../lib/api"
 import { cn } from "../lib/utils"
