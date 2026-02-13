@@ -172,15 +172,15 @@ export const api = {
             template: templateEnum
         };
 
-        // Explicit creator object if telegram user data is provided
-        if (invData.creatorUser) {
+        // Explicit creator object if telegram user data or backend user info is provided
+        if (invData.backendUserId || invData.creatorUser) {
             payload.creator = {
-                id: 0,
-                telegramId: Number(invData.creatorUser.id),
-                telegramUsername: invData.creatorUser.username || "",
-                first_name: invData.creatorUser.first_name || "",
-                lastname: invData.creatorUser.last_name || "",
-                photoUrl: invData.creatorUser.photo_url || ""
+                id: Number(invData.backendUserId) || 0,
+                telegramId: Number(invData.creatorUser?.id || 0),
+                telegramUsername: invData.creatorUser?.username || "",
+                first_name: invData.creatorUser?.first_name || "",
+                lastname: invData.creatorUser?.last_name || "",
+                photoUrl: invData.creatorUser?.photo_url || ""
             };
         }
 

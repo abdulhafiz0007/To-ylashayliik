@@ -15,6 +15,29 @@ import { Heart, X } from "lucide-react"
 import { Button } from "./components/ui/Button"
 import { LanguageProvider } from "./context/LanguageContext"
 import { ThemeProvider } from "./context/ThemeContext"
+import { useInvitation } from "./context/InvitationContext"
+
+function AuthInitializer() {
+  const { user: tgUser } = useTelegram()
+  const { setCurrentUser } = useInvitation()
+
+  useEffect(() => {
+    const token = localStorage.getItem('auth_token')
+    if (token && tgUser?.id) {
+      console.log("DEBUG: AuthInitializer fetching backend user for telegramId:", tgUser.id)
+      api.getUserByTelegramId(tgUser.id.toString())
+        .then(user => {
+          console.log("DEBUG: AuthInitializer fetched backend user:", user)
+          setCurrentUser(user)
+        })
+        .catch(err => {
+          console.error("DEBUG: AuthInitializer failed to fetch backend user:", err)
+        })
+    }
+  }, [tgUser, setCurrentUser])
+
+  return null
+}
 
 function App() {
   const { onReady, isTelegram, initData } = useTelegram()
@@ -28,8 +51,8 @@ function App() {
     if (isTelegram && initData) {
       console.log("DEBUG: Starting authTelegram with initData length:", initData.length);
       api.authTelegram(initData)
-        .then(() => {
-          // Check if token was actually set in localStorage by setAuthToken
+        .then((result) => {
+          console.log("DEBUG: authTelegram result:", result);
           const token = localStorage.getItem('auth_token');
           if (token) {
             console.log("DEBUG: Auth success and token verified.");
@@ -141,6 +164,7 @@ function App() {
     <ThemeProvider>
       <LanguageProvider>
         <InvitationProvider>
+          <AuthInitializer />
           <BrowserRouter>
             <Layout>
               <Routes>

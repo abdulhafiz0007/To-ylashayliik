@@ -20,11 +20,13 @@ export interface InvitationData {
 
 interface InvitationContextType {
     data: InvitationData
+    currentUser: any | null
+    setCurrentUser: (user: any) => void
     loading: boolean
     error: string | null
     updateData: (updates: Partial<InvitationData>) => void
     resetData: () => void
-    saveInvitation: (data?: InvitationData) => Promise<string | null>
+    saveInvitation: (data?: any) => Promise<string | null>
     getInvitation: (id: string) => Promise<InvitationData | null>
 }
 
@@ -46,6 +48,7 @@ const InvitationContext = createContext<InvitationContextType | undefined>(undef
 
 export function InvitationProvider({ children }: { children: ReactNode }) {
     const [data, setData] = useState<InvitationData>(defaultData)
+    const [currentUser, setCurrentUser] = useState<any | null>(null)
     const [loading, setLoading] = useState(false)
     const [error, setError] = useState<string | null>(null)
 
@@ -62,8 +65,14 @@ export function InvitationProvider({ children }: { children: ReactNode }) {
         setLoading(true)
         setError(null)
         try {
-            console.log("DEBUG: InvitationContext saving with data:", overrideData || data);
-            const result = await api.saveInvitation(overrideData || data)
+            const inviteData = overrideData || data;
+            // IMPORTANT: Inject internal user ID if we have it
+            if (currentUser && !inviteData.backendUserId) {
+                inviteData.backendUserId = currentUser.id;
+            }
+
+            console.log("DEBUG: InvitationContext saving with data:", inviteData);
+            const result = await api.saveInvitation(inviteData)
             console.log("DEBUG: saveInvitation success. Raw result:", result);
 
             // Extract ID from result (might be {id: 123} or just 123 or {data: {id: 123}})
@@ -106,7 +115,7 @@ export function InvitationProvider({ children }: { children: ReactNode }) {
     }
 
     return (
-        <InvitationContext.Provider value={{ data, loading, error, updateData, resetData, saveInvitation, getInvitation }}>
+        <InvitationContext.Provider value={{ data, currentUser, setCurrentUser, loading, error, updateData, resetData, saveInvitation, getInvitation }}>
             {children}
         </InvitationContext.Provider>
     )
