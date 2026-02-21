@@ -14,6 +14,7 @@ import { api } from "./lib/api"
 import { LanguageProvider } from "./context/LanguageContext"
 import { ThemeProvider } from "./context/ThemeContext"
 import { useInvitation } from "./context/InvitationContext"
+import { ErrorBoundary } from "./components/ErrorBoundary"
 
 function AuthInitializer() {
   const { user: tgUser } = useTelegram()
@@ -60,24 +61,26 @@ function App() {
   }, [onReady, isTelegram, initData])
 
   return (
-    <ThemeProvider>
-      <LanguageProvider>
-        <InvitationProvider>
-          <AuthInitializer />
-          <BrowserRouter>
-            <Layout>
-              <Routes>
-                <Route path="/" element={<Home />} />
-                <Route path="/create" element={<Create />} />
-                <Route path="/templates" element={<Templates />} />
-                <Route path="/invitation/:id" element={<Invitation />} />
-                <Route path="/profile" element={<Profile />} />
-              </Routes>
-            </Layout>
-          </BrowserRouter>
-        </InvitationProvider>
-      </LanguageProvider>
-    </ThemeProvider>
+    <ErrorBoundary>
+      <ThemeProvider>
+        <LanguageProvider>
+          <InvitationProvider>
+            <AuthInitializer />
+            <BrowserRouter>
+              <Layout>
+                <Routes>
+                  <Route path="/" element={<Home />} />
+                  <Route path="/create" element={<Create />} />
+                  <Route path="/templates" element={<Templates />} />
+                  <Route path="/invitation/:id" element={<Invitation />} />
+                  <Route path="/profile" element={<Profile />} />
+                </Routes>
+              </Layout>
+            </BrowserRouter>
+          </InvitationProvider>
+        </LanguageProvider>
+      </ThemeProvider>
+    </ErrorBoundary>
   )
 }
 
