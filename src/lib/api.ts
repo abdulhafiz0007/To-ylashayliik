@@ -209,8 +209,12 @@ export const api = {
 
     // Wishes (New API)
     getWishes: (invitationId: string | number) => fetchApi(`/api/wishes/by-invitation/${invitationId}`),
-    postWish: (invitationId: number, text: string, author: string) => fetchApi('/api/wishes/post', {
+    postWish: (invitationId: number, wishText: string, name: string) => fetchApi('/api/wishes/post', {
         method: 'POST',
-        body: JSON.stringify({ invitationId, text, author })
+        body: JSON.stringify({
+            name,
+            wishText,
+            invitation: { id: invitationId }
+        })
     }),
 };

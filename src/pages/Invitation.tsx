@@ -3,7 +3,7 @@ import { useParams, Link } from "react-router-dom"
 import { useInvitation, type InvitationData } from "../context/InvitationContext"
 import { Button } from "../components/ui/Button"
 import { Input } from "../components/ui/Input"
-import { Heart, Download, Palette, X, Sparkles, Clock, User, MapPin, Calendar } from "lucide-react"
+import { Heart, Download, X, Sparkles, Clock, User, MapPin, Calendar } from "lucide-react"
 import { cn } from "../lib/utils"
 import { templates } from "../lib/templates"
 import { toPng } from 'html-to-image'
@@ -29,7 +29,7 @@ export function Invitation() {
     useEffect(() => {
         const loadInvitation = async () => {
             if (id) {
-                // Load invitation data
+                // Load invitation
                 try {
                     const data = await getInvitation(id)
                     setInvitation(data)
@@ -37,10 +37,10 @@ export function Invitation() {
                     console.error("Failed to load invitation:", err)
                 }
 
-                // Load wishes separately so one failure doesn't affect the other
+                // Load wishes separately
                 try {
                     const wishesData = await api.getWishes(id)
-                    // Handle various response formats: plain array, {content:[...]}, {data:[...]}
+                    // Backend returns paginated: { content: [...], ... }
                     const wishArray = Array.isArray(wishesData)
                         ? wishesData
                         : (wishesData?.content || wishesData?.data || [])
@@ -96,9 +96,11 @@ export function Invitation() {
         if (!newWish.trim() || !senderName.trim() || !id) return;
 
         try {
+            // api.postWish(invitationId, wishText, name)
             const result = await api.postWish(Number(id), newWish, senderName);
             setWishes([result, ...wishes]);
             setNewWish("");
+            setSenderName("");
         } catch (err) {
             console.error("Failed to post wish:", err);
         }
@@ -131,23 +133,6 @@ export function Invitation() {
 
     return (
         <div className="min-h-screen flex flex-col items-center relative pb-10 bg-gradient-to-b from-[#fff5f5] via-[#fffdf9] to-[#fffef2] dark:from-slate-950 dark:to-slate-900 transition-colors duration-500 overflow-y-auto overflow-x-hidden">
-
-            {/* Toolbar - Only Templates Selector */}
-            <motion.div
-                initial={{ y: 50, opacity: 0 }}
-                animate={{ y: 0, opacity: 1 }}
-                className="fixed bottom-24 z-50 flex items-center bg-white/70 dark:bg-slate-900/80 backdrop-blur-xl px-4 py-2 rounded-2xl shadow-2xl border border-white dark:border-slate-800"
-            >
-                <Button
-                    variant="ghost"
-                    size="sm"
-                    className="flex items-center gap-2 text-[10px] uppercase font-bold text-gray-500 hover:text-pink-600 transition-all p-2 px-4 h-10"
-                    onClick={() => setShowTemplates(!showTemplates)}
-                >
-                    <Palette className="h-5 w-5" />
-                    <span>Andozalar</span>
-                </Button>
-            </motion.div>
 
             {/* Template Chooser Drawer */}
             <AnimatePresence>
@@ -197,7 +182,7 @@ export function Invitation() {
                 )}
             </AnimatePresence>
 
-            {/* Main Content View (v3 Scaling Restored) */}
+            {/* Main Content View */}
             <div
                 ref={cardRef}
                 className="w-full max-w-[420px] flex flex-col items-center py-8 px-6 relative z-10"
@@ -212,7 +197,7 @@ export function Invitation() {
                     </p>
                 </div>
 
-                {/* Avatar Section - v3 sizes */}
+                {/* Avatar Section */}
                 <div className="flex items-center justify-center mb-8 gap-2">
                     <div className="flex flex-col items-center">
                         <div className="relative p-1 bg-white dark:bg-slate-800 rounded-full shadow-[0_10px_20px_-5px_rgba(0,0,0,0.1)]">
@@ -241,7 +226,7 @@ export function Invitation() {
                     </div>
                 </div>
 
-                {/* Names & Subtext - v3 sizes */}
+                {/* Names & Subtext */}
                 <div className="text-center space-y-1 mb-8">
                     <h1 className="font-serif text-3xl md:text-4xl text-[#7e22ce] dark:text-white flex items-center justify-center gap-2">
                         {invitation?.brideName} <span className="text-[#f472b6] italic">&</span> {invitation?.groomName}
@@ -251,7 +236,7 @@ export function Invitation() {
                     </p>
                 </div>
 
-                {/* Main Info Card - v3 sizes */}
+                {/* Main Info Card */}
                 <div className="w-full bg-white dark:bg-slate-900 rounded-[32px] p-6 shadow-[0_20px_40px_-10px_rgba(244,114,182,0.15)] space-y-5 border border-white dark:border-slate-800">
                     <div className="flex flex-col items-center gap-1 mb-1">
                         <div className="h-10 w-10 bg-gradient-to-br from-orange-400 to-red-500 rounded-2xl flex items-center justify-center shadow-lg transform rotate-3">
@@ -361,11 +346,11 @@ export function Invitation() {
                                     className="p-5 bg-white/50 dark:bg-slate-800/30 backdrop-blur-sm rounded-[28px] border border-white/50 dark:border-slate-800/50 flex gap-4"
                                 >
                                     <div className="h-12 w-12 shrink-0 bg-gradient-to-br from-pink-100 to-purple-100 dark:from-pink-900/30 dark:to-purple-900/30 text-pink-500 rounded-full flex items-center justify-center font-bold text-lg shadow-sm">
-                                        {wish.author?.[0]?.toUpperCase() || 'G'}
+                                        {wish.name?.[0]?.toUpperCase() || 'G'}
                                     </div>
                                     <div className="space-y-1">
-                                        <p className="font-bold text-gray-900 dark:text-white">{wish.author}</p>
-                                        <p className="text-sm text-gray-600 dark:text-gray-400 leading-relaxed italic">"{wish.text}"</p>
+                                        <p className="font-bold text-gray-900 dark:text-white">{wish.name}</p>
+                                        <p className="text-sm text-gray-600 dark:text-gray-400 leading-relaxed italic">"{wish.wishText}"</p>
                                     </div>
                                 </motion.div>
                             ))
