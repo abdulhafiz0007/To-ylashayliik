@@ -28,18 +28,26 @@ export function Invitation() {
 
     useEffect(() => {
         const loadInvitation = async () => {
-            console.log("DEBUG: Invitation component loading with ID:", id);
             if (id) {
+                // Load invitation data
                 try {
                     const data = await getInvitation(id)
-                    console.log("DEBUG: getInvitation result:", data);
                     setInvitation(data)
-
-                    const wishesData = await api.getWishes(id)
-                    console.log("DEBUG: getWishes result:", wishesData);
-                    setWishes(wishesData || [])
                 } catch (err) {
-                    console.error("DEBUG: Failed to load invitation or wishes:", err)
+                    console.error("Failed to load invitation:", err)
+                }
+
+                // Load wishes separately so one failure doesn't affect the other
+                try {
+                    const wishesData = await api.getWishes(id)
+                    // Handle various response formats: plain array, {content:[...]}, {data:[...]}
+                    const wishArray = Array.isArray(wishesData)
+                        ? wishesData
+                        : (wishesData?.content || wishesData?.data || [])
+                    setWishes(Array.isArray(wishArray) ? wishArray : [])
+                } catch (err) {
+                    console.error("Failed to load wishes:", err)
+                    setWishes([])
                 }
             }
             setLoading(false)
@@ -342,7 +350,7 @@ export function Invitation() {
 
                     {/* Wishes List */}
                     <div className="space-y-4">
-                        {wishes.length === 0 ? (
+                        {!Array.isArray(wishes) || wishes.length === 0 ? (
                             <p className="text-center text-gray-400 italic py-8">Hali tabriklar yo'q. Birinchilardan bo'ling!</p>
                         ) : (
                             wishes.map((wish, i) => (
