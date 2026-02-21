@@ -205,12 +205,12 @@ export const api = {
     // User
     getUserByTelegramId: (telegramId: string) => fetchApi(`/api/users/by-telegram-id/${telegramId}`),
 
-    // Comments
-    getComments: (invitationId: string) => fetchApi(`/api/invitations/${invitationId}/comments`),
-    postComment: (invitationId: string, text: string, senderName: string) => fetchApi(`/api/invitations/${invitationId}/comments`, {
-        method: 'POST',
-        body: JSON.stringify({ text, senderName })
-    }),
-
     healthCheck: () => fetchApi('/health-check'),
+
+    // Wishes (New API)
+    getWishes: (invitationId: string | number) => fetchApi(`/api/wishes/by-invitation/${invitationId}`),
+    postWish: (invitationId: number, text: string, author: string) => fetchApi('/api/wishes/post', {
+        method: 'POST',
+        body: JSON.stringify({ invitationId, text, author })
+    }),
 };
