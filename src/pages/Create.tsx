@@ -30,9 +30,13 @@ export function Create() {
                 creatorUser: tgUser // Pass the telegram user object
             }
 
+            console.log("DEBUG: Create.tsx handleSubmit starting with finalData:", finalData);
             const id = await saveInvitation(finalData)
+            console.log("DEBUG: Create.tsx handleSubmit saveInvitation returned ID:", id);
             if (id) {
                 navigate(`/invitation/${id}`)
+            } else {
+                console.error("DEBUG: Create.tsx handleSubmit - saveInvitation returned null ID!");
             }
         } catch (err: unknown) {
             const errorMsg = err instanceof Error ? err.message : "Server bilan bog'lanishda xatolik yuz berdi.";

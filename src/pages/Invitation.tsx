@@ -28,15 +28,18 @@ export function Invitation() {
 
     useEffect(() => {
         const loadInvitation = async () => {
+            console.log("DEBUG: Invitation component loading with ID:", id);
             if (id) {
-                const data = await getInvitation(id)
-                setInvitation(data)
-
                 try {
+                    const data = await getInvitation(id)
+                    console.log("DEBUG: getInvitation result:", data);
+                    setInvitation(data)
+
                     const wishesData = await api.getWishes(id)
+                    console.log("DEBUG: getWishes result:", wishesData);
                     setWishes(wishesData || [])
                 } catch (err) {
-                    console.error("Failed to fetch wishes:", err)
+                    console.error("DEBUG: Failed to load invitation or wishes:", err)
                 }
             }
             setLoading(false)
@@ -253,10 +256,10 @@ export function Invitation() {
                     <div className="flex justify-between items-center bg-[#fff5f7] dark:bg-pink-900/10 rounded-3xl p-5 px-10">
                         <div className="text-center">
                             <p className="text-2xl font-serif font-black text-[#ec4899] leading-none mb-1">
-                                {invitation?.date?.split(' ')[0] || '28'}
+                                {invitation?.date ? (invitation.date.includes('-') ? invitation.date.split('-')[2] : invitation.date.split(' ')[0]) : '28'}
                             </p>
                             <p className="text-[10px] uppercase font-bold tracking-widest text-[#f87171]">
-                                {invitation?.date?.split(' ')[1] || 'February'}
+                                {invitation?.date ? (invitation.date.includes('-') ? new Date(invitation.date).toLocaleString('default', { month: 'long' }) : invitation.date.split(' ')[1]) : 'February'}
                             </p>
                             <p className="text-[8px] text-gray-400 mt-0.5">2026</p>
                         </div>
