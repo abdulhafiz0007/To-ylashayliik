@@ -28,11 +28,7 @@ export function Layout({ children }: LayoutProps) {
                 <div className="container mx-auto px-4 h-14 flex items-center justify-between">
                     {/* Logo */}
                     <Link to="/" className="flex items-center">
-                        <img
-                            src="/logo.jpg"
-                            alt="Logo"
-                            className="h-10 w-10 object-contain"
-                        />
+                        <h2 className="text-primary-500">E-Taklif</h2>
                     </Link>
 
                     <div className="flex items-center space-x-3">
@@ -64,7 +60,7 @@ export function Layout({ children }: LayoutProps) {
 
                         {/* Profile Wrapper */}
                         <Link to="/profile" className="relative group">
-                            <div className="h-8 w-8 rounded-full bg-gradient-to-tr from-primary-400 to-primary-100 dark:from-primary-600 dark:to-primary-400 flex items-center justify-center text-white border-2 border-primary-50 dark:border-slate-800 shadow-sm transition-all group-hover:scale-105">
+                            <div className="h-10 w-10 rounded-full bg-gradient-to-tr from-primary-400 to-primary-100 dark:from-primary-600 dark:to-primary-400 flex items-center justify-center text-white border-2 border-primary-50 dark:border-slate-800 shadow-sm transition-all group-hover:scale-105">
                                 {user?.photo_url ? (
                                     <img src={user.photo_url} alt="Profile" className="h-full w-full object-cover rounded-full" />
                                 ) : (

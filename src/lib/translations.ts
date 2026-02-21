@@ -3,7 +3,7 @@ export type Language = 'uz' | 'ru' | 'en';
 export const translations = {
     uz: {
         appName: "To'ylashaylik",
-        home: "Bosh sahifa",
+        home: "Asosiy",
         templates: "Andozalar",
         about: "Haqida",
         createBtn: "Taklifnoma yaratish",
