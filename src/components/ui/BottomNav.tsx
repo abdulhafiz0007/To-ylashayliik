@@ -1,5 +1,5 @@
 import { Link, useLocation } from "react-router-dom"
-import { Home, Palette } from "lucide-react"
+import { Home, Palette, User } from "lucide-react"
 import { cn } from "../../lib/utils"
 import { useLanguage } from "../../context/LanguageContext"
 
@@ -17,6 +17,11 @@ export function BottomNav() {
             label: t('templates'),
             path: '/templates',
             icon: Palette
+        },
+        {
+            label: t('profile.title'),
+            path: '/profile',
+            icon: User
         }
     ]
 
@@ -32,19 +37,14 @@ export function BottomNav() {
                             key={item.path}
                             to={item.path}
                             className={cn(
-                                "flex flex-col items-center justify-center space-y-1 transition-all",
+                                "flex flex-col items-center justify-center transition-all h-full px-4 rounded-2xl",
                                 isActive
-                                    ? "text-primary-600 dark:text-primary-400"
+                                    ? "bg-blue-600 text-white shadow-md scale-105"
                                     : "text-gray-400 hover:text-gray-600 dark:text-gray-500 dark:hover:text-gray-400"
                             )}
                         >
-                            <div className={cn(
-                                "p-1 rounded-lg transition-all",
-                                isActive && "bg-primary-50 dark:bg-primary-900/20"
-                            )}>
-                                <Icon className="h-6 w-6" />
-                            </div>
-                            <span className="text-[10px] font-medium uppercase tracking-wider">{item.label}</span>
+                            <Icon className={cn("h-6 w-6 mb-1", isActive ? "stroke-[2.5]" : "stroke-2")} />
+                            <span className="text-[10px] font-bold uppercase tracking-wider">{item.label}</span>
                         </Link>
                     )
                 })}
