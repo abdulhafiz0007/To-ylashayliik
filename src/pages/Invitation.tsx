@@ -76,19 +76,27 @@ export function Invitation() {
     }
 
     const handleShare = async () => {
+        // Construct a better sharing text and URL
+        const shareUrl = window.location.href;
+        const shareText = `Sizni ${invitation?.brideName} & ${invitation?.groomName}larning to'y oqshomiga taklif etamiz! 💍`;
+
         if (navigator.share) {
             try {
                 await navigator.share({
-                    title: 'Wedding Invitation',
-                    text: `You are invited to the wedding of ${invitation?.brideName} ${invitation?.brideLastname} & ${invitation?.groomName} ${invitation?.groomLastname}`,
-                    url: window.location.href,
+                    title: 'To\'y Taklifnomasi',
+                    text: shareText,
+                    url: shareUrl,
                 });
             } catch (err) {
                 console.error('Error sharing:', err);
             }
         } else {
-            navigator.clipboard.writeText(window.location.href);
-            alert("Link nusxalandi!");
+            try {
+                await navigator.clipboard.writeText(shareUrl);
+                alert("Taklifnoma havolasi nusxalandi!");
+            } catch (err) {
+                console.error('Clipboard error:', err);
+            }
         }
     }
 

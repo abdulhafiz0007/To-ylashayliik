@@ -1,5 +1,5 @@
-// Version: 1.0.2 (Auth flow fix - blank screen)
-import { BrowserRouter, Routes, Route } from "react-router-dom"
+// Version: 1.0.3 (Deep linking & Sharing fix)
+import { BrowserRouter, Routes, Route, useNavigate } from "react-router-dom"
 import { Layout } from "./components/ui/Layout"
 import { Home } from "./pages/Home"
 import { InvitationProvider } from "./context/InvitationContext"
@@ -38,6 +38,28 @@ function AuthInitializer() {
   return null
 }
 
+function TelegramDeeplinkHandler() {
+  const { tg } = useTelegram()
+  const navigate = useNavigate()
+
+  useEffect(() => {
+    if (tg?.initDataUnsafe?.start_param) {
+      const startParam = tg.initDataUnsafe.start_param;
+      console.log("DEBUG: Telegram start_param detected:", startParam);
+
+      // If start_param is like 'inv_123' or just '123'
+      const id = startParam.startsWith('inv_') ? startParam.replace('inv_', '') : startParam;
+
+      if (id) {
+        console.log("DEBUG: Redirecting to invitation:", id);
+        navigate(`/invitation/${id}`);
+      }
+    }
+  }, [tg, navigate]);
+
+  return null
+}
+
 function App() {
   const { onReady, isTelegram, initData } = useTelegram()
 
@@ -67,6 +89,7 @@ function App() {
           <InvitationProvider>
             <AuthInitializer />
             <BrowserRouter>
+              <TelegramDeeplinkHandler />
               <Layout>
                 <Routes>
                   <Route path="/" element={<Home />} />
