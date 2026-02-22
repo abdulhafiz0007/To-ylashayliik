@@ -4,7 +4,7 @@ import { useLanguage } from "../../context/LanguageContext"
 import { useTelegram } from "../../hooks/useTelegram"
 import { useTheme } from "../../context/ThemeContext"
 import { BottomNav } from "./BottomNav"
-import { Moon, Sun, User } from "lucide-react"
+import { Moon, Sun, User, Heart } from "lucide-react"
 import { cn } from "../../lib/utils"
 
 interface LayoutProps {
@@ -28,6 +28,7 @@ export function Layout({ children }: LayoutProps) {
                 <div className="container mx-auto px-4 h-14 flex items-center justify-between">
                     {/* Logo & Brand Name */}
                     <Link to="/" className="flex items-center gap-2">
+                        <Heart className="h-8 w-8 text-primary-500 fill-primary-500" />
                         <span className="text-lg font-serif font-bold text-slate-900 dark:text-white">To'ylashaylik</span>
                     </Link>
 
@@ -60,7 +61,7 @@ export function Layout({ children }: LayoutProps) {
 
                         {/* Profile Wrapper */}
                         <Link to="/profile" className="relative group">
-                            <div className="h-9 w-9 rounded-full bg-gradient-to-tr from-primary-400 to-primary-100 dark:from-primary-600 dark:to-primary-400 flex items-center justify-center text-white border-2 border-primary-50 dark:border-slate-800 shadow-sm transition-all group-hover:scale-105">
+                            <div className="h-9.5 w-9.5 rounded-full bg-gradient-to-tr from-primary-400 to-primary-100 dark:from-primary-600 dark:to-primary-400 flex items-center justify-center text-white border-2 border-primary-50 dark:border-slate-800 shadow-sm transition-all group-hover:scale-105">
                                 {user?.photo_url ? (
                                     <img src={user.photo_url} alt="Profile" className="h-full w-full object-cover rounded-full" />
                                 ) : (
