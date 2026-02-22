@@ -28,7 +28,7 @@ export function Layout({ children }: LayoutProps) {
                 <div className="container mx-auto px-4 h-14 flex items-center justify-between">
                     {/* Logo */}
                     <Link to="/" className="flex items-center">
-                        <h2 className="text-primary-500">E-Taklif</h2>
+                        <img src="/logo.jpg" alt="Logo" className="h-8" />
                     </Link>
 
                     <div className="flex items-center space-x-3">
