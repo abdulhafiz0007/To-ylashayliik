@@ -243,7 +243,7 @@ export function Invitation() {
                 {/* Names & Subtext */}
                 <div className="text-center space-y-1 mb-8">
                     <h1 className="font-serif text-3xl md:text-4xl text-[#7e22ce] dark:text-white flex items-center justify-center gap-2">
-                        {invitation?.brideName} <span className="text-[#f472b6] italic">&</span> {invitation?.groomName}
+                        {invitation?.groomName} <span className="text-[#f472b6] italic">&</span> {invitation?.brideName}
                     </h1>
                     <p className="text-[11px] text-pink-600/70 dark:text-pink-400/70 font-medium italic">
                         Oilalari sizni to'yga taklif qiladi
