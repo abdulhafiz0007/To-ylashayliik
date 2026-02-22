@@ -76,8 +76,10 @@ export function Invitation() {
     }
 
     const handleShare = async () => {
-        // Construct a better sharing text and URL
-        const shareUrl = window.location.href;
+        // Construct a direct Telegram link to ensure the invitation opens in the Mini App
+        const botUsername = 'etaklif_bot';
+        const appShortName = 'E-Taklif';
+        const shareUrl = `https://t.me/${botUsername}/${appShortName}?startapp=inv_${id}`;
         const shareText = `Sizni ${invitation?.brideName} & ${invitation?.groomName}larning to'y oqshomiga taklif etamiz! 💍`;
 
         if (navigator.share) {
