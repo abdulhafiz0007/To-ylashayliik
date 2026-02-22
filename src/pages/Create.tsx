@@ -74,8 +74,8 @@ export function Create() {
                                     <Users className="h-4 w-4" /> {t('groomName')}
                                 </label>
                                 <Input
-                                    placeholder="Sarah"
-                                    value={data.brideName}
+                                    placeholder="John"
+                                    value={data.groomName}
                                     onChange={(e) => updateData({ groomName: e.target.value })}
                                     required
                                 />
@@ -85,8 +85,8 @@ export function Create() {
                                     <Users className="h-4 w-4" /> {t('groomLastname')}
                                 </label>
                                 <Input
-                                    placeholder="Algorithm"
-                                    value={data.brideLastname}
+                                    placeholder="Doe"
+                                    value={data.groomLastname}
                                     onChange={(e) => updateData({ groomLastname: e.target.value })}
                                     required
                                 />
@@ -99,8 +99,8 @@ export function Create() {
                                     <Users className="h-4 w-4" /> {t('brideName')}
                                 </label>
                                 <Input
-                                    placeholder="John"
-                                    value={data.groomName}
+                                    placeholder="Sarah"
+                                    value={data.brideName}
                                     onChange={(e) => updateData({ brideName: e.target.value })}
                                     required
                                 />
@@ -110,8 +110,8 @@ export function Create() {
                                     <Users className="h-4 w-4" /> {t('brideLastname')}
                                 </label>
                                 <Input
-                                    placeholder="Coder"
-                                    value={data.groomLastname}
+                                    placeholder="Algorithm"
+                                    value={data.brideLastname}
                                     onChange={(e) => updateData({ brideLastname: e.target.value })}
                                     required
                                 />
