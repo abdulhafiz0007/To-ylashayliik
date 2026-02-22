@@ -1,4 +1,4 @@
-import { createContext, useContext, useState, type ReactNode } from "react"
+import { createContext, useContext, useState, useEffect, type ReactNode } from "react"
 import { api } from "../lib/api"
 
 export interface InvitationData {
@@ -21,6 +21,7 @@ export interface InvitationData {
 interface InvitationContextType {
     data: InvitationData
     currentUser: any | null
+    receivedInvitations: InvitationData[]
     setCurrentUser: (user: any) => void
     loading: boolean
     error: string | null
@@ -28,6 +29,7 @@ interface InvitationContextType {
     resetData: () => void
     saveInvitation: (data?: any) => Promise<string | null>
     getInvitation: (id: string) => Promise<InvitationData | null>
+    addReceivedInvitation: (inv: InvitationData) => void
 }
 
 const defaultData: InvitationData = {
@@ -49,8 +51,21 @@ const InvitationContext = createContext<InvitationContextType | undefined>(undef
 export function InvitationProvider({ children }: { children: ReactNode }) {
     const [data, setData] = useState<InvitationData>(defaultData)
     const [currentUser, setCurrentUser] = useState<any | null>(null)
+    const [receivedInvitations, setReceivedInvitations] = useState<InvitationData[]>([])
     const [loading, setLoading] = useState(false)
     const [error, setError] = useState<string | null>(null)
+
+    // Load received invitations from localStorage on mount
+    useEffect(() => {
+        const saved = localStorage.getItem('received_invitations')
+        if (saved) {
+            try {
+                setReceivedInvitations(JSON.parse(saved))
+            } catch (e) {
+                console.error("Failed to parse received invitations", e)
+            }
+        }
+    }, [])
 
     const updateData = (updates: Partial<InvitationData>) => {
         setData((prev) => ({ ...prev, ...updates }))
@@ -59,6 +74,20 @@ export function InvitationProvider({ children }: { children: ReactNode }) {
     const resetData = () => {
         setData(defaultData)
         setError(null)
+    }
+
+    const addReceivedInvitation = (inv: InvitationData) => {
+        if (!inv.id) return
+
+        setReceivedInvitations(prev => {
+            // Check if already exists
+            const exists = prev.find(item => String(item.id) === String(inv.id))
+            if (exists) return prev
+
+            const updated = [inv, ...prev]
+            localStorage.setItem('received_invitations', JSON.stringify(updated))
+            return updated
+        })
     }
 
     const saveInvitation = async (overrideData?: any): Promise<string | null> => {
@@ -115,7 +144,19 @@ export function InvitationProvider({ children }: { children: ReactNode }) {
     }
 
     return (
-        <InvitationContext.Provider value={{ data, currentUser, setCurrentUser, loading, error, updateData, resetData, saveInvitation, getInvitation }}>
+        <InvitationContext.Provider value={{
+            data,
+            currentUser,
+            receivedInvitations,
+            setCurrentUser,
+            loading,
+            error,
+            updateData,
+            resetData,
+            saveInvitation,
+            getInvitation,
+            addReceivedInvitation
+        }}>
             {children}
         </InvitationContext.Provider>
     )

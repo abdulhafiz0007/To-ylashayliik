@@ -3,6 +3,7 @@ import { Link } from "react-router-dom"
 import { AnimatePresence, motion } from "framer-motion"
 import { Plus, Calendar, MapPin, ChevronRight, Heart } from "lucide-react"
 import { useLanguage } from "../context/LanguageContext"
+import { useInvitation } from "../context/InvitationContext"
 import { api } from "../lib/api"
 import { cn } from "../lib/utils"
 import { Button } from "../components/ui/Button"
@@ -46,6 +47,7 @@ function InvitationSmallCard({ title, date, location, image }: InvitationCardPro
 
 export function Home() {
     const { t } = useLanguage()
+    const { receivedInvitations } = useInvitation()
     const [activeTab, setActiveTab] = useState<'myEvents' | 'invitations'>('myEvents')
     const [invitations, setInvitations] = useState<any[]>([])
     const [loading, setLoading] = useState(true)
@@ -171,12 +173,26 @@ export function Home() {
                             initial={{ opacity: 0, x: 20 }}
                             animate={{ opacity: 1, x: 0 }}
                             exit={{ opacity: 0, x: -20 }}
-                            className="text-center py-12 space-y-4"
+                            className="space-y-4"
                         >
-                            <div className="h-20 w-20 bg-blue-50 dark:bg-blue-900/10 rounded-full flex items-center justify-center mx-auto">
-                                <Plus className="h-10 w-10 text-blue-400" />
-                            </div>
-                            <p className="text-gray-500">Hozircha qabul qilingan taklifnomalar yo'q</p>
+                            {receivedInvitations.length > 0 ? (
+                                receivedInvitations.map((inv) => (
+                                    <Link key={inv.id} to={`/invitation/${inv.id}`}>
+                                        <InvitationSmallCard
+                                            title={`${inv.brideName} & ${inv.groomName}`}
+                                            date={inv.date}
+                                            location={inv.hall || inv.location}
+                                        />
+                                    </Link>
+                                ))
+                            ) : (
+                                <div className="text-center py-12 space-y-4">
+                                    <div className="h-20 w-20 bg-blue-50 dark:bg-blue-900/10 rounded-full flex items-center justify-center mx-auto">
+                                        <Plus className="h-10 w-10 text-blue-400" />
+                                    </div>
+                                    <p className="text-gray-500">Hozircha qabul qilingan taklifnomalar yo'q</p>
+                                </div>
+                            )}
                         </motion.div>
                     )}
                 </AnimatePresence>

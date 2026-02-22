@@ -14,7 +14,7 @@ import { motion, AnimatePresence } from "framer-motion"
 
 export function Invitation() {
     const { id } = useParams<{ id: string }>()
-    const { getInvitation, updateData, saveInvitation, loading: contextLoading, error: contextError } = useInvitation()
+    const { getInvitation, updateData, saveInvitation, addReceivedInvitation, loading: contextLoading, error: contextError } = useInvitation()
     const { t } = useLanguage()
     const [invitation, setInvitation] = useState<InvitationData | null>(null)
     const [loading, setLoading] = useState(true)
@@ -33,6 +33,10 @@ export function Invitation() {
                 try {
                     const data = await getInvitation(id)
                     setInvitation(data)
+                    // If successfully loaded, add to received invitations
+                    if (data) {
+                        addReceivedInvitation(data);
+                    }
                 } catch (err) {
                     console.error("Failed to load invitation:", err)
                 }

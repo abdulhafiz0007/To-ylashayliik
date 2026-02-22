@@ -8,7 +8,7 @@ import { Invitation } from "./pages/Invitation"
 import { Profile } from "./pages/Profile"
 import { Templates } from "./pages/Templates"
 
-import { useEffect } from "react"
+import { useEffect, useRef } from "react"
 import { useTelegram } from "./hooks/useTelegram"
 import { api } from "./lib/api"
 import { LanguageProvider } from "./context/LanguageContext"
@@ -41,9 +41,10 @@ function AuthInitializer() {
 function TelegramDeeplinkHandler() {
   const { tg } = useTelegram()
   const navigate = useNavigate()
+  const hasRedirected = useRef(false)
 
   useEffect(() => {
-    if (tg?.initDataUnsafe?.start_param) {
+    if (tg?.initDataUnsafe?.start_param && !hasRedirected.current) {
       const startParam = tg.initDataUnsafe.start_param;
       console.log("DEBUG: Telegram start_param detected:", startParam);
 
@@ -52,6 +53,7 @@ function TelegramDeeplinkHandler() {
 
       if (id) {
         console.log("DEBUG: Redirecting to invitation:", id);
+        hasRedirected.current = true;
         navigate(`/invitation/${id}`);
       }
     }

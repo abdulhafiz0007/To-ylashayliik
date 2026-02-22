@@ -71,36 +71,11 @@ export function Create() {
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                             <div className="space-y-2">
                                 <label className="text-sm font-medium text-gold-900 dark:text-gold-200 flex items-center gap-2">
-                                    <Users className="h-4 w-4" /> {t('brideName')}
+                                    <Users className="h-4 w-4" /> {t('groomName')}
                                 </label>
                                 <Input
                                     placeholder="Sarah"
                                     value={data.brideName}
-                                    onChange={(e) => updateData({ brideName: e.target.value })}
-                                    required
-                                />
-                            </div>
-                            <div className="space-y-2">
-                                <label className="text-sm font-medium text-gold-900 dark:text-gold-200 flex items-center gap-2">
-                                    <Users className="h-4 w-4" /> {t('brideLastname')}
-                                </label>
-                                <Input
-                                    placeholder="Algorithm"
-                                    value={data.brideLastname}
-                                    onChange={(e) => updateData({ brideLastname: e.target.value })}
-                                    required
-                                />
-                            </div>
-                        </div>
-
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                            <div className="space-y-2">
-                                <label className="text-sm font-medium text-gold-900 dark:text-gold-200 flex items-center gap-2">
-                                    <Users className="h-4 w-4" /> {t('groomName')}
-                                </label>
-                                <Input
-                                    placeholder="John"
-                                    value={data.groomName}
                                     onChange={(e) => updateData({ groomName: e.target.value })}
                                     required
                                 />
@@ -110,9 +85,34 @@ export function Create() {
                                     <Users className="h-4 w-4" /> {t('groomLastname')}
                                 </label>
                                 <Input
+                                    placeholder="Algorithm"
+                                    value={data.brideLastname}
+                                    onChange={(e) => updateData({ groomLastname: e.target.value })}
+                                    required
+                                />
+                            </div>
+                        </div>
+
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div className="space-y-2">
+                                <label className="text-sm font-medium text-gold-900 dark:text-gold-200 flex items-center gap-2">
+                                    <Users className="h-4 w-4" /> {t('brideName')}
+                                </label>
+                                <Input
+                                    placeholder="John"
+                                    value={data.groomName}
+                                    onChange={(e) => updateData({ brideName: e.target.value })}
+                                    required
+                                />
+                            </div>
+                            <div className="space-y-2">
+                                <label className="text-sm font-medium text-gold-900 dark:text-gold-200 flex items-center gap-2">
+                                    <Users className="h-4 w-4" /> {t('brideLastname')}
+                                </label>
+                                <Input
                                     placeholder="Coder"
                                     value={data.groomLastname}
-                                    onChange={(e) => updateData({ groomLastname: e.target.value })}
+                                    onChange={(e) => updateData({ brideLastname: e.target.value })}
                                     required
                                 />
                             </div>
