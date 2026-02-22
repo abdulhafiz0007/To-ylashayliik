@@ -65,7 +65,7 @@ export function Home() {
     }, [])
 
     return (
-        <div className="container mx-auto px-4 py-12 space-y-8 animate-fade-in">
+        <div className="container mx-auto px-4 py-12 space-y-8 animate-fade-in -mt-5">
             {/* Create Invitation Card */}
             <Link to="/create">
                 <motion.div
