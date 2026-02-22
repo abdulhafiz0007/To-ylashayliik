@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react"
 import { Link } from "react-router-dom"
-import { motion, AnimatePresence } from "framer-motion"
+import { AnimatePresence, motion } from "framer-motion"
 import { Plus, Calendar, MapPin, ChevronRight, Heart } from "lucide-react"
 import { useLanguage } from "../context/LanguageContext"
 import { api } from "../lib/api"
@@ -12,26 +12,10 @@ interface InvitationCardProps {
     title: string
     date: string
     location: string
-    status: 'confirmed' | 'completed' | 'pending' | 'low-rsvp'
-    progress: number
     image?: string
 }
 
-function InvitationSmallCard({ title, date, location, status, progress, image }: InvitationCardProps) {
-    const statusColors = {
-        confirmed: "text-blue-500 bg-blue-50 dark:bg-blue-900/20",
-        completed: "text-green-500 bg-green-50 dark:bg-green-900/20",
-        pending: "text-yellow-600 bg-yellow-50 dark:bg-yellow-900/20",
-        'low-rsvp': "text-red-500 bg-red-50 dark:bg-red-900/20"
-    }
-
-    const progressColors = {
-        confirmed: "bg-blue-500",
-        completed: "bg-green-500",
-        pending: "bg-yellow-500",
-        'low-rsvp': "bg-red-500"
-    }
-
+function InvitationSmallCard({ title, date, location, image }: InvitationCardProps) {
     return (
         <Card className="overflow-hidden border-none shadow-sm dark:bg-slate-800/50 hover:bg-slate-50 dark:hover:bg-slate-800 transition-all group">
             <CardContent className="p-4 flex items-center gap-4">
@@ -52,21 +36,6 @@ function InvitationSmallCard({ title, date, location, status, progress, image }:
                         <span>•</span>
                         <MapPin className="h-3 w-3" />
                         <span className="truncate">{location}</span>
-                    </div>
-                    <div className="mt-2 space-y-1">
-                        <div className="flex justify-between items-center">
-                            <span className={cn("text-[10px] font-bold px-2 py-0.5 rounded-full capitalize", statusColors[status])}>
-                                {status.replace('-', ' ')}
-                            </span>
-                            <span className="text-[10px] font-medium text-gray-400">{progress}%</span>
-                        </div>
-                        <div className="h-1 w-full bg-gray-100 dark:bg-slate-700 rounded-full overflow-hidden">
-                            <motion.div
-                                initial={{ width: 0 }}
-                                animate={{ width: `${progress}%` }}
-                                className={cn("h-full rounded-full transition-all", progressColors[status])}
-                            />
-                        </div>
                     </div>
                 </div>
                 <ChevronRight className="h-5 w-5 text-gray-300 group-hover:text-primary-500 transition-colors" />
@@ -179,8 +148,6 @@ export function Home() {
                                             title={`${inv.brideName} & ${inv.groomName}`}
                                             date={inv.date}
                                             location={inv.hall || inv.location}
-                                            status={inv.id % 2 === 0 ? 'confirmed' : 'pending'}
-                                            progress={inv.id % 2 === 0 ? 85 : 32}
                                         />
                                     </Link>
                                 ))

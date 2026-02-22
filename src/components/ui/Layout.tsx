@@ -26,9 +26,10 @@ export function Layout({ children }: LayoutProps) {
         <div className="min-h-screen flex flex-col bg-background font-sans transition-colors duration-300">
             <header className="sticky top-0 z-50 w-full bg-white dark:bg-slate-900 shadow-sm border-b border-gray-100 dark:border-slate-800">
                 <div className="container mx-auto px-4 h-14 flex items-center justify-between">
-                    {/* Logo */}
-                    <Link to="/" className="flex items-center">
+                    {/* Logo & Brand Name */}
+                    <Link to="/" className="flex items-center gap-2">
                         <img src="/logo.jpg" alt="Logo" className="h-10 w-auto object-contain" />
+                        <span className="text-lg font-serif font-bold text-slate-900 dark:text-white">ETaklif</span>
                     </Link>
 
                     <div className="flex items-center space-x-3">
