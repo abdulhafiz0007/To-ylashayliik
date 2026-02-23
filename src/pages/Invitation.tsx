@@ -42,6 +42,25 @@ export function Invitation() {
     // Ref for the invitation card to capture as image
     const cardRef = useRef<HTMLDivElement>(null)
 
+    const musicUrl = invitation?.backgroundMusic ? MUSIC_MAP[invitation.backgroundMusic as string] : null;
+
+    // Autoplay logic
+    useEffect(() => {
+        if (!loading && invitation && musicUrl && audioRef.current) {
+            const playAudio = async () => {
+                try {
+                    // Browsers require a gesture, but we try anyway.
+                    // If blocked, the user can still manual play.
+                    await audioRef.current?.play();
+                    setIsPlaying(true);
+                } catch (err) {
+                    console.log("Autoplay blocked or failed:", err);
+                }
+            };
+            playAudio();
+        }
+    }, [loading, invitation, musicUrl])
+
     useEffect(() => {
         const loadInvitation = async () => {
             if (id) {
@@ -174,24 +193,8 @@ export function Invitation() {
         }
     }
 
-    const musicUrl = invitation?.backgroundMusic ? MUSIC_MAP[invitation.backgroundMusic as string] : null;
 
-    // Autoplay logic
-    useEffect(() => {
-        if (!loading && invitation && musicUrl && audioRef.current) {
-            const playAudio = async () => {
-                try {
-                    // Browsers require a gesture, but we try anyway.
-                    // If blocked, the user can still manual play.
-                    await audioRef.current?.play();
-                    setIsPlaying(true);
-                } catch (err) {
-                    console.log("Autoplay blocked or failed:", err);
-                }
-            };
-            playAudio();
-        }
-    }, [loading, invitation, musicUrl])
+
 
     return (
         <div className="min-h-screen flex flex-col items-center relative pb-10 bg-gradient-to-b from-[#fff5f5] via-[#fffdf9] to-[#fffef2] dark:from-slate-950 dark:to-slate-900 transition-colors duration-500 overflow-y-auto overflow-x-hidden">
