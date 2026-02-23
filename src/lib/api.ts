@@ -78,11 +78,11 @@ const templateMapping: Record<string, string> = {
     'minimal': 'TEMPLATE_1'
 };
 
-const musicMapping: Record<string, string> = {
+const musicMapping: Record<string, string | null> = {
     'music1': 'MUSIC_1',
     'music2': 'MUSIC_2',
-    'music3': 'MUSIC_1', // Shim: Backend only supports MUSIC_1, MUSIC_2
-    'none': 'MUSIC_1'    // Shim: Backend doesn't support NONE yet
+    'music3': 'MUSIC_2', // Backend only supports MUSIC_1, MUSIC_2. Mapping 3 to 2 for now.
+    'none': null         // Try sending null for Musiqasiz
 };
 
 const reverseTemplateMapping: Record<string, string> = {
@@ -175,7 +175,7 @@ export const api = {
             hall: invData.hall || "",
             text: invData.text || invData.message || "",
             location: invData.location || "",
-            backgroundMusic: musicMapping[invData.backgroundMusic] || invData.backgroundMusic || 'MUSIC_1',
+            backgroundMusic: invData.backgroundMusic in musicMapping ? musicMapping[invData.backgroundMusic] : (invData.backgroundMusic || 'MUSIC_1'),
             template: templateEnum
         };
 
