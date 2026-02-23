@@ -3,7 +3,21 @@ import { useParams, Link } from "react-router-dom"
 import { useInvitation, type InvitationData } from "../context/InvitationContext"
 import { Button } from "../components/ui/Button"
 import { Input } from "../components/ui/Input"
-import { Heart, Download, X, Sparkles, Clock, User, MapPin, Calendar } from "lucide-react"
+import { Heart, Download, X, Sparkles, Clock, User, MapPin, Calendar, Music as MusicIcon, VolumeX } from "lucide-react"
+
+// Import music assets
+import musicAzizam from "../assets/music_azizam.mp3"
+import musicImg from "../assets/IMG_3421.mp3"
+import musicDate from "../assets/2026-02-23 09.26.00.mp3"
+
+const MUSIC_MAP: Record<string, string> = {
+    'MUSIC_1': musicAzizam,
+    'MUSIC_2': musicImg,
+    'MUSIC_3': musicDate,
+    'music1': musicAzizam,
+    'music2': musicImg,
+    'music3': musicDate,
+}
 import { cn } from "../lib/utils"
 import { templates } from "../lib/templates"
 import { toPng } from 'html-to-image'
@@ -22,6 +36,8 @@ export function Invitation() {
     const [wishes, setWishes] = useState<any[]>([])
     const [newWish, setNewWish] = useState("")
     const [senderName, setSenderName] = useState("")
+    const [isPlaying, setIsPlaying] = useState(false)
+    const audioRef = useRef<HTMLAudioElement | null>(null)
 
     // Ref for the invitation card to capture as image
     const cardRef = useRef<HTMLDivElement>(null)
@@ -145,8 +161,58 @@ export function Invitation() {
 
     if (!invitation) return null
 
+    const toggleMusic = () => {
+        if (audioRef.current) {
+            if (isPlaying) {
+                audioRef.current.pause()
+            } else {
+                audioRef.current.play()
+            }
+            setIsPlaying(!isPlaying)
+        }
+    }
+
+    const musicUrl = invitation.backgroundMusic ? MUSIC_MAP[invitation.backgroundMusic as string] : null;
+
     return (
         <div className="min-h-screen flex flex-col items-center relative pb-10 bg-gradient-to-b from-[#fff5f5] via-[#fffdf9] to-[#fffef2] dark:from-slate-950 dark:to-slate-900 transition-colors duration-500 overflow-y-auto overflow-x-hidden">
+            {/* Music Player */}
+            {musicUrl && (
+                <>
+                    <audio
+                        ref={audioRef}
+                        src={musicUrl}
+                        loop
+                        onPlay={() => setIsPlaying(true)}
+                        onPause={() => setIsPlaying(false)}
+                    />
+                    <motion.button
+                        initial={{ scale: 0, opacity: 0 }}
+                        animate={{ scale: 1, opacity: 1 }}
+                        whileHover={{ scale: 1.1 }}
+                        whileTap={{ scale: 0.9 }}
+                        onClick={toggleMusic}
+                        className="fixed right-6 bottom-32 z-50 h-12 w-12 rounded-full bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl border border-pink-100 dark:border-slate-800 shadow-lg flex items-center justify-center text-[#ec4899]"
+                    >
+                        {isPlaying ? (
+                            <motion.div
+                                animate={{ rotate: 360 }}
+                                transition={{ duration: 4, repeat: Infinity, ease: "linear" }}
+                            >
+                                <MusicIcon className="h-6 w-6" />
+                            </motion.div>
+                        ) : (
+                            <VolumeX className="h-6 w-6 opacity-40" />
+                        )}
+                        {isPlaying && (
+                            <span className="absolute -top-1 -right-1 flex h-3 w-3">
+                                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-pink-400 opacity-75"></span>
+                                <span className="relative inline-flex rounded-full h-3 w-3 bg-pink-500"></span>
+                            </span>
+                        )}
+                    </motion.button>
+                </>
+            )}
 
             {/* Template Chooser Drawer */}
             <AnimatePresence>

@@ -6,8 +6,22 @@ import { Input } from "../components/ui/Input"
 import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from "../components/ui/Card"
 import { Calendar, MapPin, MessageSquare, Users, Clock } from "lucide-react"
 import { useLanguage } from "../context/LanguageContext"
+import { cn } from "../lib/utils"
 
 import { useTelegram } from "../hooks/useTelegram"
+import { Music, Play, Pause, Volume2, VolumeX } from "lucide-react"
+
+// Import music assets
+import musicAzizam from "../assets/music_azizam.mp3"
+import musicImg from "../assets/IMG_3421.mp3"
+import musicDate from "../assets/2026-02-23 09.26.00.mp3"
+
+const MUSIC_OPTIONS = [
+    { id: 'music1', name: 'Musiqa 1 (Azizam)', url: musicAzizam },
+    { id: 'music2', name: 'Musiqa 2 (IMG)', url: musicImg },
+    { id: 'music3', name: 'Musiqa 3 (Wedding)', url: musicDate },
+    { id: 'none', name: 'Musiqasiz', url: null },
+]
 
 export function Create() {
     const navigate = useNavigate()
@@ -16,6 +30,7 @@ export function Create() {
     const { user: tgUser } = useTelegram()
     const [isSaving, setIsSaving] = useState(false)
     const [saveError, setSaveError] = useState<string | null>(null)
+    const [playingMusic, setPlayingMusic] = useState<string | null>(null)
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault()
@@ -167,6 +182,62 @@ export function Create() {
                                     onChange={(e) => updateData({ location: e.target.value })}
                                     required
                                 />
+                            </div>
+                        </div>
+
+                        <div className="space-y-4 pt-4 border-t border-gold-100 dark:border-slate-800">
+                            <label className="text-sm font-medium text-gold-900 dark:text-gold-200 flex items-center gap-2">
+                                <Music className="h-4 w-4" /> {t('backgroundMusic') || 'Musiqa tanlash'}
+                            </label>
+                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                                {MUSIC_OPTIONS.map((music) => (
+                                    <div
+                                        key={music.id}
+                                        onClick={() => updateData({ backgroundMusic: music.id })}
+                                        className={cn(
+                                            "flex items-center justify-between p-3 rounded-xl border-2 transition-all cursor-pointer",
+                                            data.backgroundMusic === music.id || (!data.backgroundMusic && music.id === 'music1')
+                                                ? "border-primary-500 bg-primary-50 dark:bg-primary-900/20"
+                                                : "border-gold-100 dark:border-slate-800 hover:border-gold-300 dark:hover:border-slate-700 bg-white dark:bg-slate-900"
+                                        )}
+                                    >
+                                        <div className="flex items-center gap-2">
+                                            {music.id === 'none' ? <VolumeX className="h-4 w-4 text-gray-400" /> : <Volume2 className="h-4 w-4 text-primary-500" />}
+                                            <span className="text-sm font-medium dark:text-white">{music.name}</span>
+                                        </div>
+                                        {music.url && (
+                                            <button
+                                                type="button"
+                                                onClick={(e) => {
+                                                    e.stopPropagation();
+                                                    const audio = document.getElementById(`preview-${music.id}`) as HTMLAudioElement;
+
+                                                    if (playingMusic === music.id) {
+                                                        audio.pause();
+                                                        audio.currentTime = 0;
+                                                        setPlayingMusic(null);
+                                                    } else {
+                                                        // Stop all other audios first
+                                                        document.querySelectorAll('audio').forEach(a => {
+                                                            a.pause();
+                                                            a.currentTime = 0;
+                                                        });
+                                                        setPlayingMusic(music.id);
+                                                        audio.play();
+                                                    }
+                                                }}
+                                                className="h-8 w-8 rounded-full bg-primary-100 dark:bg-primary-900/40 text-primary-600 flex items-center justify-center hover:bg-primary-200"
+                                            >
+                                                {playingMusic === music.id ? <Pause className="h-4 w-4 fill-current" /> : <Play className="h-4 w-4 fill-current" />}
+                                                <audio
+                                                    id={`preview-${music.id}`}
+                                                    src={music.url}
+                                                    onEnded={() => setPlayingMusic(null)}
+                                                />
+                                            </button>
+                                        )}
+                                    </div>
+                                ))}
                             </div>
                         </div>
 
