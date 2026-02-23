@@ -75,6 +75,23 @@ export function Invitation() {
         loadInvitation()
     }, [id])
 
+    // Autoplay logic
+    useEffect(() => {
+        if (!loading && invitation && musicUrl && audioRef.current) {
+            const playAudio = async () => {
+                try {
+                    // Browsers require a gesture, but we try anyway.
+                    // If blocked, the user can still manual play.
+                    await audioRef.current?.play();
+                    setIsPlaying(true);
+                } catch (err) {
+                    console.log("Autoplay blocked or failed:", err);
+                }
+            };
+            playAudio();
+        }
+    }, [loading, invitation, musicUrl])
+
     const handleTemplateChange = async (template: string) => {
         if (invitation && id) {
             const updated = { ...invitation, template }

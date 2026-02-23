@@ -81,8 +81,8 @@ const templateMapping: Record<string, string> = {
 const musicMapping: Record<string, string> = {
     'music1': 'MUSIC_1',
     'music2': 'MUSIC_2',
-    'music3': 'MUSIC_3',
-    'none': 'NONE'
+    'music3': 'MUSIC_1', // Shim: Backend only supports MUSIC_1, MUSIC_2
+    'none': 'MUSIC_1'    // Shim: Backend doesn't support NONE yet
 };
 
 const reverseTemplateMapping: Record<string, string> = {
@@ -91,10 +91,8 @@ const reverseTemplateMapping: Record<string, string> = {
 };
 
 const reverseMusicMapping: Record<string, string> = {
-    'MUSIC_1': 'MUSIC_1',
-    'MUSIC_2': 'MUSIC_2',
-    'MUSIC_3': 'MUSIC_3',
-    'NONE': 'NONE'
+    'MUSIC_1': 'music1',
+    'MUSIC_2': 'music2'
 };
 
 const mapBackendToFrontend = (data: any) => {
