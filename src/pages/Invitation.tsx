@@ -75,22 +75,7 @@ export function Invitation() {
         loadInvitation()
     }, [id])
 
-    // Autoplay logic
-    useEffect(() => {
-        if (!loading && invitation && musicUrl && audioRef.current) {
-            const playAudio = async () => {
-                try {
-                    // Browsers require a gesture, but we try anyway.
-                    // If blocked, the user can still manual play.
-                    await audioRef.current?.play();
-                    setIsPlaying(true);
-                } catch (err) {
-                    console.log("Autoplay blocked or failed:", err);
-                }
-            };
-            playAudio();
-        }
-    }, [loading, invitation, musicUrl])
+
 
     const handleTemplateChange = async (template: string) => {
         if (invitation && id) {
@@ -189,7 +174,24 @@ export function Invitation() {
         }
     }
 
-    const musicUrl = invitation.backgroundMusic ? MUSIC_MAP[invitation.backgroundMusic as string] : null;
+    const musicUrl = invitation?.backgroundMusic ? MUSIC_MAP[invitation.backgroundMusic as string] : null;
+
+    // Autoplay logic
+    useEffect(() => {
+        if (!loading && invitation && musicUrl && audioRef.current) {
+            const playAudio = async () => {
+                try {
+                    // Browsers require a gesture, but we try anyway.
+                    // If blocked, the user can still manual play.
+                    await audioRef.current?.play();
+                    setIsPlaying(true);
+                } catch (err) {
+                    console.log("Autoplay blocked or failed:", err);
+                }
+            };
+            playAudio();
+        }
+    }, [loading, invitation, musicUrl])
 
     return (
         <div className="min-h-screen flex flex-col items-center relative pb-10 bg-gradient-to-b from-[#fff5f5] via-[#fffdf9] to-[#fffef2] dark:from-slate-950 dark:to-slate-900 transition-colors duration-500 overflow-y-auto overflow-x-hidden">
@@ -458,6 +460,6 @@ export function Invitation() {
 
             {/* Background Texture Overlay */}
             <div className="absolute inset-x-0 top-0 h-full bg-[url('https://www.transparenttextures.com/patterns/clean-gray-paper.png')] opacity-20 pointer-events-none z-0" />
-        </div>
+        </div >
     )
 }
