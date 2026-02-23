@@ -196,7 +196,7 @@ export function Create() {
                                         onClick={() => updateData({ backgroundMusic: music.id })}
                                         className={cn(
                                             "flex items-center justify-between p-3 rounded-xl border-2 transition-all cursor-pointer",
-                                            data.backgroundMusic === music.id || (!data.backgroundMusic && music.id === 'music1')
+                                            data.backgroundMusic === music.id
                                                 ? "border-primary-500 bg-primary-50 dark:bg-primary-900/20"
                                                 : "border-gold-100 dark:border-slate-800 hover:border-gold-300 dark:hover:border-slate-700 bg-white dark:bg-slate-900"
                                         )}

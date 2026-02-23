@@ -42,7 +42,7 @@ const defaultData: InvitationData = {
     location: "",
     hall: "",
     text: "Bizning to'yimizga taklif etamiz...",
-    backgroundMusic: "MUSIC_1",
+    backgroundMusic: "music1",
     template: "classic",
 }
 
