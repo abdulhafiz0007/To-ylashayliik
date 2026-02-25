@@ -404,9 +404,6 @@ export function Create() {
 
     return (
         <div className="container mx-auto px-4 py-6 max-w-2xl min-h-screen flex flex-col">
-            <h1 className="text-2xl font-serif font-bold text-center text-primary-800 dark:text-primary-300 mb-6">
-                {t('createTitle')}
-            </h1>
 
             {/* Step Indicator */}
             <div className="flex justify-between mb-6 relative px-4">
@@ -435,10 +432,6 @@ export function Create() {
 
             <form onSubmit={handleSubmit} className="flex-grow">
                 <Card className="shadow-xl border-gold-100 dark:border-slate-800 overflow-hidden">
-                    <CardHeader className="bg-gradient-to-r from-primary-50/50 to-gold-50/50 dark:from-slate-900/50 dark:to-slate-800/50 border-b border-gold-100 dark:border-slate-800">
-                        <CardTitle className="text-lg font-serif text-gold-900 dark:text-gold-200">{t(STEPS[currentStep])}</CardTitle>
-                        <CardDescription>{t('step')} {currentStep + 1} / 3</CardDescription>
-                    </CardHeader>
                     <CardContent className="p-5">
                         {displayError && (
                             <div className="mb-4 p-3 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg text-red-600 dark:text-red-400 text-sm">

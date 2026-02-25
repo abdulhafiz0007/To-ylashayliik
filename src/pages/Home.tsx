@@ -151,7 +151,7 @@ export function Home() {
                                 invitations.map((inv) => (
                                     <Link key={inv.id} to={`/invitation/${inv.id}`}>
                                         <InvitationSmallCard
-                                            title={`${inv.brideName} & ${inv.groomName}`}
+                                            title={`${inv.groomName} & ${inv.brideName}`}
                                             date={inv.date}
                                             location={inv.hall || inv.location}
                                         />
@@ -183,7 +183,7 @@ export function Home() {
                                 filteredReceived.map((inv) => (
                                     <Link key={inv.id} to={`/invitation/${inv.id}`}>
                                         <InvitationSmallCard
-                                            title={`${inv.brideName} & ${inv.groomName}`}
+                                            title={`${inv.groomName} & ${inv.brideName}`}
                                             date={inv.date}
                                             location={inv.hall || inv.location}
                                         />
