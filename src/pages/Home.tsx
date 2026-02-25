@@ -52,6 +52,10 @@ export function Home() {
     const [invitations, setInvitations] = useState<any[]>([])
     const [loading, setLoading] = useState(true)
 
+    // Filter received invitations to exclude user's own created invitations
+    const myInvitationIds = new Set(invitations.map(inv => String(inv.id)))
+    const filteredReceived = receivedInvitations.filter(inv => !myInvitationIds.has(String(inv.id)))
+
     useEffect(() => {
         const fetchMyInvitations = async () => {
             try {
@@ -175,8 +179,8 @@ export function Home() {
                             exit={{ opacity: 0, x: -20 }}
                             className="space-y-4"
                         >
-                            {receivedInvitations.length > 0 ? (
-                                receivedInvitations.map((inv) => (
+                            {filteredReceived.length > 0 ? (
+                                filteredReceived.map((inv) => (
                                     <Link key={inv.id} to={`/invitation/${inv.id}`}>
                                         <InvitationSmallCard
                                             title={`${inv.brideName} & ${inv.groomName}`}

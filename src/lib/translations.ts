@@ -76,7 +76,8 @@ export const translations = {
         back: "Orqaga",
         uploadPhoto: "Rasm yuklash",
         changePhoto: "Rasmni o'zgartirish",
-        step: "Qadam"
+        step: "Qadam",
+        dateOfBirth: "Tug'ilgan sana"
     },
     ru: {
         appName: "To'ylashaylik",
@@ -153,7 +154,8 @@ export const translations = {
         back: "Назад",
         uploadPhoto: "Загрузить фото",
         changePhoto: "Изменить фото",
-        step: "Шаг"
+        step: "Шаг",
+        dateOfBirth: "Дата рождения"
     },
     en: {
         appName: "To'ylashaylik",
@@ -230,6 +232,7 @@ export const translations = {
         back: "Back",
         uploadPhoto: "Upload Photo",
         changePhoto: "Change Photo",
-        step: "Step"
+        step: "Step",
+        dateOfBirth: "Date of Birth"
     },
 };

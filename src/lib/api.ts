@@ -148,8 +148,23 @@ export const api = {
 
     // Invitations
     getInvitation: async (id: string) => {
-        const data = await fetchApi(`/api/invitations/${id}`);
-        return mapBackendToFrontend(data);
+        try {
+            const data = await fetchApi(`/api/invitations/${id}`);
+            return mapBackendToFrontend(data);
+        } catch (err) {
+            // If auth fails (401), try without auth header for public/shared invitations
+            console.warn('DEBUG: getInvitation with auth failed, trying public...', err);
+            try {
+                const response = await fetch(`${BASE_URL}/api/invitations/${id}`);
+                if (!response.ok) throw new Error(`Public fetch failed: ${response.status}`);
+                const text = await response.text();
+                const data = text ? JSON.parse(text) : null;
+                return mapBackendToFrontend(data);
+            } catch (publicErr) {
+                console.error('DEBUG: Public invitation fetch also failed:', publicErr);
+                throw err; // Re-throw original error
+            }
+        }
     },
 
     saveInvitation: async (invData: any) => {
@@ -169,9 +184,11 @@ export const api = {
             id: Number(invData.id) || 0,
             groomName: invData.groomName || "",
             groomLastname: invData.groomLastname || "",
+            groomDateOfBirth: invData.groomDateOfBirth || "",
             groomPictureKey: invData.groomPictureKey || "",
             brideName: invData.brideName || "",
             brideLastname: invData.brideLastname || "",
+            brideDateOfBirth: invData.brideDateOfBirth || "",
             bridePictureKey: invData.bridePictureKey || "",
             date: dateISO,
             hall: invData.hall || "",

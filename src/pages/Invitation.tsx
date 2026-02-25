@@ -25,10 +25,12 @@ import download from 'downloadjs'
 import { useLanguage } from "../context/LanguageContext"
 import { api } from "../lib/api"
 import { motion, AnimatePresence } from "framer-motion"
+import { useTelegram } from "../hooks/useTelegram"
 
 export function Invitation() {
     const { id } = useParams<{ id: string }>()
-    const { getInvitation, updateData, saveInvitation, addReceivedInvitation, loading: contextLoading, error: contextError } = useInvitation()
+    const { user: tgUser } = useTelegram()
+    const { updateData, saveInvitation, addReceivedInvitation, loading: contextLoading, error: contextError } = useInvitation()
     const { t } = useLanguage()
     const [invitation, setInvitation] = useState<InvitationData | null>(null)
     const [loading, setLoading] = useState(true)
@@ -64,13 +66,19 @@ export function Invitation() {
     useEffect(() => {
         const loadInvitation = async () => {
             if (id) {
-                // Load invitation
+                // Load invitation directly from API (not context) so it works for shared links too
                 try {
-                    const data = await getInvitation(id)
-                    setInvitation(data)
-                    // If successfully loaded, add to received invitations
+                    const data = await api.getInvitation(id)
                     if (data) {
-                        addReceivedInvitation(data);
+                        data.id = data.id || id
+                        setInvitation(data)
+
+                        // Only add to received invitations if viewer is NOT the creator
+                        const tgUserId = tgUser?.id?.toString()
+                        const creatorTgId = data.creator?.telegramId?.toString()
+                        if (!tgUserId || !creatorTgId || tgUserId !== creatorTgId) {
+                            addReceivedInvitation(data)
+                        }
                     }
                 } catch (err) {
                     console.error("Failed to load invitation:", err)
@@ -79,7 +87,6 @@ export function Invitation() {
                 // Load wishes separately
                 try {
                     const wishesData = await api.getWishes(id)
-                    // Backend returns paginated: { content: [...], ... }
                     const wishArray = Array.isArray(wishesData)
                         ? wishesData
                         : (wishesData?.content || wishesData?.data || [])
