@@ -3,7 +3,7 @@ import { useParams, Link } from "react-router-dom"
 import { useInvitation, type InvitationData } from "../context/InvitationContext"
 import { Button } from "../components/ui/Button"
 import { Input } from "../components/ui/Input"
-import { Heart, Download, X, Sparkles, Clock, User, MapPin, Calendar, Music as MusicIcon, VolumeX } from "lucide-react"
+import { Heart, Download, X, Sparkles, Clock, User, MapPin, Calendar, Music as MusicIcon, VolumeX, Share } from "lucide-react"
 
 // Import music assets
 import musicAzizam from "../assets/music_azizam.mp3"
@@ -350,7 +350,7 @@ export function Invitation() {
                                 )}
                             </div>
                             <div className="absolute -bottom-2 left-1/2 -translate-x-1/2 bg-[#f472b6] text-white text-[8px] font-bold px-3 py-1 rounded-full whitespace-nowrap shadow-sm">
-                                {t('groomInfo')}
+                                {t('groom')}
                             </div>
                         </div>
                     </div>
@@ -369,7 +369,7 @@ export function Invitation() {
                                 )}
                             </div>
                             <div className="absolute -bottom-2 left-1/2 -translate-x-1/2 bg-[#f472b6] text-white text-[8px] font-bold px-3 py-1 rounded-full whitespace-nowrap shadow-sm">
-                                {t('brideInfo')}
+                                {t('bride')}
                             </div>
                         </div>
                     </div>
@@ -447,7 +447,7 @@ export function Invitation() {
                         className="flex-1 h-12 rounded-2xl bg-[#ec4899] hover:bg-[#db2777] text-white font-bold shadow-lg shadow-pink-200 gap-2"
                         onClick={handleShare}
                     >
-                        <Heart className="h-5 w-5 fill-current" />
+                        <Share className="h-5 w-5 fill-current" />
                         <span>Ulashish</span>
                     </Button>
                 </div>
