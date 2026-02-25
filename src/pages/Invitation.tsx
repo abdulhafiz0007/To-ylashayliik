@@ -115,10 +115,42 @@ export function Invitation() {
     const handleDownload = async () => {
         if (cardRef.current) {
             try {
-                const dataUrl = await toPng(cardRef.current, { cacheBust: true, pixelRatio: 2 })
+                const dataUrl = await toPng(cardRef.current, {
+                    cacheBust: true,
+                    pixelRatio: 2,
+                    filter: (node: HTMLElement) => {
+                        // Skip the external texture overlay (causes CORS errors)
+                        if (node.className && typeof node.className === 'string' && node.className.includes('bg-[url')) {
+                            return false
+                        }
+                        return true
+                    }
+                })
                 download(dataUrl, 'my-wedding-invitation.png');
             } catch (err) {
-                console.error('oops, something went wrong!', err);
+                console.error('Download failed:', err);
+                // Fallback: try again without external images
+                try {
+                    const dataUrl = await toPng(cardRef.current, {
+                        cacheBust: true,
+                        pixelRatio: 2,
+                        skipFonts: true,
+                        filter: (node: HTMLElement) => {
+                            // Skip any element with external background images
+                            const style = node.style;
+                            if (style && style.backgroundImage && style.backgroundImage.includes('http')) {
+                                return false;
+                            }
+                            if (node.className && typeof node.className === 'string' && (node.className.includes('bg-[url') || node.className.includes('pointer-events-none'))) {
+                                return false;
+                            }
+                            return true;
+                        }
+                    })
+                    download(dataUrl, 'my-wedding-invitation.png');
+                } catch (err2) {
+                    console.error('Fallback download also failed:', err2);
+                }
             }
         }
     }

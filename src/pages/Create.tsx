@@ -26,7 +26,7 @@ const STEPS = ['groomInfo', 'brideInfo', 'weddingInfo'] as const;
 
 export function Create() {
     const navigate = useNavigate()
-    const { data, updateData, saveInvitation, error: contextError } = useInvitation()
+    const { data, updateData, error: contextError } = useInvitation()
     const { t } = useLanguage()
     const { user: tgUser } = useTelegram()
 
@@ -91,30 +91,29 @@ export function Create() {
                 creatorUser: tgUser
             }
 
-            // 1. Save invitation first to get the ID and upload URLs
-            const result = await saveInvitation(finalData)
+            // Use api.saveInvitation directly to get the full response (including PutUrls)
+            const result = await api.saveInvitation(finalData)
 
-            if (!result) {
+            if (!result || !result.id) {
                 setSaveError("Taklifnoma saqlanmadi. Qayta urinib ko'ring.")
                 setIsSaving(false)
                 return
             }
 
-            // 2. Now get the full invitation data with upload URLs
-            const invitationData = await api.getInvitation(result)
+            const invId = result.id
 
-            // 3. Upload images if the user selected any
+            // Upload images using PutUrls from the init response
             const uploadPromises: Promise<any>[] = []
 
-            if (groomFileRef.current && invitationData?.groomPicturePutUrl) {
+            if (groomFileRef.current && result.groomPicturePutUrl) {
                 uploadPromises.push(
-                    api.uploadImage(groomFileRef.current, invitationData.groomPicturePutUrl)
+                    api.uploadImage(groomFileRef.current, result.groomPicturePutUrl)
                 )
             }
 
-            if (brideFileRef.current && invitationData?.bridePicturePutUrl) {
+            if (brideFileRef.current && result.bridePicturePutUrl) {
                 uploadPromises.push(
-                    api.uploadImage(brideFileRef.current, invitationData.bridePicturePutUrl)
+                    api.uploadImage(brideFileRef.current, result.bridePicturePutUrl)
                 )
             }
 
@@ -122,8 +121,8 @@ export function Create() {
                 await Promise.all(uploadPromises)
             }
 
-            // 4. Navigate to the invitation page
-            navigate(`/invitation/${result}`)
+            // Navigate to the invitation page
+            navigate(`/invitation/${invId}`)
 
         } catch (err: unknown) {
             const errorMsg = err instanceof Error ? err.message : "Server bilan bog'lanishda xatolik yuz berdi."
