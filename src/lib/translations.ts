@@ -68,7 +68,15 @@ export const translations = {
         name: "Ismingiz",
         backgroundMusic: "Musiqa",
         loading: "Yuklanmoqda...",
-        error: "Xatolik yuz berdi"
+        error: "Xatolik yuz berdi",
+        groomInfo: "Kuyov ma'lumotlari",
+        brideInfo: "Kelin ma'lumotlari",
+        weddingInfo: "To'y ma'lumotlari",
+        next: "Keyingi",
+        back: "Orqaga",
+        uploadPhoto: "Rasm yuklash",
+        changePhoto: "Rasmni o'zgartirish",
+        step: "Qadam"
     },
     ru: {
         appName: "To'ylashaylik",
@@ -137,7 +145,15 @@ export const translations = {
         name: "Ваше имя",
         backgroundMusic: "Музыка",
         loading: "Загрузка...",
-        error: "Произошла ошибка"
+        error: "Произошла ошибка",
+        groomInfo: "Информация о женихе",
+        brideInfo: "Информация о невесте",
+        weddingInfo: "Информация о свадьбе",
+        next: "Далее",
+        back: "Назад",
+        uploadPhoto: "Загрузить фото",
+        changePhoto: "Изменить фото",
+        step: "Шаг"
     },
     en: {
         appName: "To'ylashaylik",
@@ -206,6 +222,14 @@ export const translations = {
         name: "Your Name",
         backgroundMusic: "Music",
         loading: "Loading...",
-        error: "An error occurred"
+        error: "An error occurred",
+        groomInfo: "Groom Information",
+        brideInfo: "Bride Information",
+        weddingInfo: "Wedding Information",
+        next: "Next",
+        back: "Back",
+        uploadPhoto: "Upload Photo",
+        changePhoto: "Change Photo",
+        step: "Step"
     },
 };

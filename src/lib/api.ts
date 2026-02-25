@@ -169,8 +169,10 @@ export const api = {
             id: Number(invData.id) || 0,
             groomName: invData.groomName || "",
             groomLastname: invData.groomLastname || "",
+            groomPictureKey: invData.groomPictureKey || "",
             brideName: invData.brideName || "",
             brideLastname: invData.brideLastname || "",
+            bridePictureKey: invData.bridePictureKey || "",
             date: dateISO,
             hall: invData.hall || "",
             text: invData.text || invData.message || "",
@@ -185,7 +187,7 @@ export const api = {
                 id: Number(invData.backendUserId) || 0,
                 telegramId: Number(invData.creatorUser?.id || 0),
                 telegramUsername: invData.creatorUser?.username || "",
-                first_name: invData.creatorUser?.first_name || "",
+                firstname: invData.creatorUser?.first_name || "",
                 lastname: invData.creatorUser?.last_name || "",
                 photoUrl: invData.creatorUser?.photo_url || ""
             };
@@ -197,6 +199,22 @@ export const api = {
             method: 'POST',
             body: JSON.stringify(payload),
         });
+    },
+
+    uploadImage: async (file: File, putUrl: string) => {
+        const response = await fetch(putUrl, {
+            method: 'PUT',
+            body: file,
+            headers: {
+                'Content-Type': file.type,
+            },
+        });
+
+        if (!response.ok) {
+            throw new Error(`Failed to upload image: ${response.statusText}`);
+        }
+
+        return true;
     },
 
     getMyInvitations: async () => {

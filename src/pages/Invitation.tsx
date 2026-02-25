@@ -304,10 +304,14 @@ export function Invitation() {
                     <div className="flex flex-col items-center">
                         <div className="relative p-1 bg-white dark:bg-slate-800 rounded-full shadow-[0_10px_20px_-5px_rgba(0,0,0,0.1)]">
                             <div className="h-24 w-24 rounded-full border-4 border-[#ffdde1] overflow-hidden bg-gray-50 dark:bg-slate-900 flex items-center justify-center">
-                                <User className="h-12 w-12 text-gray-200" />
+                                {invitation.groomPictureGetUrl ? (
+                                    <img src={invitation.groomPictureGetUrl} alt="Groom" className="w-full h-full object-cover" />
+                                ) : (
+                                    <User className="h-12 w-12 text-gray-200" />
+                                )}
                             </div>
                             <div className="absolute -bottom-2 left-1/2 -translate-x-1/2 bg-[#f472b6] text-white text-[8px] font-bold px-3 py-1 rounded-full whitespace-nowrap shadow-sm">
-                                Kuyov
+                                {t('groomInfo')}
                             </div>
                         </div>
                     </div>
@@ -319,10 +323,14 @@ export function Invitation() {
                     <div className="flex flex-col items-center">
                         <div className="relative p-1 bg-white dark:bg-slate-800 rounded-full shadow-[0_10px_20px_-5px_rgba(0,0,0,0.1)]">
                             <div className="h-24 w-24 rounded-full border-4 border-[#ffdde1] overflow-hidden bg-gray-50 dark:bg-slate-900 flex items-center justify-center">
-                                <User className="h-12 w-12 text-gray-200" />
+                                {invitation.bridePictureGetUrl ? (
+                                    <img src={invitation.bridePictureGetUrl} alt="Bride" className="w-full h-full object-cover" />
+                                ) : (
+                                    <User className="h-12 w-12 text-gray-200" />
+                                )}
                             </div>
                             <div className="absolute -bottom-2 left-1/2 -translate-x-1/2 bg-[#f472b6] text-white text-[8px] font-bold px-3 py-1 rounded-full whitespace-nowrap shadow-sm">
-                                Kelin
+                                {t('brideInfo')}
                             </div>
                         </div>
                     </div>

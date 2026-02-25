@@ -6,8 +6,14 @@ export interface InvitationData {
     _id?: string
     brideName: string
     brideLastname: string
+    bridePictureKey?: string
+    bridePictureGetUrl?: string
+    bridePicturePutUrl?: string
     groomName: string
     groomLastname: string
+    groomPictureKey?: string
+    groomPictureGetUrl?: string
+    groomPicturePutUrl?: string
     date: string
     time: string
     location: string
@@ -35,8 +41,14 @@ interface InvitationContextType {
 const defaultData: InvitationData = {
     brideName: "",
     brideLastname: "",
+    bridePictureKey: "",
+    bridePictureGetUrl: "",
+    bridePicturePutUrl: "",
     groomName: "",
     groomLastname: "",
+    groomPictureKey: "",
+    groomPictureGetUrl: "",
+    groomPicturePutUrl: "",
     date: "",
     time: "",
     location: "",
