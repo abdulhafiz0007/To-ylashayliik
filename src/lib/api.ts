@@ -1,4 +1,4 @@
-const BASE_URL = 'https://digital-wedding-back.onrender.com';
+const BASE_URL = 'https://back.xushxabar.uz';
 
 let authToken = localStorage.getItem('auth_token') || '';
 
