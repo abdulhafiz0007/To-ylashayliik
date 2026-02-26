@@ -72,18 +72,18 @@ export function TemplatePreview() {
             </main>
 
             {/* Sticky Action Bar */}
-            <div className="fixed bottom-4 left-1/2 -translate-x-1/2 z-50 w-[92%] max-w-lg">
-                <div className="bg-white/90 dark:bg-slate-900/90 backdrop-blur-xl border border-slate-200 dark:border-slate-800 rounded-3xl shadow-xl p-1.5 flex items-center justify-around">
+            <div className="sticky bottom-0 z-50 w-full p-3 bg-white/90 dark:bg-slate-900/90 backdrop-blur-xl border-t border-gray-100 dark:border-slate-800">
+                <div className="container mx-auto max-w-lg flex gap-4">
                     <Button
                         variant="ghost"
-                        className="flex-1 h-14 rounded-2xl font-bold bg-white dark:bg-slate-800 mr-2"
+                        className="flex-1 h-12 rounded-2xl font-bold bg-white dark:bg-slate-800 mr-2"
                         onClick={() => navigate("/templates")}
                     >
                         <ChevronLeft className="h-5 w-5" />
                         {t('back')}
                     </Button>
                     <Button
-                        className="flex-[2] h-14 rounded-2xl font-black bg-primary-500 hover:bg-primary-600 text-white shadow-xl shadow-primary-200 dark:shadow-none space-x-2"
+                        className="flex-[2] h-12 rounded-2xl font-black bg-primary-500 hover:bg-primary-600 text-white shadow-xl shadow-primary-200 dark:shadow-none space-x-2"
                         onClick={handleUseTemplate}
                     >
                         <Check className="h-5 w-5 stroke-[3]" />
