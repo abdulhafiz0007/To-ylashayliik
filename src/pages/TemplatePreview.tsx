@@ -43,7 +43,7 @@ export function TemplatePreview() {
     return (
         <div className="min-h-screen bg-slate-50 dark:bg-black/40 flex flex-col">
             {/* Top Bar */}
-            <header className="sticky top-0 z-50 w-full bg-white/80 dark:bg-slate-900/80 backdrop-blur-md border-b border-gray-100 dark:border-slate-800 px-4 h-14 flex items-center justify-between">
+            {/* <header className="sticky top-0 z-50 w-full bg-white/80 dark:bg-slate-900/80 backdrop-blur-md border-b border-gray-100 dark:border-slate-800 px-4 h-14 flex items-center justify-between">
                 <button
                     onClick={() => navigate("/templates")}
                     className="p-2 hover:bg-gray-100 dark:hover:bg-slate-800 rounded-full transition-colors flex items-center gap-2 text-sm font-medium text-slate-600 dark:text-slate-400"
@@ -55,8 +55,8 @@ export function TemplatePreview() {
                     <span className="text-xs font-bold text-slate-900 dark:text-white uppercase tracking-widest leading-none">Preview</span>
                     <span className="text-[10px] text-slate-400 font-medium">{template.name}</span>
                 </div>
-                <div className="w-10" /> {/* Spacer */}
-            </header>
+                <div className="w-10" /> 
+            </header> */}
 
             <main className="flex-1 overflow-y-auto py-8 px-4 flex justify-center items-start">
                 <motion.div
@@ -72,14 +72,15 @@ export function TemplatePreview() {
             </main>
 
             {/* Sticky Action Bar */}
-            <div className="sticky bottom-0 z-50 w-full p-6 bg-white/90 dark:bg-slate-900/90 backdrop-blur-xl border-t border-gray-100 dark:border-slate-800">
-                <div className="container mx-auto max-w-lg flex gap-4">
+            <div className="fixed bottom-4 left-1/2 -translate-x-1/2 z-50 w-[92%] max-w-lg">
+                <div className="bg-white/90 dark:bg-slate-900/90 backdrop-blur-xl border border-slate-200 dark:border-slate-800 rounded-3xl shadow-xl p-1.5 flex items-center justify-around">
                     <Button
                         variant="ghost"
-                        className="flex-1 h-14 rounded-2xl font-bold bg-white dark:bg-slate-800"
+                        className="flex-1 h-14 rounded-2xl font-bold bg-white dark:bg-slate-800 mr-2"
                         onClick={() => navigate("/templates")}
                     >
-                        {t('cancel')}
+                        <ChevronLeft className="h-5 w-5" />
+                        {t('back')}
                     </Button>
                     <Button
                         className="flex-[2] h-14 rounded-2xl font-black bg-primary-500 hover:bg-primary-600 text-white shadow-xl shadow-primary-200 dark:shadow-none space-x-2"

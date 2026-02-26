@@ -105,7 +105,7 @@ export function Layout({ children }: LayoutProps) {
 
                         {/* Profile Wrapper */}
                         <Link to="/profile" className="relative group">
-                            <div className="h-8 w-8 rounded-full bg-gradient-to-tr from-primary-400 to-primary-100 dark:from-primary-600 dark:to-primary-400 flex items-center justify-center text-white border-2 border-primary-50 dark:border-slate-800 shadow-sm transition-all group-hover:scale-105 active:scale-90">
+                            <div className="h-9 w-9 rounded-full bg-gradient-to-tr from-primary-400 to-primary-100 dark:from-primary-600 dark:to-primary-400 flex items-center justify-center text-white border-2 border-primary-50 dark:border-slate-800 shadow-sm transition-all group-hover:scale-105 active:scale-90">
                                 {user?.photo_url ? (
                                     <img src={user.photo_url} alt="Profile" className="h-full w-full object-cover rounded-full" />
                                 ) : (

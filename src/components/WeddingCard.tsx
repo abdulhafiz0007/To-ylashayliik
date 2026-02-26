@@ -55,7 +55,7 @@ function Photo({ src, size = 80, className = "", personType = "groom" }: {
 // ════════════════════════════════════════════════════════════════════════════
 function ClassicRoyale({ invitation }: { invitation: Partial<InvitationData> }) {
     return (
-        <div className="relative w-full min-h-[680px] bg-[#fffdf5] flex flex-col items-center overflow-hidden select-none">
+        <div className="relative w-full min-h-[580px] bg-[#fffdf5] flex flex-col items-center overflow-hidden select-none">
             {/* Texture overlay */}
             <div className="absolute inset-0 opacity-[0.03] pointer-events-none bg-[url('https://www.transparenttextures.com/patterns/pinstripe-dark.png')]" />
 
@@ -176,7 +176,7 @@ function ClassicRoyale({ invitation }: { invitation: Partial<InvitationData> }) 
 // ════════════════════════════════════════════════════════════════════════════
 function ModernMinimal({ invitation }: { invitation: Partial<InvitationData> }) {
     return (
-        <div className="w-full min-h-[680px] bg-white flex flex-col overflow-hidden select-none">
+        <div className="w-full min-h-[580px] bg-white flex flex-col overflow-hidden select-none">
             {/* Split photo hero */}
             <div className="flex h-64 relative">
                 {/* Left — Groom, dark */}
@@ -265,7 +265,7 @@ function ModernMinimal({ invitation }: { invitation: Partial<InvitationData> }) 
 // ════════════════════════════════════════════════════════════════════════════
 function GardenBliss({ invitation }: { invitation: Partial<InvitationData> }) {
     return (
-        <div className="w-full min-h-[680px] bg-[#fdfaf5] flex flex-col items-center overflow-hidden select-none relative">
+        <div className="w-full min-h-[580px] bg-[#fdfaf5] flex flex-col items-center overflow-hidden select-none relative">
             {/* Background Pattern */}
             <div className="absolute inset-0 opacity-[0.05] pointer-events-none bg-[url('https://www.transparenttextures.com/patterns/skulls.png')] saturate-0" />
 
@@ -382,7 +382,7 @@ function GardenBliss({ invitation }: { invitation: Partial<InvitationData> }) {
 // ════════════════════════════════════════════════════════════════════════════
 function MidnightStar({ invitation }: { invitation: Partial<InvitationData> }) {
     return (
-        <div className="w-full min-h-[680px] bg-[#05070a] flex flex-col items-center overflow-hidden select-none relative">
+        <div className="w-full min-h-[580px] bg-[#05070a] flex flex-col items-center overflow-hidden select-none relative">
             {/* Stars background - Enhanced */}
             <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/stardust.png')] opacity-30 pointer-events-none" />
             {[...Array(30)].map((_, i) => (
