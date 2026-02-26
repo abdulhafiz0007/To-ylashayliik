@@ -1,6 +1,6 @@
 import type { InvitationData } from "../context/InvitationContext"
 import type { TemplateConfig } from "../lib/templates"
-import { Clock, User, MapPin, Calendar, Heart, Star, Flower2, Diamond } from "lucide-react"
+import { Clock, MapPin, Calendar, Heart, Star, Flower2, Diamond } from "lucide-react"
 
 interface WeddingCardProps {
     invitation: Partial<InvitationData>
@@ -19,18 +19,29 @@ function getMonth(date?: string) {
     return date.split(' ')[1]
 }
 
+// Default avatars
+const DEFAULT_GROOM = "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&q=80&w=200&h=200"
+const DEFAULT_BRIDE = "https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&q=80&w=200&h=200"
+
 // ─── PhotoSlot ───────────────────────────────────────────────────────────────
-function Photo({ src, size = 80, className = "" }: { src?: string; size?: number; className?: string }) {
+function Photo({ src, size = 80, className = "", personType = "groom" }: {
+    src?: string;
+    size?: number;
+    className?: string;
+    personType?: "groom" | "bride"
+}) {
+    const fallback = personType === "bride" ? DEFAULT_BRIDE : DEFAULT_GROOM
     return (
         <div
             className={`overflow-hidden bg-gray-100 flex items-center justify-center shrink-0 ${className}`}
             style={{ width: size, height: size }}
         >
-            {src ? (
-                <img src={src} alt="" className="w-full h-full object-cover" />
-            ) : (
-                <User className="text-gray-300" style={{ width: size * 0.45, height: size * 0.45 }} />
-            )}
+            <img
+                src={src || fallback}
+                alt=""
+                className="w-full h-full object-cover"
+                loading="eager"
+            />
         </div>
     )
 }
@@ -91,6 +102,7 @@ function ClassicRoyale({ invitation }: { invitation: Partial<InvitationData> }) 
                             src={invitation.bridePictureGetUrl}
                             size={96}
                             className="rounded-full border-4 border-pink-300 relative z-10"
+                            personType="bride"
                         />
                     </div>
                     <div className="bg-pink-50 border border-pink-200 rounded-xl px-4 py-1.5 mt-1">
@@ -177,12 +189,9 @@ function ModernMinimal({ invitation }: { invitation: Partial<InvitationData> }) 
 
                 {/* Right — Bride, light */}
                 <div className="w-1/2 bg-slate-100 flex flex-col items-center justify-end pb-4 relative overflow-hidden">
-                    <div className="absolute inset-0">
-                        <Photo src={invitation.bridePictureGetUrl} size={999} className="w-full h-full opacity-50 object-cover" />
-                        <div className="absolute inset-0 bg-gradient-to-t from-slate-100 via-slate-100/60 to-transparent" />
-                    </div>
                     <div className="relative z-10 text-center">
                         <p className="text-[8px] uppercase tracking-[0.3em] text-slate-500 font-bold">Kelin</p>
+                        <Photo src={invitation.bridePictureGetUrl} size={999} className="w-full h-full opacity-50 object-cover absolute inset-0 -z-10" personType="bride" />
                         <p className="text-lg font-black text-slate-800 mt-0.5 leading-tight">
                             {invitation.brideName || "Malika"}
                         </p>
@@ -286,6 +295,7 @@ function GardenBliss({ invitation }: { invitation: Partial<InvitationData> }) {
                             src={invitation.bridePictureGetUrl}
                             className="rounded-[50%] border-2 border-white absolute inset-1"
                             size={80}
+                            personType="bride"
                         />
                     </div>
                     <div className="text-center mt-2">
@@ -413,6 +423,7 @@ function MidnightStar({ invitation }: { invitation: Partial<InvitationData> }) {
                             src={invitation.bridePictureGetUrl}
                             className="rounded-2xl border border-amber-500/20 w-full relative z-10"
                             size={152}
+                            personType="bride"
                         />
                         {/* Bride label */}
                         <div className="absolute bottom-0 left-0 right-0 z-20 bg-gradient-to-t from-black/90 to-transparent rounded-b-2xl py-2 px-3">
