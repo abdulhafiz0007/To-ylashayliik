@@ -16,6 +16,8 @@ import { ThemeProvider } from "./context/ThemeContext"
 import { useInvitation } from "./context/InvitationContext"
 import { ErrorBoundary } from "./components/ErrorBoundary"
 
+import { TemplatePreview } from "./pages/TemplatePreview"
+
 function AuthInitializer() {
   const { user: tgUser } = useTelegram()
   const { setCurrentUser } = useInvitation()
@@ -97,6 +99,7 @@ function App() {
                   <Route path="/" element={<Home />} />
                   <Route path="/create" element={<Create />} />
                   <Route path="/templates" element={<Templates />} />
+                  <Route path="/templates/preview/:id" element={<TemplatePreview />} />
                   <Route path="/invitation/:id" element={<Invitation />} />
                   <Route path="/profile" element={<Profile />} />
                 </Routes>

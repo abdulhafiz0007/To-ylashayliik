@@ -1,5 +1,5 @@
 import { type ReactNode, useState, useRef, useEffect } from "react"
-import { Link } from "react-router-dom"
+import { Link, useLocation } from "react-router-dom"
 import { useLanguage } from "../../context/LanguageContext"
 import { useTelegram } from "../../hooks/useTelegram"
 import { useTheme } from "../../context/ThemeContext"
@@ -18,6 +18,7 @@ export function Layout({ children }: LayoutProps) {
     const { theme, toggleTheme } = useTheme()
     const [isLangOpen, setIsLangOpen] = useState(false)
     const langRef = useRef<HTMLDivElement>(null)
+    const location = useLocation()
 
     const languages = [
         { code: 'uz', label: 'UZ' },
@@ -37,6 +38,8 @@ export function Layout({ children }: LayoutProps) {
         document.addEventListener('mousedown', handleClickOutside)
         return () => document.removeEventListener('mousedown', handleClickOutside)
     }, [])
+
+    const isCreatePage = location.pathname === '/create' || location.pathname.startsWith('/templates/preview');
 
     return (
         <div className="min-h-screen flex flex-col bg-background font-sans transition-colors duration-300">
@@ -116,11 +119,11 @@ export function Layout({ children }: LayoutProps) {
                 </div>
             </header>
 
-            <main className="flex-1 pb-20">
+            <main className={cn("flex-1", !isCreatePage && "pb-20")}>
                 {children}
             </main>
 
-            <BottomNav />
+            {!isCreatePage && <BottomNav />}
         </div>
     )
 }
