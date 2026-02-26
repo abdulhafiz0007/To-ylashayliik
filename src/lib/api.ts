@@ -178,11 +178,9 @@ export const api = {
     },
 
     saveInvitation: async (invData: any) => {
-        // Strict mapping based on backend documentation screenshot
-        const currentTemplate = invData.template || invData.templateId || 'classic';
-        const templateEnum = templateMapping[currentTemplate] || (currentTemplate.startsWith('TEMPLATE_') ? currentTemplate : 'TEMPLATE_1');
+        const currentTemplate = invData.template || invData.templateId || 'classic_royale';
+        const templateEnum = templateMapping[currentTemplate] || (currentTemplate.startsWith('TEMPLATE_') ? currentTemplate : 'TEMPLATE_0000');
 
-        // Date transformation strictly to ISO Instant with milliseconds
         let dateISO = invData.date || "";
         if (invData.date && typeof invData.date === 'string' && invData.time && typeof invData.time === 'string') {
             dateISO = `${invData.date}T${invData.time}:00.000Z`;
@@ -190,37 +188,29 @@ export const api = {
             dateISO = `${invData.date}T12:00:00.000Z`;
         }
 
+        // STRICT COLUMN ORDER based on failing SQL: 
+        // background_music, bride_lastname, bride_name, bride_picture_key, created_at, 
+        // creator_id, date, groom_lastname, groom_name, groom_picture_key, 
+        // hall, location, template, text, id
         const payload: any = {
-            id: Number(invData.id) || 0,
-            groomName: invData.groomName || "",
-            groomLastname: invData.groomLastname || "",
-            groomDateOfBirth: invData.groomDateOfBirth || "",
-            groomPictureKey: invData.groomPictureKey || "",
-            brideName: invData.brideName || "",
-            brideLastname: invData.brideLastname || "",
-            brideDateOfBirth: invData.brideDateOfBirth || "",
-            bridePictureKey: invData.bridePictureKey || "",
+            background_music: invData.backgroundMusic in musicMapping ? musicMapping[invData.backgroundMusic] : (invData.backgroundMusic || 'MUSIC_0000'),
+            bride_lastname: invData.brideLastname || "",
+            bride_name: invData.brideName || "",
+            bride_picture_key: invData.bridePictureKey || "",
+            created_at: new Date().toISOString(),
+            creator_id: Number(invData.creatorUser?.id || invData.backendUserId || 0),
             date: dateISO,
+            groom_lastname: invData.groomLastname || "",
+            groom_name: invData.groomName || "",
+            groom_picture_key: invData.groomPictureKey || "",
             hall: invData.hall || "",
-            text: invData.text || invData.message || "",
             location: invData.location || "",
-            backgroundMusic: invData.backgroundMusic in musicMapping ? musicMapping[invData.backgroundMusic] : (invData.backgroundMusic || 'MUSIC_1'),
-            template: templateEnum
+            template: templateEnum,
+            text: invData.text || invData.message || "",
+            id: Number(invData.id) || 0
         };
 
-        // Explicit creator object if telegram user data or backend user info is provided
-        if (invData.backendUserId || invData.creatorUser) {
-            payload.creator = {
-                id: Number(invData.backendUserId) || 0,
-                telegramId: Number(invData.creatorUser?.id || 0),
-                telegramUsername: invData.creatorUser?.username || "",
-                firstname: invData.creatorUser?.first_name || "",
-                lastname: invData.creatorUser?.last_name || "",
-                photoUrl: invData.creatorUser?.photo_url || ""
-            };
-        }
-
-        console.log(`DEBUG: Final saveInvitation payload:`, JSON.stringify(payload));
+        console.log(`DEBUG: Final aligned payload:`, JSON.stringify(payload));
 
         return fetchApi('/api/invitations/init', {
             method: 'POST',
