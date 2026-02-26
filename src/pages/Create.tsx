@@ -11,6 +11,8 @@ import { useTelegram } from "../hooks/useTelegram"
 import { api } from "../lib/api"
 import Cropper from "react-easy-crop"
 import { getCroppedImg } from "../lib/cropImage"
+import defaultGroom from "../assets/default_groom.jpg"
+import defaultBride from "../assets/default_bride.jpg"
 
 // Import music assets
 import musicAzizam from "../assets/music_azizam.mp3"
@@ -239,9 +241,7 @@ export function Create() {
         label: string
     }) => {
         const hasPhoto = !!(preview || existing)
-        const defaultAvatar = type === 'groom'
-            ? "https://images.unsplash.com/photo-1515934751635-c81c6bc9a2d8?q=80&w=400"
-            : "https://images.unsplash.com/photo-1519225421980-715cb0215aed?q=80&w=400"
+        const defaultAvatar = type === 'groom' ? defaultGroom : defaultBride
 
         return (
             <div className="flex flex-col items-center space-y-3">

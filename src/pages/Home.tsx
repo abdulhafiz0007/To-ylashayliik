@@ -86,7 +86,7 @@ export function Home() {
                                 <div className="space-y-2">
                                     <h2 className="text-2xl font-bold text-white mb-1">{t('createPrompt')}</h2>
                                     <p className="text-primary-200 text-sm opacity-80">
-                                        Elegant va raqamli taklifnomalar olami
+                                        {t('digitalWorld')}
                                     </p>
                                 </div>
                                 <div className="h-14 w-14 rounded-2xl bg-primary-500 text-white flex items-center justify-center shadow-lg group-hover:rotate-12 transition-transform">
@@ -194,7 +194,7 @@ export function Home() {
                                     <div className="h-20 w-20 bg-blue-50 dark:bg-blue-900/10 rounded-full flex items-center justify-center mx-auto">
                                         <Plus className="h-10 w-10 text-blue-400" />
                                     </div>
-                                    <p className="text-gray-500">Hozircha qabul qilingan taklifnomalar yo'q</p>
+                                    <p className="text-gray-500">{t('noReceivedInvitations')}</p>
                                 </div>
                             )}
                         </motion.div>

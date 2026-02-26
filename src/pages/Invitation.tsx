@@ -11,9 +11,9 @@ import musicImg from "../assets/IMG_3421.mp3"
 import musicDate from "../assets/2026-02-23 09.26.00.mp3"
 
 const MUSIC_MAP: Record<string, string> = {
-    'MUSIC_1': musicAzizam,
-    'MUSIC_2': musicImg,
-    'MUSIC_3': musicDate,
+    'MUSIC_0000': musicAzizam,
+    'MUSIC_0001': musicImg,
+    'MUSIC_1000': musicDate,
     'music1': musicAzizam,
     'music2': musicImg,
     'music3': musicDate,
@@ -350,14 +350,14 @@ export function Invitation() {
                         onClick={handleDownload}
                     >
                         <Download className="h-5 w-5 text-pink-500" />
-                        <span>Yuklab olish</span>
+                        <span>{t('save')}</span>
                     </Button>
                     <Button
                         className="flex-1 h-12 rounded-2xl bg-[#ec4899] hover:bg-[#db2777] text-white font-bold shadow-lg shadow-pink-200 gap-2"
                         onClick={handleShare}
                     >
                         <Share2 className="h-5 w-5 fill-current" />
-                        <span>Ulashish</span>
+                        <span>{t('share')}</span>
                     </Button>
                 </div>
 
@@ -365,19 +365,19 @@ export function Invitation() {
                 <div className="space-y-6">
                     <div className="flex items-center gap-2">
                         <div className="h-8 w-px bg-pink-500 rounded-full" />
-                        <h2 className="font-serif text-2xl font-bold text-gray-900 dark:text-white">Tabrik yo'llash</h2>
+                        <h2 className="font-serif text-2xl font-bold text-gray-900 dark:text-white">{t('congratulations')}</h2>
                     </div>
 
                     {/* Wish Form */}
                     <div className="bg-white dark:bg-slate-900 rounded-[32px] p-6 shadow-sm border border-white dark:border-slate-800 space-y-4">
                         <Input
-                            placeholder="Ismingiz"
+                            placeholder={t('name')}
                             value={senderName}
                             onChange={(e) => setSenderName(e.target.value)}
                             className="bg-gray-50/50 dark:bg-slate-800/50 rounded-2xl border-none h-12 px-4 focus:ring-2 focus:ring-pink-200 dark:text-white outline-none"
                         />
                         <textarea
-                            placeholder="Tabrik so'zlari..."
+                            placeholder={t('addComment')}
                             value={newWish}
                             onChange={(e) => setNewWish(e.target.value)}
                             className="w-full min-h-[100px] bg-gray-50/50 dark:bg-slate-800/50 rounded-2xl border-none p-4 focus:ring-2 focus:ring-pink-200 resize-none text-sm dark:text-white outline-none"
@@ -387,14 +387,14 @@ export function Invitation() {
                             className="w-full h-12 rounded-2xl bg-gradient-to-r from-pink-500 to-purple-500 hover:from-pink-600 hover:to-purple-600 text-white font-bold shadow-lg shadow-pink-100"
                             disabled={!newWish.trim() || !senderName.trim()}
                         >
-                            Yuborish
+                            {t('send')}
                         </Button>
                     </div>
 
                     {/* Wishes List */}
                     <div className="space-y-4">
                         {!Array.isArray(wishes) || wishes.length === 0 ? (
-                            <p className="text-center text-gray-400 italic py-8">Hali tabriklar yo'q. Birinchilardan bo'ling!</p>
+                            <p className="text-center text-gray-400 italic py-8">{t('noReceivedInvitations')}</p>
                         ) : (
                             wishes.map((wish, i) => (
                                 <motion.div

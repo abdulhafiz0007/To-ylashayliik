@@ -21,13 +21,10 @@ export function Templates() {
             <div className="text-center pt-10 pb-8 px-4 space-y-3">
                 <div className="inline-flex items-center gap-1.5 px-4 py-1.5 rounded-full bg-primary-50 dark:bg-primary-900/20 text-primary-600 dark:text-primary-400 text-[10px] font-bold uppercase tracking-widest border border-primary-100 dark:border-primary-800/30">
                     <Sparkles className="h-3 w-3" />
-                    Premium Designs
+                    {t('premiumDesigns') || 'Premium Designs'}
                 </div>
-                <h1 className="text-3xl font-black text-slate-900 dark:text-white tracking-tight">
-                    {t('templates')}
-                </h1>
                 <p className="text-gray-500 dark:text-gray-400 max-w-sm mx-auto text-sm leading-relaxed">
-                    O'zingizga ma'qul premium uslubni tanlang
+                    {t('chooseStyle')}
                 </p>
             </div>
 
@@ -86,7 +83,7 @@ export function Templates() {
                                 <div className="px-3 py-3">
                                     <div className="w-full h-10 rounded-2xl bg-gradient-to-r from-primary-500 to-primary-600 flex items-center justify-center gap-2 shadow-sm group-hover:shadow-primary-200 dark:group-hover:shadow-primary-900/30 transition-shadow">
                                         <Eye className="h-4 w-4 text-white" />
-                                        <span className="text-white font-black text-sm">Preview</span>
+                                        <span className="text-white font-black text-sm">{t('previewBtn')}</span>
                                     </div>
                                 </div>
                             </div>

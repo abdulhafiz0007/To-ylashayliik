@@ -4,20 +4,22 @@ import { WeddingCard } from "../components/WeddingCard"
 import { Button } from "../components/ui/Button"
 import { ChevronLeft, Check } from "lucide-react"
 import { useInvitation } from "../context/InvitationContext"
+import { useLanguage } from "../context/LanguageContext"
 import { motion } from "framer-motion"
 
 export function TemplatePreview() {
     const { id } = useParams<{ id: string }>()
     const navigate = useNavigate()
     const { updateData } = useInvitation()
+    const { t } = useLanguage()
 
     const template = templates.find(t => t.id === id)
 
     if (!template) {
         return (
             <div className="min-h-screen flex flex-col items-center justify-center p-4">
-                <p className="text-gray-500 mb-4">Template topilmadi</p>
-                <Button onClick={() => navigate("/templates")}>Back to Templates</Button>
+                <p className="text-gray-500 mb-4">{t('invitationNotFound')}</p>
+                <Button onClick={() => navigate("/templates")}>{t('back')}</Button>
             </div>
         )
     }
@@ -31,8 +33,6 @@ export function TemplatePreview() {
         hall: "Zarafshon Tantanalar Saroyi",
         location: "Toshkent shahri, Yunusobod tumani",
         text: "Allohning izni bilan, qalblarimiz birikadigan ushbu fayzli oqshomda siz azizlarni go'zal to'y bazmimizda kutib qolamiz.",
-        groomPictureGetUrl: "https://images.unsplash.com/photo-1550009158-9ebf69173e03?auto=format&fit=crop&q=80&w=200",
-        bridePictureGetUrl: "https://images.unsplash.com/photo-1549416878-b9ca35c2d47a?auto=format&fit=crop&q=80&w=200",
     }
 
     const handleUseTemplate = () => {
@@ -49,7 +49,7 @@ export function TemplatePreview() {
                     className="p-2 hover:bg-gray-100 dark:hover:bg-slate-800 rounded-full transition-colors flex items-center gap-2 text-sm font-medium text-slate-600 dark:text-slate-400"
                 >
                     <ChevronLeft className="h-5 w-5" />
-                    <span>Back</span>
+                    <span>{t('back')}</span>
                 </button>
                 <div className="flex flex-col items-center">
                     <span className="text-xs font-bold text-slate-900 dark:text-white uppercase tracking-widest leading-none">Preview</span>
@@ -79,14 +79,14 @@ export function TemplatePreview() {
                         className="flex-1 h-14 rounded-2xl font-bold bg-white dark:bg-slate-800"
                         onClick={() => navigate("/templates")}
                     >
-                        Cancel
+                        {t('cancel')}
                     </Button>
                     <Button
                         className="flex-[2] h-14 rounded-2xl font-black bg-primary-500 hover:bg-primary-600 text-white shadow-xl shadow-primary-200 dark:shadow-none space-x-2"
                         onClick={handleUseTemplate}
                     >
                         <Check className="h-5 w-5 stroke-[3]" />
-                        <span>Use This Template</span>
+                        <span>{t('saveContinue')}</span>
                     </Button>
                 </div>
             </div>

@@ -24,8 +24,8 @@ export const translations = {
             }
         },
         createTitle: "Taklifnoma yarating",
-        weddingDetails: "To'y tafsilotlari",
-        enterDetails: "Maxsus kuningiz uchun tafsilotlarni kiriting.",
+        weddingDetails: "Taklifnoma ma'lumotlari",
+        enterDetails: "Maxsus kuningiz tafsilotlarini kiriting.",
         brideName: "Kelinning ismi",
         brideLastname: "Kelinning familiyasi",
         groom: "Kuyov",
@@ -35,8 +35,8 @@ export const translations = {
         date: "Sana",
         time: "Vaqt",
         location: "Manzil",
-        hall: "To'yxona nomi",
-        message: "Shaxsiy xabar",
+        hall: "To'yxona/Restoran",
+        message: "Taklifnoma matni",
         previewBtn: "Ko'rish",
         cancel: "Bekor qilish",
         chooseStyle: "Uslubni tanlang",
@@ -50,7 +50,7 @@ export const translations = {
         style: "Uslub",
         invitationNotFound: "Taklifnoma topilmadi",
         invitationNotFoundDesc: "Bu taklifnoma mavjud emas yoki muddati o'tgan.",
-        createNew: "Yangi yaratish",
+        createNew: "Taklifnoma yaratish",
         profile: {
             title: "Profil",
             settings: "Sozlamalar",
@@ -62,10 +62,10 @@ export const translations = {
         },
         management: "Boshqaruv",
         myEvents: "Mening tadbirlarim",
-        receivedInvitations: "Taklifnomalar",
+        receivedInvitations: "Kelgan taklifnomalar",
         createPrompt: "O'z taklifnomangizni yarating",
         congratulations: "Tabriklar",
-        addComment: "Tabrik yozish",
+        addComment: "Tilak bildirish",
         send: "Yuborish",
         name: "Ismingiz",
         backgroundMusic: "Musiqa",
@@ -73,13 +73,16 @@ export const translations = {
         error: "Xatolik yuz berdi",
         groomInfo: "Kuyov ma'lumotlari",
         brideInfo: "Kelin ma'lumotlari",
-        weddingInfo: "To'y ma'lumotlari",
+        weddingInfo: "To'y tafsilotlari",
         next: "Keyingi",
         back: "Orqaga",
         uploadPhoto: "Rasm yuklash",
         changePhoto: "Rasmni o'zgartirish",
         step: "Qadam",
-        dateOfBirth: "Tug'ilgan sana"
+        dateOfBirth: "Tug'ilgan sana",
+        premiumDesigns: "Premium dizaynlar",
+        digitalWorld: "Elegant va raqamli taklifnomalar olami",
+        noReceivedInvitations: "Hozircha qabul qilingan taklifnomalar yo'q"
     },
     ru: {
         appName: "To'ylashaylik",
@@ -159,7 +162,10 @@ export const translations = {
         uploadPhoto: "Загрузить фото",
         changePhoto: "Изменить фото",
         step: "Шаг",
-        dateOfBirth: "Дата рождения"
+        dateOfBirth: "Дата рождения",
+        premiumDesigns: "Премиум дизайны",
+        digitalWorld: "Мир элегантных цифровых приглашений",
+        noReceivedInvitations: "Принятых приглашений пока нет"
     },
     en: {
         appName: "To'ylashaylik",
@@ -239,6 +245,9 @@ export const translations = {
         uploadPhoto: "Upload Photo",
         changePhoto: "Change Photo",
         step: "Step",
-        dateOfBirth: "Date of Birth"
+        dateOfBirth: "Date of Birth",
+        premiumDesigns: "Premium Designs",
+        digitalWorld: "World of elegant digital invitations",
+        noReceivedInvitations: "No received invitations yet"
     },
 };

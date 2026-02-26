@@ -69,37 +69,40 @@ async function fetchApi(path: string, options: RequestInit = {}) {
 
 // Mappings
 const templateMapping: Record<string, string> = {
-    // New 4-template IDs (Remapped for backend compatibility: only TEMPLATE_1 and TEMPLATE_2)
-    'classic_royale': 'TEMPLATE_1',
-    'modern_minimal': 'TEMPLATE_2',
-    'garden_bliss': 'TEMPLATE_1',
-    'midnight_star': 'TEMPLATE_2',
+    // New 4-template IDs
+    'classic_royale': 'TEMPLATE_0000',
+    'modern_minimal': 'TEMPLATE_0001',
+    'garden_bliss': 'TEMPLATE_1000',
+    'midnight_star': 'TEMPLATE_1001',
     // Legacy/fallback IDs
-    'classic': 'TEMPLATE_1',
-    'royal_gold': 'TEMPLATE_1',
-    'modern_slate': 'TEMPLATE_2',
-    'flower': 'TEMPLATE_1',
-    'pastel': 'TEMPLATE_1',
-    'dark': 'TEMPLATE_2',
-    'minimal': 'TEMPLATE_2',
-    'default': 'TEMPLATE_1',
+    'classic': 'TEMPLATE_0000',
+    'royal_gold': 'TEMPLATE_0000',
+    'modern_slate': 'TEMPLATE_0001',
+    'flower': 'TEMPLATE_1000',
+    'pastel': 'TEMPLATE_0000',
+    'dark': 'TEMPLATE_1001',
+    'minimal': 'TEMPLATE_0001',
+    'default': 'TEMPLATE_0000',
 };
 
 const musicMapping: Record<string, string | null> = {
-    'music1': 'MUSIC_1',
-    'music2': 'MUSIC_2',
-    'music3': 'MUSIC_2',
+    'music1': 'MUSIC_0000',
+    'music2': 'MUSIC_0001',
+    'music3': 'MUSIC_1000',
     'none': null
 };
 
 const reverseTemplateMapping: Record<string, string> = {
-    'TEMPLATE_1': 'classic_royale',
-    'TEMPLATE_2': 'modern_minimal',
+    'TEMPLATE_0000': 'classic_royale',
+    'TEMPLATE_0001': 'modern_minimal',
+    'TEMPLATE_1000': 'garden_bliss',
+    'TEMPLATE_1001': 'midnight_star',
 };
 
 const reverseMusicMapping: Record<string, string> = {
-    'MUSIC_1': 'music1',
-    'MUSIC_2': 'music2'
+    'MUSIC_0000': 'music1',
+    'MUSIC_0001': 'music2',
+    'MUSIC_1000': 'music3'
 };
 
 const mapBackendToFrontend = (data: any) => {

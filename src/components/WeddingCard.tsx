@@ -1,6 +1,8 @@
 import type { InvitationData } from "../context/InvitationContext"
 import type { TemplateConfig } from "../lib/templates"
 import { Clock, MapPin, Calendar, Heart, Star, Flower2, Diamond } from "lucide-react"
+import defaultGroom from "../assets/default_groom.jpg"
+import defaultBride from "../assets/default_bride.jpg"
 
 interface WeddingCardProps {
     invitation: Partial<InvitationData>
@@ -20,21 +22,22 @@ function getMonth(date?: string) {
 }
 
 // Default avatars
-const DEFAULT_GROOM = "https://images.unsplash.com/photo-1515934751635-c81c6bc9a2d8?q=80&w=400"
-const DEFAULT_BRIDE = "https://images.unsplash.com/photo-1519225421980-715cb0215aed?q=80&w=400"
+const DEFAULT_GROOM = defaultGroom
+const DEFAULT_BRIDE = defaultBride
 
 // ─── PhotoSlot ───────────────────────────────────────────────────────────────
 function Photo({ src, size = 80, className = "", personType = "groom" }: {
     src?: string;
-    size?: number;
+    size?: number | string;
     className?: string;
     personType?: "groom" | "bride"
 }) {
     const fallback = personType === "bride" ? DEFAULT_BRIDE : DEFAULT_GROOM
+    const dimStyle = typeof size === 'number' ? { width: size, height: size } : {}
     return (
         <div
-            className={`overflow-hidden bg-gray-100 flex items-center justify-center shrink-0 ${className}`}
-            style={{ width: size, height: size }}
+            className={`overflow-hidden bg-gray-100/10 flex items-center justify-center shrink-0 ${className}`}
+            style={dimStyle}
         >
             <img
                 src={src || fallback}
@@ -53,11 +56,14 @@ function Photo({ src, size = 80, className = "", personType = "groom" }: {
 function ClassicRoyale({ invitation }: { invitation: Partial<InvitationData> }) {
     return (
         <div className="relative w-full min-h-[680px] bg-[#fffdf5] flex flex-col items-center overflow-hidden select-none">
-            {/* Gold corner ornaments */}
-            <div className="absolute top-0 left-0 w-16 h-16 border-l-4 border-t-4 border-amber-400/60" />
-            <div className="absolute top-0 right-0 w-16 h-16 border-r-4 border-t-4 border-amber-400/60" />
-            <div className="absolute bottom-0 left-0 w-16 h-16 border-l-4 border-b-4 border-amber-400/60" />
-            <div className="absolute bottom-0 right-0 w-16 h-16 border-r-4 border-b-4 border-amber-400/60" />
+            {/* Texture overlay */}
+            <div className="absolute inset-0 opacity-[0.03] pointer-events-none bg-[url('https://www.transparenttextures.com/patterns/pinstripe-dark.png')]" />
+
+            {/* Gold corner ornaments - More Ornate */}
+            <div className="absolute top-4 left-4 w-12 h-12 border-l-2 border-t-2 border-amber-400/40" />
+            <div className="absolute top-4 right-4 w-12 h-12 border-r-2 border-t-2 border-amber-400/40" />
+            <div className="absolute bottom-4 left-4 w-12 h-12 border-l-2 border-b-2 border-amber-400/40" />
+            <div className="absolute bottom-4 right-4 w-12 h-12 border-r-2 border-b-2 border-amber-400/40" />
 
             {/* Inner gold border */}
             <div className="absolute inset-4 border border-amber-200/80 pointer-events-none" />
@@ -174,10 +180,10 @@ function ModernMinimal({ invitation }: { invitation: Partial<InvitationData> }) 
             {/* Split photo hero */}
             <div className="flex h-64 relative">
                 {/* Left — Groom, dark */}
-                <div className="w-1/2 bg-slate-900 flex flex-col items-center justify-end pb-4 relative overflow-hidden">
+                <div className="w-1/2 bg-slate-950 flex flex-col items-center justify-end pb-6 relative overflow-hidden">
                     <div className="absolute inset-0">
-                        <Photo src={invitation.groomPictureGetUrl} size={999} className="w-full h-full opacity-40 object-cover" />
-                        <div className="absolute inset-0 bg-gradient-to-t from-slate-900 via-slate-900/60 to-transparent" />
+                        <Photo src={invitation.groomPictureGetUrl} size="full" className="w-full h-full opacity-60 object-cover" />
+                        <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/40 to-transparent" />
                     </div>
                     <div className="relative z-10 text-center">
                         <p className="text-[8px] uppercase tracking-[0.3em] text-slate-400 font-bold">Kuyov</p>
@@ -188,11 +194,14 @@ function ModernMinimal({ invitation }: { invitation: Partial<InvitationData> }) 
                 </div>
 
                 {/* Right — Bride, light */}
-                <div className="w-1/2 bg-slate-100 flex flex-col items-center justify-end pb-4 relative overflow-hidden">
+                <div className="w-1/2 bg-white flex flex-col items-center justify-end pb-6 relative overflow-hidden">
+                    <div className="absolute inset-0">
+                        <Photo src={invitation.bridePictureGetUrl} size="full" className="w-full h-full opacity-50 object-cover" personType="bride" />
+                        <div className="absolute inset-0 bg-gradient-to-t from-white via-white/10 to-transparent" />
+                    </div>
                     <div className="relative z-10 text-center">
-                        <p className="text-[8px] uppercase tracking-[0.3em] text-slate-500 font-bold">Kelin</p>
-                        <Photo src={invitation.bridePictureGetUrl} size={999} className="w-full h-full opacity-50 object-cover absolute inset-0 -z-10" personType="bride" />
-                        <p className="text-lg font-black text-slate-800 mt-0.5 leading-tight">
+                        <p className="text-[8px] uppercase tracking-[0.3em] text-slate-500 font-black">Kelin</p>
+                        <p className="text-lg font-black text-slate-900 mt-0.5 leading-tight">
                             {invitation.brideName || "Malika"}
                         </p>
                     </div>
@@ -221,30 +230,30 @@ function ModernMinimal({ invitation }: { invitation: Partial<InvitationData> }) 
 
             {/* Details row */}
             <div className="grid grid-cols-3 border-b border-slate-100">
-                <div className="flex flex-col items-center py-5 gap-1 border-r border-slate-100">
+                <div className="flex flex-col items-center py-6 gap-1 border-r border-slate-100 bg-slate-50/50">
                     <Calendar className="h-4 w-4 text-slate-400 mb-1" />
                     <p className="text-2xl font-black text-slate-900 leading-none">{getDay(invitation.date)}</p>
-                    <p className="text-[9px] uppercase tracking-widest text-slate-400 font-bold">{getMonth(invitation.date)}</p>
+                    <p className="text-[9px] uppercase tracking-widest text-slate-500 font-black">{getMonth(invitation.date)}</p>
                 </div>
-                <div className="flex flex-col items-center py-5 gap-1 border-r border-slate-100">
+                <div className="flex flex-col items-center py-6 gap-1 border-r border-slate-100">
                     <Clock className="h-4 w-4 text-slate-400 mb-1" />
                     <p className="text-2xl font-black text-slate-900 leading-none">{invitation.time || "18:00"}</p>
-                    <p className="text-[9px] uppercase tracking-widest text-slate-400 font-bold">Vaqt</p>
+                    <p className="text-[9px] uppercase tracking-widest text-slate-500 font-black">Vaqt</p>
                 </div>
-                <div className="flex flex-col items-center py-5 gap-1">
+                <div className="flex flex-col items-center py-6 gap-1 bg-slate-50/50">
                     <MapPin className="h-4 w-4 text-slate-400 mb-1" />
-                    <p className="text-xs font-black text-slate-900 leading-tight text-center px-2">
+                    <p className="text-xs font-black text-slate-900 leading-tight text-center px-2 truncate w-full">
                         {invitation.hall || "Zarafshon"}
                     </p>
-                    <p className="text-[8px] text-slate-400 text-center px-2 leading-tight">
-                        {invitation.location || "Toshkent"}
+                    <p className="text-[8px] text-slate-500 text-center px-2 leading-tight font-bold">
+                        {invitation.location?.split(',')[0] || "Toshkent"}
                     </p>
                 </div>
             </div>
 
             {/* Footer bar */}
-            <div className="mt-auto bg-slate-900 py-5 flex items-center justify-center">
-                <p className="text-[9px] uppercase tracking-[0.5em] text-slate-400 font-bold">Sizni kutib qolamiz</p>
+            <div className="mt-auto bg-slate-950 py-6 flex items-center justify-center">
+                <p className="text-[9px] uppercase tracking-[0.5em] text-slate-400 font-black">Sizni kutib qolamiz</p>
             </div>
         </div>
     )
@@ -256,21 +265,24 @@ function ModernMinimal({ invitation }: { invitation: Partial<InvitationData> }) 
 // ════════════════════════════════════════════════════════════════════════════
 function GardenBliss({ invitation }: { invitation: Partial<InvitationData> }) {
     return (
-        <div className="w-full min-h-[680px] bg-[#fdf8f0] flex flex-col items-center overflow-hidden select-none relative">
+        <div className="w-full min-h-[680px] bg-[#fdfaf5] flex flex-col items-center overflow-hidden select-none relative">
+            {/* Background Pattern */}
+            <div className="absolute inset-0 opacity-[0.05] pointer-events-none bg-[url('https://www.transparenttextures.com/patterns/skulls.png')] saturate-0" />
+
             {/* Floral decoration top */}
-            <div className="w-full h-3 bg-gradient-to-r from-pink-200 via-emerald-200 to-pink-200" />
+            <div className="w-full h-2 bg-gradient-to-r from-pink-300 via-rose-200 to-emerald-200" />
 
             {/* Overlapping circles header */}
             <div className="relative mt-8 mb-4 flex items-center justify-center" style={{ height: 140 }}>
                 {/* Groom oval — left */}
                 <div className="absolute"
-                    style={{ left: '50%', transform: 'translateX(-108px)', top: 0 }}>
-                    <div className="relative" style={{ width: 96, height: 120 }}>
-                        <div className="absolute inset-0 rounded-[50%] border-4 border-pink-200 bg-pink-50" />
+                    style={{ left: '50%', transform: 'translateX(-96px)', top: 0 }}>
+                    <div className="relative" style={{ width: 88, height: 88 }}>
+                        <div className="absolute inset-0 rounded-full border-4 border-pink-200 bg-pink-50 shadow-inner" />
                         <Photo
                             src={invitation.groomPictureGetUrl}
-                            className="rounded-[50%] border-2 border-white absolute inset-1"
-                            size={80}
+                            className="rounded-full border-2 border-white absolute inset-1"
+                            size="full"
                         />
                     </div>
                     <div className="text-center mt-2">
@@ -288,13 +300,13 @@ function GardenBliss({ invitation }: { invitation: Partial<InvitationData> }) {
 
                 {/* Bride oval — right */}
                 <div className="absolute"
-                    style={{ left: '50%', transform: 'translateX(12px)', top: 0 }}>
-                    <div className="relative" style={{ width: 96, height: 120 }}>
-                        <div className="absolute inset-0 rounded-[50%] border-4 border-emerald-200 bg-emerald-50" />
+                    style={{ left: '50%', transform: 'translateX(8px)', top: 0 }}>
+                    <div className="relative" style={{ width: 88, height: 88 }}>
+                        <div className="absolute inset-0 rounded-full border-4 border-emerald-200 bg-emerald-50 shadow-inner" />
                         <Photo
                             src={invitation.bridePictureGetUrl}
-                            className="rounded-[50%] border-2 border-white absolute inset-1"
-                            size={80}
+                            className="rounded-full border-2 border-white absolute inset-1"
+                            size="full"
                             personType="bride"
                         />
                     </div>
@@ -370,15 +382,17 @@ function GardenBliss({ invitation }: { invitation: Partial<InvitationData> }) {
 // ════════════════════════════════════════════════════════════════════════════
 function MidnightStar({ invitation }: { invitation: Partial<InvitationData> }) {
     return (
-        <div className="w-full min-h-[680px] bg-[#080b12] flex flex-col items-center overflow-hidden select-none relative">
-            {/* Stars background */}
-            {[...Array(20)].map((_, i) => (
+        <div className="w-full min-h-[680px] bg-[#05070a] flex flex-col items-center overflow-hidden select-none relative">
+            {/* Stars background - Enhanced */}
+            <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/stardust.png')] opacity-30 pointer-events-none" />
+            {[...Array(30)].map((_, i) => (
                 <div
                     key={i}
-                    className="absolute w-0.5 h-0.5 bg-white rounded-full opacity-40"
+                    className="absolute w-0.5 h-0.5 bg-white rounded-full opacity-60 animate-pulse"
                     style={{
-                        top: `${Math.sin(i * 1.7) * 40 + 50}%`,
-                        left: `${(i * 4.7 + 10) % 90 + 5}%`,
+                        top: `${Math.random() * 100}%`,
+                        left: `${Math.random() * 100}%`,
+                        animationDelay: `${Math.random() * 3}s`,
                     }}
                 />
             ))}
@@ -435,12 +449,16 @@ function MidnightStar({ invitation }: { invitation: Partial<InvitationData> }) {
             </div>
 
             {/* Names */}
-            <div className="text-center px-6 mb-6">
-                <h2 className="text-3xl font-black text-amber-100 italic font-serif tracking-wide leading-tight">
+            <div className="text-center px-6 mb-8 relative">
+                <h2 className="text-4xl font-black text-transparent bg-clip-text bg-gradient-to-b from-amber-200 to-amber-500 italic font-serif tracking-wider leading-tight drop-shadow-sm">
                     {invitation.groomName?.split(' ')[0] || "Sanjar"}
-                    <br />
-                    <span className="text-amber-500 text-xl not-italic">&</span>
-                    <br />
+                </h2>
+                <div className="flex items-center justify-center gap-4 my-2">
+                    <div className="h-px flex-1 bg-gradient-to-r from-transparent to-amber-500/30" />
+                    <span className="text-amber-500 text-2xl font-serif font-light">&</span>
+                    <div className="h-px flex-1 bg-gradient-to-l from-transparent to-amber-500/30" />
+                </div>
+                <h2 className="text-4xl font-black text-transparent bg-clip-text bg-gradient-to-b from-amber-200 to-amber-500 italic font-serif tracking-wider leading-tight drop-shadow-sm">
                     {invitation.brideName?.split(' ')[0] || "Malika"}
                 </h2>
             </div>
