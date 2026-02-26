@@ -69,18 +69,18 @@ async function fetchApi(path: string, options: RequestInit = {}) {
 
 // Mappings
 const templateMapping: Record<string, string> = {
-    // New 4-template IDs
+    // New 4-template IDs (Remapped for backend compatibility: only TEMPLATE_1 and TEMPLATE_2)
     'classic_royale': 'TEMPLATE_1',
     'modern_minimal': 'TEMPLATE_2',
-    'garden_bliss': 'TEMPLATE_3',
-    'midnight_star': 'TEMPLATE_4',
+    'garden_bliss': 'TEMPLATE_1',
+    'midnight_star': 'TEMPLATE_2',
     // Legacy/fallback IDs
     'classic': 'TEMPLATE_1',
     'royal_gold': 'TEMPLATE_1',
     'modern_slate': 'TEMPLATE_2',
-    'flower': 'TEMPLATE_3',
+    'flower': 'TEMPLATE_1',
     'pastel': 'TEMPLATE_1',
-    'dark': 'TEMPLATE_4',
+    'dark': 'TEMPLATE_2',
     'minimal': 'TEMPLATE_2',
     'default': 'TEMPLATE_1',
 };
@@ -95,8 +95,6 @@ const musicMapping: Record<string, string | null> = {
 const reverseTemplateMapping: Record<string, string> = {
     'TEMPLATE_1': 'classic_royale',
     'TEMPLATE_2': 'modern_minimal',
-    'TEMPLATE_3': 'garden_bliss',
-    'TEMPLATE_4': 'midnight_star',
 };
 
 const reverseMusicMapping: Record<string, string> = {

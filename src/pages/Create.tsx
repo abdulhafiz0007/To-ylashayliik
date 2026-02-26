@@ -240,8 +240,8 @@ export function Create() {
     }) => {
         const hasPhoto = !!(preview || existing)
         const defaultAvatar = type === 'groom'
-            ? "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&q=80&w=200&h=200"
-            : "https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&q=80&w=200&h=200"
+            ? "https://images.unsplash.com/photo-1515934751635-c81c6bc9a2d8?q=80&w=400"
+            : "https://images.unsplash.com/photo-1519225421980-715cb0215aed?q=80&w=400"
 
         return (
             <div className="flex flex-col items-center space-y-3">
