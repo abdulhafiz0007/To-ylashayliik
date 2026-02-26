@@ -188,27 +188,29 @@ export const api = {
             dateISO = `${invData.date}T12:00:00.000Z`;
         }
 
-        // STRICT COLUMN ORDER based on failing SQL: 
-        // background_music, bride_lastname, bride_name, bride_picture_key, created_at, 
-        // creator_id, date, groom_lastname, groom_name, groom_picture_key, 
-        // hall, location, template, text, id
         const payload: any = {
-            background_music: invData.backgroundMusic in musicMapping ? musicMapping[invData.backgroundMusic] : (invData.backgroundMusic || 'MUSIC_0000'),
-            bride_lastname: invData.brideLastname || "",
-            bride_name: invData.brideName || "",
-            bride_picture_key: invData.bridePictureKey || "",
-            created_at: new Date().toISOString(),
-            creator_id: Number(invData.creatorUser?.id || invData.backendUserId || 0),
+            backgroundMusic: invData.backgroundMusic in musicMapping ? musicMapping[invData.backgroundMusic] : (invData.backgroundMusic || 'MUSIC_0000'),
+            brideLastname: invData.brideLastname || "",
+            brideName: invData.brideName || "",
+            bridePictureKey: invData.bridePictureKey || "",
+            createdAt: new Date().toISOString(),
+            creatorId: Number(invData.creatorUser?.id || invData.backendUserId || 0),
             date: dateISO,
-            groom_lastname: invData.groomLastname || "",
-            groom_name: invData.groomName || "",
-            groom_picture_key: invData.groomPictureKey || "",
+            groomLastname: invData.groomLastname || "",
+            groomName: invData.groomName || "",
+            groomPictureKey: invData.groomPictureKey || "",
             hall: invData.hall || "",
             location: invData.location || "",
             template: templateEnum,
             text: invData.text || invData.message || "",
-            id: Number(invData.id) || 0
         };
+
+        // DO NOT add 'id' if it is 0. 
+        // Alphabetically, 'id' falls between 'hall' and 'location', which shifts 
+        // later properties (like 'template' and 'text') into wrong SQL columns.
+        if (invData.id && Number(invData.id) !== 0) {
+            payload.id = Number(invData.id);
+        }
 
         console.log(`DEBUG: Final aligned payload:`, JSON.stringify(payload));
 
