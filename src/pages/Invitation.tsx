@@ -333,11 +333,21 @@ export function Invitation() {
             </AnimatePresence>
 
             {/* Main Content View */}
-            <WeddingCard
-                invitation={invitation}
-                template={template}
-                cardRef={cardRef}
-            />
+            <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                className="w-full max-w-[420px] px-6 py-8 relative z-10"
+            >
+                <div
+                    className="w-full shadow-[0_32px_64px_-12px_rgba(0,0,0,0.15)] rounded-[2.5rem] overflow-hidden bg-white dark:bg-slate-900 border border-gold-100/50 dark:border-slate-800"
+                >
+                    <WeddingCard
+                        invitation={invitation}
+                        template={template}
+                        cardRef={cardRef}
+                    />
+                </div>
+            </motion.div>
 
 
             {/* Actions & Wishes Section - Below Card */}
