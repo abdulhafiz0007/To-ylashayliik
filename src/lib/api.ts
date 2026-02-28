@@ -199,23 +199,28 @@ export const api = {
             dateISO = `${invData.date}T12:00:00.000Z`;
         }
 
+        // Reverting to camelCase for backend JSON mapping (Java/Spring usually expects camelCase).
+        // The alphabetical order of these keys MUST match the SQL column order:
+        // backgroundMusic, brideLastname, brideName, bridePictureKey, createdAt, creatorId, 
+        // date, groomLastname, groomName, groomPictureKey, hall, location, template, text
         const payload: any = {
-            background_music: invData.backgroundMusic in musicMapping ? musicMapping[invData.backgroundMusic] : (invData.backgroundMusic || 'MUSIC_0000'),
-            bride_lastname: invData.brideLastname || "",
-            bride_name: invData.brideName || "",
-            bride_picture_key: invData.bridePictureKey || "",
-            created_at: new Date().toISOString(),
-            creator_id: Number(invData.creatorUser?.id || invData.backendUserId || 0),
+            backgroundMusic: invData.backgroundMusic in musicMapping ? musicMapping[invData.backgroundMusic] : (invData.backgroundMusic || 'MUSIC_0000'),
+            brideLastname: invData.brideLastname || "",
+            brideName: invData.brideName || "",
+            bridePictureKey: invData.bridePictureKey || "",
+            createdAt: new Date().toISOString(),
+            creatorId: Number(invData.creatorUser?.id || invData.backendUserId || 0),
             date: dateISO,
-            groom_lastname: invData.groomLastname || "",
-            groom_name: invData.groomName || "",
-            groom_picture_key: invData.groomPictureKey || "",
+            groomLastname: invData.groomLastname || "",
+            groomName: invData.groomName || "",
+            groomPictureKey: invData.groomPictureKey || "",
             hall: invData.hall || "",
             location: invData.location || "",
             template: templateEnum,
             text: invData.text || invData.message || "",
         };
 
+        // Only add ID if we are UPDATING (avoids alphabetical shift for new records).
         if (invData.id && Number(invData.id) !== 0) {
             payload.id = Number(invData.id);
         }

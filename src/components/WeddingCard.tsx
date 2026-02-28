@@ -35,14 +35,15 @@ function Photo({ src, size = 80, className = "", personType = "groom" }: {
     const fallback = personType === "bride" ? DEFAULT_BRIDE : DEFAULT_GROOM
 
     // Robust check for truthy src that isn't a placeholder string
-    const isValidSrc = src &&
-        src !== "" &&
-        src !== "null" &&
-        src !== "undefined" &&
-        !src.includes("/null") &&
-        !src.includes("/undefined")
+    const trimmedSrc = typeof src === 'string' ? src.trim() : src
+    const isValidSrc = trimmedSrc &&
+        trimmedSrc !== "" &&
+        trimmedSrc !== "null" &&
+        trimmedSrc !== "undefined" &&
+        !trimmedSrc.includes("/null") &&
+        !trimmedSrc.includes("/undefined")
 
-    const finalSrc = isValidSrc ? src : fallback
+    const finalSrc = isValidSrc ? (trimmedSrc as string) : fallback
     const dimStyle = typeof size === 'number' ? { width: size, height: size } : {}
 
     return (

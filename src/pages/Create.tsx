@@ -240,8 +240,25 @@ export function Create() {
         type: 'groom' | 'bride'
         label: string
     }) => {
-        const hasPhoto = !!(preview || existing)
         const defaultAvatar = type === 'groom' ? defaultGroom : defaultBride
+
+        // Robust check for truthy src that isn't a placeholder string
+        const getValidSrc = () => {
+            if (preview) return preview;
+            if (existing &&
+                existing !== "" &&
+                existing !== "null" &&
+                existing !== "undefined" &&
+                !existing.includes("/null") &&
+                !existing.includes("/undefined")
+            ) {
+                return existing;
+            }
+            return defaultAvatar;
+        }
+
+        const finalSrc = getValidSrc()
+        const hasPhoto = !!(preview || (finalSrc !== defaultAvatar))
 
         return (
             <div className="flex flex-col items-center space-y-3">
@@ -250,7 +267,7 @@ export function Create() {
                     onClick={() => inputRef.current?.click()}
                 >
                     <img
-                        src={preview || existing || defaultAvatar}
+                        src={finalSrc}
                         alt={label}
                         className="w-full h-full object-cover"
                         loading="eager"
