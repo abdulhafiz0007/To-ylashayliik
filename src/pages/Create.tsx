@@ -4,7 +4,7 @@ import { useInvitation } from "../context/InvitationContext"
 import { Button } from "../components/ui/Button"
 import { Input } from "../components/ui/Input"
 import { Card, CardContent, CardFooter } from "../components/ui/Card"
-import { Calendar, MapPin, MessageSquare, Users, Clock, Camera, ChevronRight, ChevronLeft, Music, Play, Pause, Volume2, VolumeX, Cake, X, Check, ZoomIn } from "lucide-react"
+import { Calendar, MapPin, MessageSquare, Users, Clock, Camera, ChevronRight, ChevronLeft, Music, Play, Pause, Volume2, VolumeX, Cake, X, Check, ZoomIn, Sparkles } from "lucide-react"
 import { useLanguage } from "../context/LanguageContext"
 import { cn } from "../lib/utils"
 import { useTelegram } from "../hooks/useTelegram"
@@ -13,6 +13,9 @@ import Cropper from "react-easy-crop"
 import { getCroppedImg } from "../lib/cropImage"
 import defaultGroom from "../assets/default_groom.jpg"
 import defaultBride from "../assets/default_bride.jpg"
+import { templates } from "../lib/templates"
+import { WeddingCard } from "../components/WeddingCard"
+import { motion } from "framer-motion"
 
 // Import music assets
 import musicAzizam from "../assets/music_azizam.mp3"
@@ -26,7 +29,7 @@ const MUSIC_OPTIONS = [
     { id: 'none', name: 'Musiqasiz', url: null },
 ]
 
-const STEPS = ['groomInfo', 'brideInfo', 'weddingInfo'] as const;
+const STEPS = ['groomInfo', 'brideInfo', 'weddingInfo', 'chooseTemplate'] as const;
 
 // ─── Crop Modal ───────────────────────────────────────────────────────────────
 interface CropModalProps {
@@ -515,6 +518,86 @@ export function Create() {
                         </div>
                     </div>
                 )
+            case 3:
+                return (
+                    <div className="space-y-5 animate-fade-in -mx-5 -mt-2">
+                        {/* Header */}
+                        <div className="text-center px-5 pt-2 pb-1">
+                            <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-primary-50 dark:bg-primary-900/20 text-primary-600 dark:text-primary-400 text-[9px] font-bold uppercase tracking-widest border border-primary-100 dark:border-primary-800/30 mb-2">
+                                <Sparkles className="h-3 w-3" />
+                                Shablon tanlang
+                            </div>
+                            <p className="text-xs text-gray-500 dark:text-gray-400">Sizning ma'lumotlaringiz bilan shablonlarni ko'ring</p>
+                        </div>
+
+                        {/* Template cards — scrollable list */}
+                        <div className="space-y-5 px-2">
+                            {templates.map((template, index) => {
+                                const isSelected = data.template === template.id
+                                // Build preview data using user's actual entered data + local preview images
+                                const previewInvitation = {
+                                    ...data,
+                                    groomPictureGetUrl: groomPreview || data.groomPictureGetUrl || undefined,
+                                    bridePictureGetUrl: bridePreview || data.bridePictureGetUrl || undefined,
+                                }
+                                return (
+                                    <motion.div
+                                        key={template.id}
+                                        initial={{ opacity: 0, y: 20 }}
+                                        animate={{ opacity: 1, y: 0 }}
+                                        transition={{ delay: index * 0.1, duration: 0.4 }}
+                                    >
+                                        <button
+                                            type="button"
+                                            onClick={() => updateData({ template: template.id })}
+                                            className={cn(
+                                                "w-full text-left rounded-3xl overflow-hidden transition-all duration-300 border-[3px]",
+                                                isSelected
+                                                    ? "border-primary-500 shadow-xl shadow-primary-100 dark:shadow-primary-900/20 scale-[1.01]"
+                                                    : "border-transparent shadow-lg hover:shadow-xl hover:scale-[1.005]"
+                                            )}
+                                        >
+                                            {/* Template name header */}
+                                            <div className={cn(
+                                                "flex items-center justify-between px-4 py-2.5",
+                                                isSelected
+                                                    ? "bg-primary-500 text-white"
+                                                    : "bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-300"
+                                            )}>
+                                                <div className="flex items-center gap-2">
+                                                    <span className="font-black text-sm">{template.name}</span>
+                                                    {template.category === 'Premium' && (
+                                                        <span className={cn(
+                                                            "px-2 py-0.5 rounded-full text-[8px] font-black uppercase tracking-wider",
+                                                            isSelected
+                                                                ? "bg-white/20 text-white"
+                                                                : "bg-gradient-to-r from-amber-400 to-orange-400 text-white"
+                                                        )}>
+                                                            Premium
+                                                        </span>
+                                                    )}
+                                                </div>
+                                                {isSelected && (
+                                                    <div className="w-6 h-6 rounded-full bg-white/20 flex items-center justify-center">
+                                                        <Check className="h-4 w-4 text-white stroke-[3]" />
+                                                    </div>
+                                                )}
+                                            </div>
+
+                                            {/* Render the actual WeddingCard with user data */}
+                                            <div className="pointer-events-none">
+                                                <WeddingCard
+                                                    invitation={previewInvitation}
+                                                    template={template}
+                                                />
+                                            </div>
+                                        </button>
+                                    </motion.div>
+                                )
+                            })}
+                        </div>
+                    </div>
+                )
         }
     }
 
@@ -576,7 +659,7 @@ export function Create() {
                             </Button>
                             <Button type="submit" disabled={isSaving}>
                                 {currentStep === STEPS.length - 1
-                                    ? (isSaving ? t('saving') : t('previewBtn'))
+                                    ? (isSaving ? t('saving') : <><Check className="mr-1 h-4 w-4" /> {t('save')}</>)
                                     : <>{t('next')} <ChevronRight className="ml-1 h-4 w-4" /></>}
                             </Button>
                         </CardFooter>

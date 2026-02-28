@@ -145,29 +145,25 @@ function ClassicRoyale({ invitation }: { invitation: Partial<InvitationData> }) 
             </p>
 
             {/* Wedding details */}
-            <div className="w-full mx-6 border-t border-b border-amber-100 py-6 px-8 space-y-4 bg-amber-50/50">
-                <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-2 text-amber-700">
-                        <Calendar className="h-4 w-4" />
-                        <div>
-                            <p className="text-[8px] uppercase tracking-widest opacity-60 font-bold">Sana</p>
-                            <p className="font-black text-base leading-tight">
-                                {getDay(invitation.date)} {getMonth(invitation.date)}
-                            </p>
-                        </div>
+            <div className="w-full px-8 border-t border-b border-amber-100 py-6 space-y-4 bg-amber-50/50">
+                <div className="flex items-center justify-center gap-6">
+                    <div className="flex flex-col items-center text-amber-700">
+                        <Calendar className="h-4 w-4 mb-1 opacity-60" />
+                        <p className="text-[8px] uppercase tracking-widest opacity-60 font-bold">Sana</p>
+                        <p className="font-black text-base leading-tight mt-0.5">
+                            {getDay(invitation.date)} {getMonth(invitation.date)}
+                        </p>
                     </div>
-                    <div className="w-px h-8 bg-amber-200" />
-                    <div className="flex items-center gap-2 text-amber-700">
-                        <Clock className="h-4 w-4" />
-                        <div>
-                            <p className="text-[8px] uppercase tracking-widest opacity-60 font-bold">Vaqt</p>
-                            <p className="font-black text-base leading-tight">{invitation.time || "18:00"}</p>
-                        </div>
+                    <div className="w-px h-10 bg-amber-200" />
+                    <div className="flex flex-col items-center text-amber-700">
+                        <Clock className="h-4 w-4 mb-1 opacity-60" />
+                        <p className="text-[8px] uppercase tracking-widest opacity-60 font-bold">Vaqt</p>
+                        <p className="font-black text-base leading-tight mt-0.5">{invitation.time || "18:00"}</p>
                     </div>
                 </div>
-                <div className="flex items-start gap-3 text-amber-800">
-                    <MapPin className="h-4 w-4 mt-0.5 shrink-0" />
-                    <div>
+                <div className="flex items-start justify-center gap-2.5 text-amber-800 pt-2 border-t border-amber-100/80">
+                    <MapPin className="h-4 w-4 mt-0.5 shrink-0 opacity-60" />
+                    <div className="text-center">
                         <p className="font-black text-sm">{invitation.hall || "Zarafshon Saroyi"}</p>
                         <p className="text-[10px] opacity-60 mt-0.5">{invitation.location || "Manzil ko'rsatilmagan"}</p>
                     </div>
@@ -254,7 +250,7 @@ function ModernMinimal({ invitation }: { invitation: Partial<InvitationData> }) 
                 </div>
                 <div className="flex flex-col items-center py-6 gap-1 bg-slate-50/50">
                     <MapPin className="h-4 w-4 text-slate-400 mb-1" />
-                    <p className="text-xs font-black text-slate-900 leading-tight text-center px-2 truncate w-full">
+                    <p className="text-xs font-black text-slate-900 leading-tight text-center px-2">
                         {invitation.hall || "Zarafshon"}
                     </p>
                     <p className="text-[8px] text-slate-500 text-center px-2 leading-tight font-bold">
@@ -285,46 +281,46 @@ function GardenBliss({ invitation }: { invitation: Partial<InvitationData> }) {
             <div className="w-full h-2 bg-gradient-to-r from-pink-300 via-rose-200 to-emerald-200" />
 
             {/* Overlapping circles header */}
-            <div className="relative mt-8 mb-4 flex items-center justify-center" style={{ height: 140 }}>
-                {/* Groom oval — left */}
-                <div className="absolute"
-                    style={{ left: '50%', transform: 'translateX(-96px)', top: 0 }}>
-                    <div className="relative" style={{ width: 88, height: 88 }}>
-                        <div className="absolute inset-0 rounded-full border-4 border-pink-200 bg-pink-50 shadow-inner" />
-                        <Photo
-                            src={invitation.groomPictureGetUrl}
-                            className="rounded-full border-2 border-white absolute inset-1"
-                            size="full"
-                        />
+            <div className="flex flex-col items-center mt-8 mb-4">
+                <div className="flex items-start justify-center">
+                    {/* Groom */}
+                    <div className="flex flex-col items-center z-10">
+                        <div className="relative" style={{ width: 88, height: 88 }}>
+                            <div className="absolute inset-0 rounded-full border-4 border-pink-200 bg-pink-50 shadow-inner" />
+                            <Photo
+                                src={invitation.groomPictureGetUrl}
+                                className="rounded-full border-2 border-white absolute inset-1"
+                                size="full"
+                            />
+                        </div>
+                        <div className="text-center mt-2">
+                            <p className="text-[8px] text-emerald-600 uppercase tracking-[0.3em] font-bold">Kuyov</p>
+                            <p className="font-black text-slate-800 text-sm">{invitation.groomName || "Sanjar"}</p>
+                        </div>
                     </div>
-                    <div className="text-center mt-2">
-                        <p className="text-[8px] text-emerald-600 uppercase tracking-[0.3em] font-bold">Kuyov</p>
-                        <p className="font-black text-slate-800 text-sm">{invitation.groomName || "Sanjar"}</p>
-                    </div>
-                </div>
 
-                {/* Heart center */}
-                <div className="absolute z-20" style={{ left: '50%', transform: 'translateX(-20px)', top: 40 }}>
-                    <div className="w-10 h-10 bg-white rounded-full border-2 border-pink-200 flex items-center justify-center shadow-md">
-                        <Flower2 className="h-5 w-5 text-pink-400" />
+                    {/* Heart center — overlapping */}
+                    <div className="z-20 -mx-3 mt-8">
+                        <div className="w-10 h-10 bg-white rounded-full border-2 border-pink-200 flex items-center justify-center shadow-md">
+                            <Flower2 className="h-5 w-5 text-pink-400" />
+                        </div>
                     </div>
-                </div>
 
-                {/* Bride oval — right */}
-                <div className="absolute"
-                    style={{ left: '50%', transform: 'translateX(8px)', top: 0 }}>
-                    <div className="relative" style={{ width: 88, height: 88 }}>
-                        <div className="absolute inset-0 rounded-full border-4 border-emerald-200 bg-emerald-50 shadow-inner" />
-                        <Photo
-                            src={invitation.bridePictureGetUrl}
-                            className="rounded-full border-2 border-white absolute inset-1"
-                            size="full"
-                            personType="bride"
-                        />
-                    </div>
-                    <div className="text-center mt-2">
-                        <p className="text-[8px] text-pink-500 uppercase tracking-[0.3em] font-bold">Kelin</p>
-                        <p className="font-black text-slate-800 text-sm">{invitation.brideName || "Malika"}</p>
+                    {/* Bride */}
+                    <div className="flex flex-col items-center z-10">
+                        <div className="relative" style={{ width: 88, height: 88 }}>
+                            <div className="absolute inset-0 rounded-full border-4 border-emerald-200 bg-emerald-50 shadow-inner" />
+                            <Photo
+                                src={invitation.bridePictureGetUrl}
+                                className="rounded-full border-2 border-white absolute inset-1"
+                                size="full"
+                                personType="bride"
+                            />
+                        </div>
+                        <div className="text-center mt-2">
+                            <p className="text-[8px] text-pink-500 uppercase tracking-[0.3em] font-bold">Kelin</p>
+                            <p className="font-black text-slate-800 text-sm">{invitation.brideName || "Malika"}</p>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -501,8 +497,8 @@ function MidnightStar({ invitation }: { invitation: Partial<InvitationData> }) {
                     </div>
                     <div className="border-t border-amber-500/20 flex items-center gap-3 px-5 py-4">
                         <MapPin className="h-4 w-4 text-amber-400 shrink-0" />
-                        <div className="min-w-0">
-                            <p className="font-black text-amber-100 text-sm truncate">{invitation.hall || "Zarafshon Saroyi"}</p>
+                        <div className="min-w-0 flex-1">
+                            <p className="font-black text-amber-100 text-sm">{invitation.hall || "Zarafshon Saroyi"}</p>
                             <p className="text-[10px] text-slate-400">{invitation.location || "Toshkent"}</p>
                         </div>
                     </div>
