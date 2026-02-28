@@ -134,6 +134,17 @@ const mapBackendToFrontend = (data: any) => {
         }
     }
 
+    // Sanitize common "bad" backend values
+    const sanitize = (val: any) => {
+        if (typeof val === 'string' && (val === 'null' || val === 'undefined')) return '';
+        return val || '';
+    };
+
+    mapped.groomPictureKey = sanitize(mapped.groomPictureKey);
+    mapped.groomPictureGetUrl = sanitize(mapped.groomPictureGetUrl);
+    mapped.bridePictureKey = sanitize(mapped.bridePictureKey);
+    mapped.bridePictureGetUrl = sanitize(mapped.bridePictureGetUrl);
+
     return mapped;
 };
 
@@ -189,25 +200,22 @@ export const api = {
         }
 
         const payload: any = {
-            backgroundMusic: invData.backgroundMusic in musicMapping ? musicMapping[invData.backgroundMusic] : (invData.backgroundMusic || 'MUSIC_0000'),
-            brideLastname: invData.brideLastname || "",
-            brideName: invData.brideName || "",
-            bridePictureKey: invData.bridePictureKey || "",
-            createdAt: new Date().toISOString(),
-            creatorId: Number(invData.creatorUser?.id || invData.backendUserId || 0),
+            background_music: invData.backgroundMusic in musicMapping ? musicMapping[invData.backgroundMusic] : (invData.backgroundMusic || 'MUSIC_0000'),
+            bride_lastname: invData.brideLastname || "",
+            bride_name: invData.brideName || "",
+            bride_picture_key: invData.bridePictureKey || "",
+            created_at: new Date().toISOString(),
+            creator_id: Number(invData.creatorUser?.id || invData.backendUserId || 0),
             date: dateISO,
-            groomLastname: invData.groomLastname || "",
-            groomName: invData.groomName || "",
-            groomPictureKey: invData.groomPictureKey || "",
+            groom_lastname: invData.groomLastname || "",
+            groom_name: invData.groomName || "",
+            groom_picture_key: invData.groomPictureKey || "",
             hall: invData.hall || "",
             location: invData.location || "",
             template: templateEnum,
             text: invData.text || invData.message || "",
         };
 
-        // DO NOT add 'id' if it is 0. 
-        // Alphabetically, 'id' falls between 'hall' and 'location', which shifts 
-        // later properties (like 'template' and 'text') into wrong SQL columns.
         if (invData.id && Number(invData.id) !== 0) {
             payload.id = Number(invData.id);
         }

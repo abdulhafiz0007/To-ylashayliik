@@ -33,14 +33,25 @@ function Photo({ src, size = 80, className = "", personType = "groom" }: {
     personType?: "groom" | "bride"
 }) {
     const fallback = personType === "bride" ? DEFAULT_BRIDE : DEFAULT_GROOM
+
+    // Robust check for truthy src that isn't a placeholder string
+    const isValidSrc = src &&
+        src !== "" &&
+        src !== "null" &&
+        src !== "undefined" &&
+        !src.includes("/null") &&
+        !src.includes("/undefined")
+
+    const finalSrc = isValidSrc ? src : fallback
     const dimStyle = typeof size === 'number' ? { width: size, height: size } : {}
+
     return (
         <div
             className={`overflow-hidden bg-gray-100/10 flex items-center justify-center shrink-0 ${className}`}
             style={dimStyle}
         >
             <img
-                src={src || fallback}
+                src={finalSrc}
                 alt=""
                 className="w-full h-full object-cover"
                 loading="eager"
