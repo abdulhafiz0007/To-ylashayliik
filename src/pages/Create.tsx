@@ -541,78 +541,57 @@ export function Create() {
                                         className="relative group"
                                     >
                                         <button
-                                            type="button"
                                             onClick={() => updateData({ template: template.id })}
                                             className={cn(
-                                                "w-full text-left rounded-[2.5rem] overflow-hidden transition-all duration-500 border-[3px] bg-white dark:bg-slate-900 relative",
+                                                "w-full text-left rounded-[2rem] overflow-hidden bg-white dark:bg-slate-900 transition-all duration-500 relative ring-offset-2",
                                                 isSelected
-                                                    ? "border-primary-500 shadow-[0_20px_50px_rgba(236,72,153,0.15)] scale-[1.02] ring-8 ring-primary-500/5"
-                                                    : "border-slate-100 dark:border-slate-800 shadow-xl hover:shadow-2xl hover:scale-[1.01] hover:border-primary-200 dark:hover:border-primary-900/30"
+                                                    ? "ring-4 ring-primary-500 shadow-2xl scale-[1.02] z-10"
+                                                    : "border border-slate-100 dark:border-slate-800 shadow-sm hover:shadow-xl hover:scale-[1.01]"
                                             )}
                                         >
-                                            {/* Refined Header */}
-                                            <div className={cn(
-                                                "flex items-center justify-between px-6 py-4",
-                                                isSelected
-                                                    ? "bg-gradient-to-r from-primary-500 to-primary-600 text-white"
-                                                    : "bg-slate-50/50 dark:bg-slate-800/50 text-slate-700 dark:text-slate-300"
-                                            )}>
-                                                <div className="flex items-center gap-3">
-                                                    <div className={cn(
-                                                        "w-1.5 h-6 rounded-full",
-                                                        isSelected ? "bg-white" : "bg-primary-500"
-                                                    )} />
-                                                    <div className="flex flex-col">
-                                                        <span className="font-black text-sm tracking-tight">{template.name}</span>
-                                                        <span className={cn(
-                                                            "text-[9px] font-medium uppercase tracking-wider opacity-60",
-                                                            isSelected ? "text-white" : "text-slate-500"
-                                                        )}>
-                                                            {template.type || 'Wedding Design'}
-                                                        </span>
-                                                    </div>
+                                            {/* Immersive Overlays */}
+                                            <div className="absolute top-4 left-4 z-20 flex flex-col gap-2 pointer-events-none">
+                                                <div className={cn(
+                                                    "px-3 py-1.5 rounded-full backdrop-blur-md border flex flex-col",
+                                                    isSelected
+                                                        ? "bg-primary-500/90 border-primary-400/50 text-white"
+                                                        : "bg-white/80 dark:bg-slate-900/80 border-white/20 dark:border-slate-700/50 text-slate-900 dark:text-white"
+                                                )}>
+                                                    <span className="text-[10px] font-black uppercase tracking-widest">{template.name}</span>
+                                                    <span className="text-[8px] opacity-70 font-bold uppercase tracking-tighter -mt-0.5">{template.type || 'Design'}</span>
                                                 </div>
 
-                                                <div className="flex items-center gap-2">
-                                                    {template.category === 'Premium' && (
-                                                        <span className={cn(
-                                                            "px-2.5 py-1 rounded-full text-[9px] font-black uppercase tracking-widest flex items-center gap-1",
-                                                            isSelected
-                                                                ? "bg-white text-primary-600"
-                                                                : "bg-gradient-to-r from-amber-400 to-orange-500 text-white shadow-sm"
-                                                        )}>
-                                                            <Sparkles className="h-2.5 w-2.5" />
-                                                            Premium
-                                                        </span>
-                                                    )}
-                                                    {isSelected && (
-                                                        <motion.div
-                                                            initial={{ scale: 0 }}
-                                                            animate={{ scale: 1 }}
-                                                            className="w-7 h-7 rounded-full bg-white/20 backdrop-blur-md flex items-center justify-center border border-white/30"
-                                                        >
-                                                            <Check className="h-4 w-4 text-white stroke-[3.5]" />
-                                                        </motion.div>
-                                                    )}
-                                                </div>
+                                                {template.category === 'Premium' && (
+                                                    <div className="bg-gradient-to-r from-amber-400 to-orange-500 text-white px-3 py-1 rounded-full text-[9px] font-black uppercase tracking-widest flex items-center gap-1.5 shadow-lg border border-white/20">
+                                                        <Sparkles className="h-3 w-3" />
+                                                        Premium
+                                                    </div>
+                                                )}
                                             </div>
 
-                                            {/* Wedding Card Preview */}
-                                            <div className="relative pointer-events-none group-hover:brightness-[1.02] transition-all duration-500 rounded-2xl overflow-hidden">
+                                            {isSelected && (
+                                                <div className="absolute top-4 right-4 z-20">
+                                                    <motion.div
+                                                        initial={{ scale: 0 }}
+                                                        animate={{ scale: 1 }}
+                                                        className="w-10 h-10 rounded-full bg-primary-500 flex items-center justify-center border-4 border-white shadow-xl"
+                                                    >
+                                                        <Check className="h-5 w-5 text-white stroke-[4]" />
+                                                    </motion.div>
+                                                </div>
+                                            )}
+
+                                            {/* Wedding Card Preview - Full Bleed */}
+                                            <div className="relative pointer-events-none group-hover:brightness-[1.02] transition-all duration-500">
                                                 <WeddingCard
                                                     invitation={previewInvitation}
                                                     template={template}
                                                 />
-                                                {/* Soft Overlay for unselected cards */}
+                                                {/* Selection Highlight Overlay */}
                                                 {!isSelected && (
-                                                    <div className="absolute inset-0 bg-slate-900/5 dark:bg-black/20 group-hover:bg-transparent transition-colors duration-500" />
+                                                    <div className="absolute inset-0 bg-slate-900/5 dark:bg-black/10 group-hover:bg-transparent transition-colors duration-500" />
                                                 )}
                                             </div>
-
-                                            {/* Subtle indicator for selection */}
-                                            {isSelected && (
-                                                <div className="absolute top-1/2 left-0 w-1 h-12 bg-white rounded-r-full -translate-y-1/2 z-10" />
-                                            )}
                                         </button>
 
                                         {/* Premium Inline Save & Create Action */}

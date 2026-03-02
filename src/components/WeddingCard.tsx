@@ -1,6 +1,7 @@
 import type { InvitationData } from "../context/InvitationContext"
 import type { TemplateConfig } from "../lib/templates"
 import { Clock, MapPin, Calendar, Heart, Star, Flower2, Diamond, Sparkles } from "lucide-react"
+import { useLanguage } from "../context/LanguageContext"
 import defaultGroom from "../assets/default_groom.jpg"
 import defaultBride from "../assets/default_bride.jpg"
 
@@ -516,105 +517,109 @@ function MidnightStar({ invitation }: { invitation: Partial<InvitationData> }) {
 // Circular photos with badges, elegant initials, info cards below
 // ════════════════════════════════════════════════════════════════════════════
 function ToylashaylikTheme({ invitation }: { invitation: Partial<InvitationData> }) {
+    const { t } = useLanguage()
+
     return (
-        <div className="w-full min-h-[680px] bg-[#fff9fa] dark:bg-slate-950 flex flex-col items-center overflow-hidden select-none relative font-sans">
-            {/* Header Sparkle Icon and Label */}
-            <div className="mt-10 flex flex-col items-center gap-1">
-                <Sparkles className="h-6 w-6 text-pink-300 animate-pulse" />
-                <p className="text-[10px] uppercase tracking-[0.4em] text-slate-400 font-medium">T O ' Y  T A K L I F I</p>
+        <div className="w-full flex flex-col items-center py-8 px-6 relative z-10 bg-[#fffafa] dark:bg-slate-950 overflow-hidden">
+            {/* Header Decoration */}
+            <div className="mb-4 text-center">
+                <div className="flex justify-center mb-1">
+                    <Sparkles className="h-6 w-6 text-[#f472b6] opacity-60" />
+                </div>
+                <p className="text-[10px] tracking-[0.6em] text-gray-400 uppercase ml-2">
+                    TO'Y TAKLIFI
+                </p>
             </div>
 
-            {/* Portraits Section */}
-            <div className="flex items-center justify-center gap-2 mt-10 mb-8 relative px-6">
-                {/* Groom */}
-                <div className="flex flex-col items-center relative">
-                    <div className="w-32 h-32 rounded-full border-4 border-pink-100 bg-white shadow-sm overflow-hidden p-1">
-                        <Photo
-                            src={invitation.groomPictureGetUrl}
-                            size="full"
-                            className="rounded-full h-full w-full"
-                        />
-                    </div>
-                    <div className="absolute -bottom-2 bg-pink-500 text-white text-[9px] font-black uppercase px-4 py-1 rounded-full shadow-md z-10 tracking-widest">
-                        Kuyov
-                    </div>
-                </div>
-
-                {/* Heart Icon Connector */}
-                <div className="z-20 -mx-2 h-10 w-10 rounded-full bg-white flex items-center justify-center shadow-lg border border-pink-50">
-                    <Heart className="h-5 w-5 text-pink-500 fill-pink-500" />
-                </div>
-
-                {/* Bride */}
-                <div className="flex flex-col items-center relative">
-                    <div className="w-32 h-32 rounded-full border-4 border-pink-100 bg-white shadow-sm overflow-hidden p-1">
-                        <Photo
-                            src={invitation.bridePictureGetUrl}
-                            size="full"
-                            className="rounded-full h-full w-full"
-                            personType="bride"
-                        />
-                    </div>
-                    <div className="absolute -bottom-2 bg-pink-500 text-white text-[9px] font-black uppercase px-4 py-1 rounded-full shadow-md z-10 tracking-widest">
-                        Kelin
-                    </div>
-                </div>
-            </div>
-
-            {/* Full Names & Slogan */}
-            <div className="flex flex-col items-center text-center mb-8 px-6">
-                <h1 className="text-4xl font-serif text-indigo-900 dark:text-indigo-200 font-black tracking-tight leading-tight">
-                    {invitation.groomName || 'Sanjar'}
-                </h1>
-                <div className="flex items-center justify-center gap-2 my-1">
-                    <div className="h-px w-8 bg-pink-100" />
-                    <span className="text-pink-500 text-2xl font-serif italic">&</span>
-                    <div className="h-px w-8 bg-pink-100" />
-                </div>
-                <h1 className="text-4xl font-serif text-indigo-900 dark:text-indigo-200 font-black tracking-tight leading-tight">
-                    {invitation.brideName || 'Malika'}
-                </h1>
-                <p className="text-[11px] text-pink-500 italic mt-3 font-medium">Oilalari sizni to'yga taklif qiladi</p>
-            </div>
-
-            {/* Main Information Container */}
-            <div className="w-full px-6 flex flex-col gap-5 pb-12">
-                {/* Event Card */}
-                <div className="bg-white dark:bg-slate-900 rounded-[2.5rem] p-6 shadow-sm border border-pink-50/50 dark:border-slate-800 flex flex-col items-center gap-4">
-                    <div className="w-12 h-12 bg-primary-500 rounded-2xl flex items-center justify-center text-white shadow-lg shadow-primary-200/50">
-                        <Calendar className="h-6 w-6" />
-                    </div>
-                    <p className="text-[10px] font-black tracking-[0.2em] text-slate-800 dark:text-slate-200 uppercase">TO'Y MAROSIMI</p>
-
-                    <div className="w-full h-px bg-slate-50 dark:bg-slate-800" />
-
-                    <div className="flex items-center justify-between w-full px-4 py-1">
-                        {/* Date info */}
-                        <div className="flex flex-col items-center flex-1">
-                            <span className="text-3xl font-black text-pink-500 leading-none">{getDay(invitation.date)}</span>
-                            <span className="text-[10px] uppercase font-black tracking-widest text-pink-400 mt-1">{getMonth(invitation.date)}</span>
-                            <span className="text-[9px] text-slate-400 font-bold mt-0.5">2026</span>
+            {/* Avatar Section */}
+            <div className="flex items-center justify-center mb-8 gap-2">
+                <div className="flex flex-col items-center">
+                    <div className="relative p-1 bg-white dark:bg-slate-800 rounded-full shadow-[0_10px_20px_-5px_rgba(0,0,0,0.1)]">
+                        <div className="h-24 w-24 rounded-full border-4 border-[#ffdde1] overflow-hidden bg-gray-50 dark:bg-slate-900 flex items-center justify-center">
+                            <Photo
+                                src={invitation.groomPictureGetUrl}
+                                size="full"
+                                className="w-full h-full"
+                            />
                         </div>
-
-                        {/* Divider */}
-                        <div className="w-px h-12 bg-slate-100 dark:bg-slate-800 mx-2" />
-
-                        {/* Time info */}
-                        <div className="flex flex-col items-center flex-1 gap-1">
-                            <Clock className="h-4 w-4 text-pink-300 opacity-60" />
-                            <span className="text-2xl font-black text-indigo-900 dark:text-indigo-200">{invitation.time || '18:00'}</span>
+                        <div className="absolute -bottom-2 left-1/2 -translate-x-1/2 bg-[#f472b6] text-white text-[8px] font-bold px-3 py-1 rounded-full whitespace-nowrap shadow-sm">
+                            {t('groom')}
                         </div>
                     </div>
                 </div>
 
-                {/* Location Card */}
-                <div className="bg-[#fffdf5] dark:bg-slate-900/50 rounded-[2.5rem] p-6 shadow-sm border border-gold-100/50 dark:border-slate-800 flex items-center gap-4">
-                    <div className="w-12 h-12 bg-orange-500/10 rounded-2xl flex items-center justify-center text-orange-500 border border-orange-100">
-                        <MapPin className="h-6 w-6" />
+                <div className="px-1 text-[#f472b6]">
+                    <Heart className="h-8 w-8 fill-current" />
+                </div>
+
+                <div className="flex flex-col items-center">
+                    <div className="relative p-1 bg-white dark:bg-slate-800 rounded-full shadow-[0_10px_20px_-5px_rgba(0,0,0,0.1)]">
+                        <div className="h-24 w-24 rounded-full border-4 border-[#ffdde1] overflow-hidden bg-gray-50 dark:bg-slate-900 flex items-center justify-center">
+                            <Photo
+                                src={invitation.bridePictureGetUrl}
+                                size="full"
+                                className="w-full h-full"
+                                personType="bride"
+                            />
+                        </div>
+                        <div className="absolute -bottom-2 left-1/2 -translate-x-1/2 bg-[#f472b6] text-white text-[8px] font-bold px-3 py-1 rounded-full whitespace-nowrap shadow-sm">
+                            {t('bride')}
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            {/* Names & Subtext */}
+            <div className="text-center space-y-1 mb-8">
+                <h1 className="font-serif text-3xl md:text-4xl text-[#7e22ce] dark:text-white flex items-center justify-center gap-2">
+                    {invitation?.groomName || 'Sanjar'} <span className="text-[#f472b6] italic">&</span> {invitation?.brideName || 'Malika'}
+                </h1>
+                <p className="text-[11px] text-pink-600/70 dark:text-pink-400/70 font-medium italic">
+                    Oilalari sizni to'yga taklif qiladi
+                </p>
+            </div>
+
+            {/* Main Info Card */}
+            <div className="w-full bg-white dark:bg-slate-900 rounded-[32px] p-6 shadow-[0_20px_40px_-10px_rgba(244,114,182,0.15)] space-y-5 border border-white dark:border-slate-800">
+                <div className="flex flex-col items-center gap-1 mb-1">
+                    <div className="h-10 w-10 bg-gradient-to-br from-orange-400 to-red-500 rounded-2xl flex items-center justify-center shadow-lg transform rotate-3">
+                        <Calendar className="h-5 w-5 text-white" />
+                    </div>
+                    <h3 className="text-xs font-bold text-gray-800 dark:text-white mt-1 uppercase tracking-widest">To'y marosimi</h3>
+                </div>
+
+                {/* Date/Time Row */}
+                <div className="flex justify-between items-center bg-[#fff5f7] dark:bg-pink-900/10 rounded-3xl p-5 px-10">
+                    <div className="text-center">
+                        <p className="text-2xl font-serif font-black text-[#ec4899] leading-none mb-1">
+                            {invitation?.date ? (invitation.date.includes('-') ? invitation.date.split('-')[2] : invitation.date.split(' ')[0]) : '28'}
+                        </p>
+                        <p className="text-[10px] uppercase font-bold tracking-widest text-[#f87171]">
+                            {invitation?.date ? (invitation.date.includes('-') ? new Date(invitation.date).toLocaleString('default', { month: 'long' }) : invitation.date.split(' ')[1]) : 'August'}
+                        </p>
+                        <p className="text-[8px] text-gray-400 mt-0.5">2026</p>
+                    </div>
+                    <div className="w-px h-10 bg-pink-200/50 dark:bg-pink-800/20" />
+                    <div className="flex flex-col items-center gap-1">
+                        <Clock className="h-4 w-4 text-[#ec4899] opacity-40 mb-1" />
+                        <span className="text-xl font-black text-[#ec4899]">
+                            {invitation?.time || '18:00'}
+                        </span>
+                    </div>
+                </div>
+
+                {/* Location Box */}
+                <div className="bg-[#fffbeb] dark:bg-orange-900/10 rounded-2xl p-4 flex items-center gap-4 border border-orange-50 dark:border-orange-900/20">
+                    <div className="h-10 w-10 bg-orange-100 dark:bg-orange-900/30 rounded-full flex items-center justify-center shrink-0">
+                        <MapPin className="h-5 w-5 text-orange-500" />
                     </div>
                     <div className="flex-1 min-w-0">
-                        <p className="font-black text-slate-900 dark:text-white text-base truncate">{invitation.hall || "Zarafshon Tantanalar Saroyi"}</p>
-                        <p className="text-xs text-slate-500 dark:text-slate-400 truncate mt-0.5">{invitation.location || "Toshkent shahri, Shayxontohur tumani"}</p>
+                        <p className="text-sm font-bold text-gray-800 dark:text-white truncate">
+                            {invitation?.hall || 'Mumtoz to\'yxonasi'}
+                        </p>
+                        <p className="text-[10px] text-gray-500 dark:text-gray-400 truncate leading-tight mt-0.5">
+                            {invitation?.location}
+                        </p>
                     </div>
                 </div>
             </div>

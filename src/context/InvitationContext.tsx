@@ -57,7 +57,7 @@ const defaultData: InvitationData = {
     time: "18:00",
     location: "",
     hall: "",
-    text: "",
+    text: "Bizning quvonchli kunimizda sizni ham ko'rishdan xursand bo'lamiz!",
     backgroundMusic: "music1",
     template: "toylashaylik",
 }
