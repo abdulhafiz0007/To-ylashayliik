@@ -67,22 +67,37 @@ export function Invitation() {
     useEffect(() => {
         const loadInvitation = async () => {
             if (id) {
-                // Load invitation directly from API (not context) so it works for shared links too
-                try {
+                // Helper: attempt to load invitation from API
+                const tryLoad = async (): Promise<any> => {
                     const data = await api.getInvitation(id)
-                    if (data) {
-                        data.id = data.id || id
-                        setInvitation(data)
+                    return data
+                }
 
-                        // Only add to received invitations if viewer is NOT the creator
-                        const tgUserId = tgUser?.id?.toString()
-                        const creatorTgId = data.creator?.telegramId?.toString()
-                        if (!tgUserId || !creatorTgId || tgUserId !== creatorTgId) {
-                            addReceivedInvitation(data)
-                        }
-                    }
+                // Load invitation - with retry for shared links (auth may not be ready yet)
+                let data = null
+                try {
+                    data = await tryLoad()
                 } catch (err) {
-                    console.error("Failed to load invitation:", err)
+                    console.warn("First load attempt failed, retrying in 2s...", err)
+                    // Wait for authTelegram to finish setting the token
+                    await new Promise(r => setTimeout(r, 2000))
+                    try {
+                        data = await tryLoad()
+                    } catch (retryErr) {
+                        console.error("Retry also failed:", retryErr)
+                    }
+                }
+
+                if (data) {
+                    data.id = data.id || id
+                    setInvitation(data)
+
+                    // Only add to received invitations if viewer is NOT the creator
+                    const tgUserId = tgUser?.id?.toString()
+                    const creatorTgId = data.creator?.telegramId?.toString()
+                    if (!tgUserId || !creatorTgId || tgUserId !== creatorTgId) {
+                        addReceivedInvitation(data)
+                    }
                 }
 
                 // Load wishes separately
