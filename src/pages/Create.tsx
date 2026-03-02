@@ -543,46 +543,26 @@ export function Create() {
                                         <button
                                             onClick={() => updateData({ template: template.id })}
                                             className={cn(
-                                                "w-full text-left rounded-[2rem] overflow-hidden bg-white dark:bg-slate-900 transition-all duration-500 relative ring-offset-2",
+                                                "w-full text-left transition-all duration-500 relative",
                                                 isSelected
-                                                    ? "ring-4 ring-primary-500 shadow-2xl scale-[1.02] z-10"
-                                                    : "border border-slate-100 dark:border-slate-800 shadow-sm hover:shadow-xl hover:scale-[1.01]"
+                                                    ? "z-10 bg-primary-50 px-[2px] rounded-3xl"
+                                                    : "opacity-80 hover:opacity-100"
                                             )}
                                         >
-                                            {/* Immersive Overlays */}
-                                            <div className="absolute top-4 left-4 z-20 flex flex-col gap-2 pointer-events-none">
-                                                <div className={cn(
-                                                    "px-3 py-1.5 rounded-full backdrop-blur-md border flex flex-col",
-                                                    isSelected
-                                                        ? "bg-primary-500/90 border-primary-400/50 text-white"
-                                                        : "bg-white/80 dark:bg-slate-900/80 border-white/20 dark:border-slate-700/50 text-slate-900 dark:text-white"
-                                                )}>
-                                                    <span className="text-[10px] font-black uppercase tracking-widest">{template.name}</span>
-                                                    <span className="text-[8px] opacity-70 font-bold uppercase tracking-tighter -mt-0.5">{template.type || 'Design'}</span>
-                                                </div>
-
-                                                {template.category === 'Premium' && (
-                                                    <div className="bg-gradient-to-r from-amber-400 to-orange-500 text-white px-3 py-1 rounded-full text-[9px] font-black uppercase tracking-widest flex items-center gap-1.5 shadow-lg border border-white/20">
-                                                        <Sparkles className="h-3 w-3" />
-                                                        Premium
-                                                    </div>
-                                                )}
-                                            </div>
-
                                             {isSelected && (
                                                 <div className="absolute top-4 right-4 z-20">
                                                     <motion.div
                                                         initial={{ scale: 0 }}
                                                         animate={{ scale: 1 }}
-                                                        className="w-10 h-10 rounded-full bg-primary-500 flex items-center justify-center border-4 border-white shadow-xl"
+                                                        className="w-7 h-7 rounded-full bg-primary-500 flex items-center justify-center shadow-lg border-2 border-white"
                                                     >
-                                                        <Check className="h-5 w-5 text-white stroke-[4]" />
+                                                        <Check className="h-3.5 w-3.5 text-white stroke-[4]" />
                                                     </motion.div>
                                                 </div>
                                             )}
 
                                             {/* Wedding Card Preview - Full Bleed */}
-                                            <div className="relative pointer-events-none group-hover:brightness-[1.02] transition-all duration-500">
+                                            <div className="relative pointer-events-none group-hover:brightness-[1.02] transition-all duration-500 rounded-3xl overflow-hidden">
                                                 <WeddingCard
                                                     invitation={previewInvitation}
                                                     template={template}
