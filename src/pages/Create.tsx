@@ -15,7 +15,7 @@ import defaultGroom from "../assets/default_groom.jpg"
 import defaultBride from "../assets/default_bride.jpg"
 import { templates } from "../lib/templates"
 import { WeddingCard } from "../components/WeddingCard"
-import { motion } from "framer-motion"
+import { motion, AnimatePresence } from "framer-motion"
 
 // Import music assets
 import musicAzizam from "../assets/music_azizam.mp3"
@@ -520,78 +520,150 @@ export function Create() {
                 )
             case 3:
                 return (
-                    <div className="space-y-5 animate-fade-in -mx-5 -mt-2">
-                        {/* Header */}
-                        <div className="text-center px-5 pt-2 pb-1">
-                            <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-primary-50 dark:bg-primary-900/20 text-primary-600 dark:text-primary-400 text-[9px] font-bold uppercase tracking-widest border border-primary-100 dark:border-primary-800/30 mb-2">
-                                <Sparkles className="h-3 w-3" />
-                                Shablon tanlang
-                            </div>
-                            <p className="text-xs text-gray-500 dark:text-gray-400">Sizning ma'lumotlaringiz bilan shablonlarni ko'ring</p>
+                    <div className="space-y-8 animate-fade-in -mx-5 -mt-2 pb-10">
+                        {/* Elegant Header */}
+                        <div className="text-center px-5 pt-4 pb-2">
+                            <motion.div
+                                initial={{ opacity: 0, y: -10 }}
+                                animate={{ opacity: 1, y: 0 }}
+                                className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-primary-50 dark:bg-primary-900/20 text-primary-600 dark:text-primary-400 text-[10px] font-black uppercase tracking-[0.2em] border border-primary-100 dark:border-primary-800/30 mb-3 shadow-sm"
+                            >
+                                <Sparkles className="h-3.5 w-3.5 animate-pulse" />
+                                {t('chooseTemplate')}
+                            </motion.div>
+                            <h3 className="text-lg font-black text-slate-800 dark:text-white tracking-tight">{t('chooseTemplate')}</h3>
+                            <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">Taklifnomangiz uchun eng go'zal dizaynni tanlang</p>
                         </div>
 
-                        {/* Template cards — scrollable list */}
-                        <div className="space-y-5 px-2">
+                        {/* Premium Template List */}
+                        <div className="space-y-8 px-4">
                             {templates.map((template, index) => {
                                 const isSelected = data.template === template.id
-                                // Build preview data using user's actual entered data + local preview images
                                 const previewInvitation = {
                                     ...data,
                                     groomPictureGetUrl: groomPreview || data.groomPictureGetUrl || undefined,
                                     bridePictureGetUrl: bridePreview || data.bridePictureGetUrl || undefined,
                                 }
+
                                 return (
                                     <motion.div
                                         key={template.id}
-                                        initial={{ opacity: 0, y: 20 }}
+                                        layout
+                                        initial={{ opacity: 0, y: 30 }}
                                         animate={{ opacity: 1, y: 0 }}
-                                        transition={{ delay: index * 0.1, duration: 0.4 }}
+                                        transition={{ delay: index * 0.1, duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
+                                        className="relative group"
                                     >
                                         <button
                                             type="button"
                                             onClick={() => updateData({ template: template.id })}
                                             className={cn(
-                                                "w-full text-left rounded-3xl overflow-hidden transition-all duration-300 border-[3px]",
+                                                "w-full text-left rounded-[2.5rem] overflow-hidden transition-all duration-500 border-[3px] bg-white dark:bg-slate-900 relative",
                                                 isSelected
-                                                    ? "border-primary-500 shadow-xl shadow-primary-100 dark:shadow-primary-900/20 scale-[1.01]"
-                                                    : "border-transparent shadow-lg hover:shadow-xl hover:scale-[1.005]"
+                                                    ? "border-primary-500 shadow-[0_20px_50px_rgba(236,72,153,0.15)] scale-[1.02] ring-8 ring-primary-500/5"
+                                                    : "border-slate-100 dark:border-slate-800 shadow-xl hover:shadow-2xl hover:scale-[1.01] hover:border-primary-200 dark:hover:border-primary-900/30"
                                             )}
                                         >
-                                            {/* Template name header */}
+                                            {/* Refined Header */}
                                             <div className={cn(
-                                                "flex items-center justify-between px-4 py-2.5",
+                                                "flex items-center justify-between px-6 py-4",
                                                 isSelected
-                                                    ? "bg-primary-500 text-white"
-                                                    : "bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-300"
+                                                    ? "bg-gradient-to-r from-primary-500 to-primary-600 text-white"
+                                                    : "bg-slate-50/50 dark:bg-slate-800/50 text-slate-700 dark:text-slate-300"
                                             )}>
+                                                <div className="flex items-center gap-3">
+                                                    <div className={cn(
+                                                        "w-1.5 h-6 rounded-full",
+                                                        isSelected ? "bg-white" : "bg-primary-500"
+                                                    )} />
+                                                    <div className="flex flex-col">
+                                                        <span className="font-black text-sm tracking-tight">{template.name}</span>
+                                                        <span className={cn(
+                                                            "text-[9px] font-medium uppercase tracking-wider opacity-60",
+                                                            isSelected ? "text-white" : "text-slate-500"
+                                                        )}>
+                                                            {template.type || 'Wedding Design'}
+                                                        </span>
+                                                    </div>
+                                                </div>
+
                                                 <div className="flex items-center gap-2">
-                                                    <span className="font-black text-sm">{template.name}</span>
                                                     {template.category === 'Premium' && (
                                                         <span className={cn(
-                                                            "px-2 py-0.5 rounded-full text-[8px] font-black uppercase tracking-wider",
+                                                            "px-2.5 py-1 rounded-full text-[9px] font-black uppercase tracking-widest flex items-center gap-1",
                                                             isSelected
-                                                                ? "bg-white/20 text-white"
-                                                                : "bg-gradient-to-r from-amber-400 to-orange-400 text-white"
+                                                                ? "bg-white text-primary-600"
+                                                                : "bg-gradient-to-r from-amber-400 to-orange-500 text-white shadow-sm"
                                                         )}>
+                                                            <Sparkles className="h-2.5 w-2.5" />
                                                             Premium
                                                         </span>
                                                     )}
+                                                    {isSelected && (
+                                                        <motion.div
+                                                            initial={{ scale: 0 }}
+                                                            animate={{ scale: 1 }}
+                                                            className="w-7 h-7 rounded-full bg-white/20 backdrop-blur-md flex items-center justify-center border border-white/30"
+                                                        >
+                                                            <Check className="h-4 w-4 text-white stroke-[3.5]" />
+                                                        </motion.div>
+                                                    )}
                                                 </div>
-                                                {isSelected && (
-                                                    <div className="w-6 h-6 rounded-full bg-white/20 flex items-center justify-center">
-                                                        <Check className="h-4 w-4 text-white stroke-[3]" />
-                                                    </div>
+                                            </div>
+
+                                            {/* Wedding Card Preview */}
+                                            <div className="relative aspect-[4/5] overflow-hidden pointer-events-none group-hover:brightness-[1.02] transition-all duration-500">
+                                                <div className="absolute inset-0 scale-[1.01] origin-top">
+                                                    <WeddingCard
+                                                        invitation={previewInvitation}
+                                                        template={template}
+                                                    />
+                                                </div>
+                                                {/* Soft Overlay for unselected cards */}
+                                                {!isSelected && (
+                                                    <div className="absolute inset-0 bg-slate-900/5 dark:bg-black/20 group-hover:bg-transparent transition-colors duration-500" />
                                                 )}
                                             </div>
 
-                                            {/* Render the actual WeddingCard with user data */}
-                                            <div className="pointer-events-none">
-                                                <WeddingCard
-                                                    invitation={previewInvitation}
-                                                    template={template}
-                                                />
-                                            </div>
+                                            {/* Subtle indicator for selection */}
+                                            {isSelected && (
+                                                <div className="absolute top-1/2 left-0 w-1 h-12 bg-white rounded-r-full -translate-y-1/2 z-10" />
+                                            )}
                                         </button>
+
+                                        {/* Premium Inline Save & Create Action */}
+                                        <AnimatePresence>
+                                            {isSelected && (
+                                                <motion.div
+                                                    initial={{ height: 0, opacity: 0, marginTop: 0 }}
+                                                    animate={{ height: 'auto', opacity: 1, marginTop: 20 }}
+                                                    exit={{ height: 0, opacity: 0, marginTop: 0 }}
+                                                    className="overflow-hidden px-1"
+                                                >
+                                                    <Button
+                                                        onClick={(e) => {
+                                                            e.preventDefault();
+                                                            handleSubmit(e as any);
+                                                        }}
+                                                        disabled={isSaving}
+                                                        className="w-full h-16 rounded-[1.8rem] bg-gradient-to-r from-primary-600 via-primary-500 to-primary-600 bg-[length:200%_auto] animate-shimmer text-white font-black text-base shadow-2xl shadow-primary-200 dark:shadow-none flex items-center justify-center gap-3 border-[3px] border-white/30 hover:scale-[0.99] transition-transform active:scale-95 overflow-hidden group/btn"
+                                                    >
+                                                        {isSaving ? (
+                                                            <div className="flex items-center gap-3">
+                                                                <div className="w-5 h-5 border-3 border-white/30 border-t-white rounded-full animate-spin" />
+                                                                <span className="animate-pulse tracking-wide">{t('saving')}</span>
+                                                            </div>
+                                                        ) : (
+                                                            <>
+                                                                <Check className="h-6 w-6 stroke-[3.5] transition-transform group-hover/btn:scale-110" />
+                                                                <span className="tracking-tight">Saqlash va Yaratish</span>
+                                                                <div className="absolute inset-0 bg-white/10 opacity-0 group-hover/btn:opacity-100 transition-opacity" />
+                                                            </>
+                                                        )}
+                                                    </Button>
+                                                </motion.div>
+                                            )}
+                                        </AnimatePresence>
                                     </motion.div>
                                 )
                             })}
@@ -617,24 +689,29 @@ export function Create() {
                 <div className="flex justify-between mb-6 relative px-4">
                     <div className="absolute top-5 left-[15%] right-[15%] h-0.5 bg-gold-100 dark:bg-slate-800"></div>
                     {STEPS.map((step, idx) => (
-                        <div key={step} className="flex flex-col items-center relative z-10">
+                        <button
+                            key={step}
+                            type="button"
+                            onClick={() => setCurrentStep(idx)}
+                            className="flex flex-col items-center relative z-10 group cursor-pointer transition-transform active:scale-95"
+                        >
                             <div className={cn(
                                 "w-10 h-10 rounded-full flex items-center justify-center text-sm font-bold transition-all border-2",
                                 currentStep === idx
                                     ? "bg-primary-500 text-white border-primary-500 scale-110 shadow-lg shadow-primary-200"
                                     : currentStep > idx
-                                        ? "bg-primary-400 text-white border-primary-400"
-                                        : "bg-white dark:bg-slate-900 text-gold-400 border-gold-200 dark:border-slate-700"
+                                        ? "bg-primary-400 text-white border-primary-400 group-hover:bg-primary-500 group-hover:border-primary-500"
+                                        : "bg-white dark:bg-slate-900 text-gold-400 border-gold-200 dark:border-slate-700 group-hover:border-gold-300"
                             )}>
                                 {currentStep > idx ? '✓' : idx + 1}
                             </div>
                             <span className={cn(
-                                "text-[10px] sm:text-xs mt-2 font-medium text-center max-w-[80px]",
-                                currentStep === idx ? "text-primary-600 dark:text-primary-400" : "text-gray-400"
+                                "text-[10px] sm:text-xs mt-2 font-medium text-center max-w-[80px] transition-colors",
+                                currentStep === idx ? "text-primary-600 dark:text-primary-400 font-bold" : "text-gray-400 group-hover:text-gray-500"
                             )}>
                                 {t(step)}
                             </span>
-                        </div>
+                        </button>
                     ))}
                 </div>
 
@@ -648,21 +725,21 @@ export function Create() {
                             )}
                             {renderStep()}
                         </CardContent>
-                        <CardFooter className="flex justify-between border-t border-gold-100 dark:border-slate-800 bg-gold-50/30 dark:bg-slate-900/20 p-4">
-                            <Button
-                                type="button"
-                                variant="ghost"
-                                onClick={currentStep === 0 ? () => navigate("/") : prevStep}
-                            >
-                                <ChevronLeft className="mr-1 h-4 w-4" />
-                                {currentStep === 0 ? t('cancel') : t('back')}
-                            </Button>
-                            <Button type="submit" disabled={isSaving}>
-                                {currentStep === STEPS.length - 1
-                                    ? (isSaving ? t('saving') : <><Check className="mr-1 h-4 w-4" /> {t('save')}</>)
-                                    : <>{t('next')} <ChevronRight className="ml-1 h-4 w-4" /></>}
-                            </Button>
-                        </CardFooter>
+                        {currentStep < 3 && (
+                            <CardFooter className="flex justify-between border-t border-gold-100 dark:border-slate-800 bg-gold-50/30 dark:bg-slate-900/20 p-4">
+                                <Button
+                                    type="button"
+                                    variant="ghost"
+                                    onClick={currentStep === 0 ? () => navigate("/") : prevStep}
+                                >
+                                    <ChevronLeft className="mr-1 h-4 w-4" />
+                                    {currentStep === 0 ? t('cancel') : t('back')}
+                                </Button>
+                                <Button type="submit" disabled={isSaving}>
+                                    {currentStep === 2 ? t('chooseTemplate') : <>{t('next')} <ChevronRight className="ml-1 h-4 w-4" /></>}
+                                </Button>
+                            </CardFooter>
+                        )}
                     </Card>
                 </form>
             </div>

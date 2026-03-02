@@ -42,22 +42,6 @@ export function TemplatePreview() {
 
     return (
         <div className="min-h-screen bg-slate-50 dark:bg-black/40 flex flex-col">
-            {/* Top Bar */}
-            {/* <header className="sticky top-0 z-50 w-full bg-white/80 dark:bg-slate-900/80 backdrop-blur-md border-b border-gray-100 dark:border-slate-800 px-4 h-14 flex items-center justify-between">
-                <button
-                    onClick={() => navigate("/templates")}
-                    className="p-2 hover:bg-gray-100 dark:hover:bg-slate-800 rounded-full transition-colors flex items-center gap-2 text-sm font-medium text-slate-600 dark:text-slate-400"
-                >
-                    <ChevronLeft className="h-5 w-5" />
-                    <span>{t('back')}</span>
-                </button>
-                <div className="flex flex-col items-center">
-                    <span className="text-xs font-bold text-slate-900 dark:text-white uppercase tracking-widest leading-none">Preview</span>
-                    <span className="text-[10px] text-slate-400 font-medium">{template.name}</span>
-                </div>
-                <div className="w-10" /> 
-            </header> */}
-
             <main className="flex-1 overflow-y-auto py-8 px-4 flex justify-center items-start">
                 <motion.div
                     initial={{ opacity: 0, scale: 0.95 }}
