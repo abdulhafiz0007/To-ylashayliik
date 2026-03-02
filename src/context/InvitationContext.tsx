@@ -41,25 +41,25 @@ interface InvitationContextType {
 }
 
 const defaultData: InvitationData = {
-    brideName: "Malika",
-    brideLastname: "Ismailova",
+    brideName: "",
+    brideLastname: "",
     brideDateOfBirth: "",
     bridePictureKey: "",
     bridePictureGetUrl: "",
     bridePicturePutUrl: "",
-    groomName: "Sanjar",
-    groomLastname: "Karimov",
+    groomName: "",
+    groomLastname: "",
     groomDateOfBirth: "",
     groomPictureKey: "",
     groomPictureGetUrl: "",
     groomPicturePutUrl: "",
     date: "2026-08-28",
     time: "18:00",
-    location: "Toshkent shahri, Shayxontohur tumani",
-    hall: "Zarafshon Tantanalar Saroyi",
-    text: "Bizning quvonchli kunimizda sizlarni mehmon qilishdan baxtiyormiz",
+    location: "",
+    hall: "",
+    text: "",
     backgroundMusic: "music1",
-    template: "classic",
+    template: "toylashaylik",
 }
 
 const InvitationContext = createContext<InvitationContextType | undefined>(undefined)

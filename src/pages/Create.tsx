@@ -328,7 +328,7 @@ export function Create() {
                                     <Users className="h-4 w-4" /> {t('groomName')}
                                 </label>
                                 <Input
-                                    placeholder="Ism"
+                                    placeholder="Sanjar"
                                     value={data.groomName}
                                     onChange={(e) => updateData({ groomName: e.target.value })}
                                     required
@@ -339,7 +339,7 @@ export function Create() {
                                     <Users className="h-4 w-4" /> {t('groomLastname')}
                                 </label>
                                 <Input
-                                    placeholder="Familiya"
+                                    placeholder="Karimov"
                                     value={data.groomLastname}
                                     onChange={(e) => updateData({ groomLastname: e.target.value })}
                                     required
@@ -375,7 +375,7 @@ export function Create() {
                                     <Users className="h-4 w-4" /> {t('brideName')}
                                 </label>
                                 <Input
-                                    placeholder="Ism"
+                                    placeholder="Malika"
                                     value={data.brideName}
                                     onChange={(e) => updateData({ brideName: e.target.value })}
                                     required
@@ -386,7 +386,7 @@ export function Create() {
                                     <Users className="h-4 w-4" /> {t('brideLastname')}
                                 </label>
                                 <Input
-                                    placeholder="Familiya"
+                                    placeholder="Ismailova"
                                     value={data.brideLastname}
                                     onChange={(e) => updateData({ brideLastname: e.target.value })}
                                     required
@@ -442,7 +442,7 @@ export function Create() {
                                     <MapPin className="h-4 w-4" /> {t('hall')}
                                 </label>
                                 <Input
-                                    placeholder="e.g. Grand Hotel"
+                                    placeholder="Zarafshon Tantanalar Saroyi"
                                     value={data.hall}
                                     onChange={(e) => updateData({ hall: e.target.value })}
                                     required
@@ -453,7 +453,7 @@ export function Create() {
                                     <MapPin className="h-4 w-4" /> {t('location')}
                                 </label>
                                 <Input
-                                    placeholder="e.g. Tashkent, buyuk ipak yo'li"
+                                    placeholder="Toshkent shahri, Shayxontohur tumani"
                                     value={data.location}
                                     onChange={(e) => updateData({ location: e.target.value })}
                                     required
@@ -511,7 +511,7 @@ export function Create() {
                             </label>
                             <textarea
                                 className="flex min-h-[80px] w-full rounded-md border border-gold-200 dark:border-slate-700 bg-white dark:bg-slate-900 px-3 py-2 text-sm focus:ring-2 focus:ring-primary-400 outline-none transition-all shadow-sm dark:text-white"
-                                placeholder={t('message')}
+                                placeholder="Bizning quvonchli kunimizda sizlarni mehmon qilishdan baxtiyormiz"
                                 value={data.text}
                                 onChange={(e) => updateData({ text: e.target.value })}
                             />
@@ -520,23 +520,9 @@ export function Create() {
                 )
             case 3:
                 return (
-                    <div className="space-y-8 animate-fade-in -mx-5 -mt-2 pb-10">
-                        {/* Elegant Header */}
-                        <div className="text-center px-5 pt-4 pb-2">
-                            <motion.div
-                                initial={{ opacity: 0, y: -10 }}
-                                animate={{ opacity: 1, y: 0 }}
-                                className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-primary-50 dark:bg-primary-900/20 text-primary-600 dark:text-primary-400 text-[10px] font-black uppercase tracking-[0.2em] border border-primary-100 dark:border-primary-800/30 mb-3 shadow-sm"
-                            >
-                                <Sparkles className="h-3.5 w-3.5 animate-pulse" />
-                                {t('chooseTemplate')}
-                            </motion.div>
-                            <h3 className="text-lg font-black text-slate-800 dark:text-white tracking-tight">{t('chooseTemplate')}</h3>
-                            <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">Taklifnomangiz uchun eng go'zal dizaynni tanlang</p>
-                        </div>
-
+                    <div className="space-y-8 animate-fade-in -mx-5 -mt-2 pb-32">
                         {/* Premium Template List */}
-                        <div className="space-y-8 px-4">
+                        <div className="space-y-10 px-4">
                             {templates.map((template, index) => {
                                 const isSelected = data.template === template.id
                                 const previewInvitation = {
@@ -646,16 +632,16 @@ export function Create() {
                                                             handleSubmit(e as any);
                                                         }}
                                                         disabled={isSaving}
-                                                        className="w-full h-16 rounded-[1.8rem] bg-gradient-to-r from-primary-600 via-primary-500 to-primary-600 bg-[length:200%_auto] animate-shimmer text-white font-black text-base shadow-2xl shadow-primary-200 dark:shadow-none flex items-center justify-center gap-3 border-[3px] border-white/30 hover:scale-[0.99] transition-transform active:scale-95 overflow-hidden group/btn"
+                                                        className="w-full h-13 rounded-2xl bg-gradient-to-r from-primary-600 via-primary-500 to-primary-600 bg-[length:200%_auto] animate-shimmer text-white font-black text-sm shadow-xl shadow-primary-200/50 dark:shadow-none flex items-center justify-center gap-2 border-2 border-white/20 hover:scale-[0.98] transition-all active:scale-95 overflow-hidden group/btn"
                                                     >
                                                         {isSaving ? (
-                                                            <div className="flex items-center gap-3">
-                                                                <div className="w-5 h-5 border-3 border-white/30 border-t-white rounded-full animate-spin" />
-                                                                <span className="animate-pulse tracking-wide">{t('saving')}</span>
+                                                            <div className="flex items-center gap-2">
+                                                                <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                                                                <span className="animate-pulse tracking-wide text-xs">{t('saving')}</span>
                                                             </div>
                                                         ) : (
                                                             <>
-                                                                <Check className="h-6 w-6 stroke-[3.5] transition-transform group-hover/btn:scale-110" />
+                                                                <Check className="h-5 w-5 stroke-[3] transition-transform group-hover/btn:scale-110" />
                                                                 <span className="tracking-tight">Saqlash va Yaratish</span>
                                                                 <div className="absolute inset-0 bg-white/10 opacity-0 group-hover/btn:opacity-100 transition-opacity" />
                                                             </>

@@ -25,6 +25,21 @@ export interface TemplateConfig {
 
 export const templates: TemplateConfig[] = [
     {
+        id: "toylashaylik",
+        name: "To'ylashaylik",
+        type: "Official Theme",
+        category: "Premium",
+        thumbnail: "https://images.unsplash.com/photo-1515934751635-c81c6bc9a2d8?auto=format&fit=crop&q=80&w=600",
+        wrapperClass: "bg-[#fffafa] dark:bg-slate-950 border-0 shadow-2xl relative overflow-hidden",
+        introClass: "text-pink-400 dark:text-pink-500 uppercase tracking-[0.5em] text-[10px] font-black pt-12",
+        namesClass: "font-serif text-5xl md:text-7xl text-indigo-900 dark:text-indigo-200 font-black tracking-tight my-2",
+        ampersandClass: "text-pink-500 text-4xl mx-2 font-serif italic",
+        messageClass: "font-serif text-sm text-pink-600 dark:text-pink-400 leading-relaxed px-10 mt-2 italic font-medium",
+        detailsClass: "bg-white/80 dark:bg-slate-900/80 backdrop-blur-sm rounded-[2.5rem] p-8 mx-6 mt-10 border border-pink-100 dark:border-pink-900/30 shadow-sm",
+        iconClass: "text-orange-500",
+        overlayClass: "absolute inset-0 border-[15px] border-pink-50/30 dark:border-pink-900/10 pointer-events-none"
+    },
+    {
         id: "classic_royale",
         name: "Classic Royale",
         type: "Traditional",

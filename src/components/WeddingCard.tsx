@@ -1,6 +1,6 @@
 import type { InvitationData } from "../context/InvitationContext"
 import type { TemplateConfig } from "../lib/templates"
-import { Clock, MapPin, Calendar, Heart, Star, Flower2, Diamond } from "lucide-react"
+import { Clock, MapPin, Calendar, Heart, Star, Flower2, Diamond, Sparkles } from "lucide-react"
 import defaultGroom from "../assets/default_groom.jpg"
 import defaultBride from "../assets/default_bride.jpg"
 
@@ -195,9 +195,6 @@ function ModernMinimal({ invitation }: { invitation: Partial<InvitationData> }) 
                     </div>
                     <div className="relative z-10 text-center">
                         <p className="text-[8px] uppercase tracking-[0.3em] text-slate-400 font-bold">Kuyov</p>
-                        <p className="text-lg font-black text-white mt-0.5 leading-tight">
-                            {invitation.groomName || "Sanjar"}
-                        </p>
                     </div>
                 </div>
 
@@ -209,9 +206,6 @@ function ModernMinimal({ invitation }: { invitation: Partial<InvitationData> }) 
                     </div>
                     <div className="relative z-10 text-center">
                         <p className="text-[8px] uppercase tracking-[0.3em] text-slate-500 font-black">Kelin</p>
-                        <p className="text-lg font-black text-slate-900 mt-0.5 leading-tight">
-                            {invitation.brideName || "Malika"}
-                        </p>
                     </div>
                 </div>
 
@@ -295,7 +289,6 @@ function GardenBliss({ invitation }: { invitation: Partial<InvitationData> }) {
                         </div>
                         <div className="text-center mt-2">
                             <p className="text-[8px] text-emerald-600 uppercase tracking-[0.3em] font-bold">Kuyov</p>
-                            <p className="font-black text-slate-800 text-sm">{invitation.groomName || "Sanjar"}</p>
                         </div>
                     </div>
 
@@ -319,7 +312,6 @@ function GardenBliss({ invitation }: { invitation: Partial<InvitationData> }) {
                         </div>
                         <div className="text-center mt-2">
                             <p className="text-[8px] text-pink-500 uppercase tracking-[0.3em] font-bold">Kelin</p>
-                            <p className="font-black text-slate-800 text-sm">{invitation.brideName || "Malika"}</p>
                         </div>
                     </div>
                 </div>
@@ -432,7 +424,6 @@ function MidnightStar({ invitation }: { invitation: Partial<InvitationData> }) {
                         {/* Groom label */}
                         <div className="absolute bottom-0 left-0 right-0 z-20 bg-gradient-to-t from-black/90 to-transparent rounded-b-2xl py-2 px-3">
                             <p className="text-[7px] uppercase tracking-[0.3em] text-amber-400 font-bold">Kuyov</p>
-                            <p className="font-black text-white text-sm leading-tight">{invitation.groomName || "Sanjar"}</p>
                         </div>
                     </div>
                 </div>
@@ -450,7 +441,6 @@ function MidnightStar({ invitation }: { invitation: Partial<InvitationData> }) {
                         {/* Bride label */}
                         <div className="absolute bottom-0 left-0 right-0 z-20 bg-gradient-to-t from-black/90 to-transparent rounded-b-2xl py-2 px-3">
                             <p className="text-[7px] uppercase tracking-[0.3em] text-amber-400 font-bold">Kelin</p>
-                            <p className="font-black text-white text-sm leading-tight">{invitation.brideName || "Malika"}</p>
                         </div>
                     </div>
                 </div>
@@ -522,21 +512,133 @@ function MidnightStar({ invitation }: { invitation: Partial<InvitationData> }) {
 }
 
 // ════════════════════════════════════════════════════════════════════════════
+// TEMPLATE 5 — Toylashaylik (Official Theme)
+// Circular photos with badges, elegant initials, info cards below
+// ════════════════════════════════════════════════════════════════════════════
+function ToylashaylikTheme({ invitation }: { invitation: Partial<InvitationData> }) {
+    return (
+        <div className="w-full min-h-[680px] bg-[#fff9fa] dark:bg-slate-950 flex flex-col items-center overflow-hidden select-none relative font-sans">
+            {/* Header Sparkle Icon and Label */}
+            <div className="mt-10 flex flex-col items-center gap-1">
+                <Sparkles className="h-6 w-6 text-pink-300 animate-pulse" />
+                <p className="text-[10px] uppercase tracking-[0.4em] text-slate-400 font-medium">T O ' Y  T A K L I F I</p>
+            </div>
+
+            {/* Portraits Section */}
+            <div className="flex items-center justify-center gap-2 mt-10 mb-8 relative px-6">
+                {/* Groom */}
+                <div className="flex flex-col items-center relative">
+                    <div className="w-32 h-32 rounded-full border-4 border-pink-100 bg-white shadow-sm overflow-hidden p-1">
+                        <Photo
+                            src={invitation.groomPictureGetUrl}
+                            size="full"
+                            className="rounded-full h-full w-full"
+                        />
+                    </div>
+                    <div className="absolute -bottom-2 bg-pink-500 text-white text-[9px] font-black uppercase px-4 py-1 rounded-full shadow-md z-10 tracking-widest">
+                        Kuyov
+                    </div>
+                </div>
+
+                {/* Heart Icon Connector */}
+                <div className="z-20 -mx-2 h-10 w-10 rounded-full bg-white flex items-center justify-center shadow-lg border border-pink-50">
+                    <Heart className="h-5 w-5 text-pink-500 fill-pink-500" />
+                </div>
+
+                {/* Bride */}
+                <div className="flex flex-col items-center relative">
+                    <div className="w-32 h-32 rounded-full border-4 border-pink-100 bg-white shadow-sm overflow-hidden p-1">
+                        <Photo
+                            src={invitation.bridePictureGetUrl}
+                            size="full"
+                            className="rounded-full h-full w-full"
+                            personType="bride"
+                        />
+                    </div>
+                    <div className="absolute -bottom-2 bg-pink-500 text-white text-[9px] font-black uppercase px-4 py-1 rounded-full shadow-md z-10 tracking-widest">
+                        Kelin
+                    </div>
+                </div>
+            </div>
+
+            {/* Full Names & Slogan */}
+            <div className="flex flex-col items-center text-center mb-8 px-6">
+                <h1 className="text-4xl font-serif text-indigo-900 dark:text-indigo-200 font-black tracking-tight leading-tight">
+                    {invitation.groomName || 'Sanjar'}
+                </h1>
+                <div className="flex items-center justify-center gap-2 my-1">
+                    <div className="h-px w-8 bg-pink-100" />
+                    <span className="text-pink-500 text-2xl font-serif italic">&</span>
+                    <div className="h-px w-8 bg-pink-100" />
+                </div>
+                <h1 className="text-4xl font-serif text-indigo-900 dark:text-indigo-200 font-black tracking-tight leading-tight">
+                    {invitation.brideName || 'Malika'}
+                </h1>
+                <p className="text-[11px] text-pink-500 italic mt-3 font-medium">Oilalari sizni to'yga taklif qiladi</p>
+            </div>
+
+            {/* Main Information Container */}
+            <div className="w-full px-6 flex flex-col gap-5 pb-12">
+                {/* Event Card */}
+                <div className="bg-white dark:bg-slate-900 rounded-[2.5rem] p-6 shadow-sm border border-pink-50/50 dark:border-slate-800 flex flex-col items-center gap-4">
+                    <div className="w-12 h-12 bg-primary-500 rounded-2xl flex items-center justify-center text-white shadow-lg shadow-primary-200/50">
+                        <Calendar className="h-6 w-6" />
+                    </div>
+                    <p className="text-[10px] font-black tracking-[0.2em] text-slate-800 dark:text-slate-200 uppercase">TO'Y MAROSIMI</p>
+
+                    <div className="w-full h-px bg-slate-50 dark:bg-slate-800" />
+
+                    <div className="flex items-center justify-between w-full px-4 py-1">
+                        {/* Date info */}
+                        <div className="flex flex-col items-center flex-1">
+                            <span className="text-3xl font-black text-pink-500 leading-none">{getDay(invitation.date)}</span>
+                            <span className="text-[10px] uppercase font-black tracking-widest text-pink-400 mt-1">{getMonth(invitation.date)}</span>
+                            <span className="text-[9px] text-slate-400 font-bold mt-0.5">2026</span>
+                        </div>
+
+                        {/* Divider */}
+                        <div className="w-px h-12 bg-slate-100 dark:bg-slate-800 mx-2" />
+
+                        {/* Time info */}
+                        <div className="flex flex-col items-center flex-1 gap-1">
+                            <Clock className="h-4 w-4 text-pink-300 opacity-60" />
+                            <span className="text-2xl font-black text-indigo-900 dark:text-indigo-200">{invitation.time || '18:00'}</span>
+                        </div>
+                    </div>
+                </div>
+
+                {/* Location Card */}
+                <div className="bg-[#fffdf5] dark:bg-slate-900/50 rounded-[2.5rem] p-6 shadow-sm border border-gold-100/50 dark:border-slate-800 flex items-center gap-4">
+                    <div className="w-12 h-12 bg-orange-500/10 rounded-2xl flex items-center justify-center text-orange-500 border border-orange-100">
+                        <MapPin className="h-6 w-6" />
+                    </div>
+                    <div className="flex-1 min-w-0">
+                        <p className="font-black text-slate-900 dark:text-white text-base truncate">{invitation.hall || "Zarafshon Tantanalar Saroyi"}</p>
+                        <p className="text-xs text-slate-500 dark:text-slate-400 truncate mt-0.5">{invitation.location || "Toshkent shahri, Shayxontohur tumani"}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    )
+}
+
+// ════════════════════════════════════════════════════════════════════════════
 // Main WeddingCard — routes to the correct template
 // ════════════════════════════════════════════════════════════════════════════
 export function WeddingCard({ invitation, template, cardRef }: WeddingCardProps) {
-    const isDefault = !template || template.id === 'default'
+    const isDefault = !template || template.id === 'default' || template.id === 'toylashaylik'
 
     const renderCard = () => {
         if (isDefault || !template) {
-            return <ClassicRoyale invitation={invitation} />
+            return <ToylashaylikTheme invitation={invitation} />
         }
         switch (template.id) {
+            case 'toylashaylik': return <ToylashaylikTheme invitation={invitation} />
             case 'classic_royale': return <ClassicRoyale invitation={invitation} />
             case 'modern_minimal': return <ModernMinimal invitation={invitation} />
             case 'garden_bliss': return <GardenBliss invitation={invitation} />
             case 'midnight_star': return <MidnightStar invitation={invitation} />
-            default: return <ClassicRoyale invitation={invitation} />
+            default: return <ToylashaylikTheme invitation={invitation} />
         }
     }
 
