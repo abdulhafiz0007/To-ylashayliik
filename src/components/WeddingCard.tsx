@@ -631,13 +631,11 @@ function ToylashaylikTheme({ invitation }: { invitation: Partial<InvitationData>
 // Main WeddingCard — routes to the correct template
 // ════════════════════════════════════════════════════════════════════════════
 export function WeddingCard({ invitation, template, cardRef }: WeddingCardProps) {
-    const isDefault = !template || template.id === 'default' || template.id === 'toylashaylik'
+    // Determine which template to render based on ID
+    const templateId = template?.id || invitation?.template || 'toylashaylik'
 
     const renderCard = () => {
-        if (isDefault || !template) {
-            return <ToylashaylikTheme invitation={invitation} />
-        }
-        switch (template.id) {
+        switch (templateId) {
             case 'toylashaylik': return <ToylashaylikTheme invitation={invitation} />
             case 'classic_royale': return <ClassicRoyale invitation={invitation} />
             case 'modern_minimal': return <ModernMinimal invitation={invitation} />

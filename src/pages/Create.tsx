@@ -1,4 +1,4 @@
-import { useState, useRef, useCallback } from "react"
+import { useState, useRef, useCallback, useEffect } from "react"
 import { useNavigate } from "react-router-dom"
 import { useInvitation } from "../context/InvitationContext"
 import { Button } from "../components/ui/Button"
@@ -125,7 +125,7 @@ function CropModal({ imageSrc, onCropDone, onCancel }: CropModalProps) {
 // ─── Main Create Page ─────────────────────────────────────────────────────────
 export function Create() {
     const navigate = useNavigate()
-    const { data, updateData, error: contextError } = useInvitation()
+    const { data, updateData, resetData, error: contextError } = useInvitation()
     const { t } = useLanguage()
     const { user: tgUser } = useTelegram()
 
@@ -133,6 +133,11 @@ export function Create() {
     const [isSaving, setIsSaving] = useState(false)
     const [saveError, setSaveError] = useState<string | null>(null)
     const [playingMusic, setPlayingMusic] = useState<string | null>(null)
+
+    // Reset data when entering creation flow to avoid stale photos/info
+    useEffect(() => {
+        resetData()
+    }, [])
 
     // Local image previews (shown immediately after cropping)
     const [groomPreview, setGroomPreview] = useState<string | null>(null)
@@ -541,6 +546,7 @@ export function Create() {
                                         className="relative group"
                                     >
                                         <button
+                                            type="button"
                                             onClick={() => updateData({ template: template.id })}
                                             className={cn(
                                                 "w-full text-left transition-all duration-500 relative",
@@ -627,7 +633,10 @@ export function Create() {
                 />
             )}
 
-            <div className="container mx-auto px-4 py-6 max-w-2xl min-h-screen flex flex-col">
+            <div className={cn(
+                "container mx-auto py-6 max-w-2xl min-h-screen flex flex-col",
+                currentStep === 3 ? "px-0" : "px-4"
+            )}>
                 {/* Step Indicator */}
                 <div className="flex justify-between mb-6 relative px-4">
                     <div className="absolute top-5 left-[15%] right-[15%] h-0.5 bg-gold-100 dark:bg-slate-800"></div>
