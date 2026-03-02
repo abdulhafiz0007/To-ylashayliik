@@ -35,14 +35,15 @@ function Photo({ src, size = 80, className = "", personType = "groom" }: {
 }) {
     const fallback = personType === "bride" ? DEFAULT_BRIDE : DEFAULT_GROOM
 
-    // Robust check for truthy src that isn't a placeholder string
     const trimmedSrc = typeof src === 'string' ? src.trim() : src
-    const isValidSrc = trimmedSrc &&
+    const isValidSrc = !!trimmedSrc &&
+        typeof trimmedSrc === 'string' &&
         trimmedSrc !== "" &&
         trimmedSrc !== "null" &&
         trimmedSrc !== "undefined" &&
-        !trimmedSrc.includes("/null") &&
-        !trimmedSrc.includes("/undefined")
+        !trimmedSrc.toLowerCase().includes("null") &&
+        !trimmedSrc.toLowerCase().includes("undefined") &&
+        (trimmedSrc.startsWith("http") || trimmedSrc.startsWith("blob:") || trimmedSrc.startsWith("data:"))
 
     const finalSrc = isValidSrc ? (trimmedSrc as string) : fallback
     const dimStyle = typeof size === 'number' ? { width: size, height: size } : {}
@@ -632,6 +633,7 @@ function ToylashaylikTheme({ invitation }: { invitation: Partial<InvitationData>
 // ════════════════════════════════════════════════════════════════════════════
 export function WeddingCard({ invitation, template, cardRef }: WeddingCardProps) {
     // Determine which template to render based on ID
+    // Prioritize the passed template object (useful for previews), then the invitation data, then default
     const templateId = template?.id || invitation?.template || 'toylashaylik'
 
     const renderCard = () => {

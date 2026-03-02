@@ -200,7 +200,7 @@ export function Create() {
         try {
             const finalData = {
                 ...data,
-                template: data.template || 'classic_royale',
+                template: data.template || 'toylashaylik',
                 creatorUser: tgUser
             }
 

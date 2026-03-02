@@ -242,7 +242,7 @@ export function Invitation() {
     if (!invitation) return null
 
 
-    const templateId = invitation.template || 'classic'
+    const templateId = invitation.template || 'toylashaylik'
     const template = templates.find(temp => temp.id === templateId) || templates[0]
 
     const toggleMusic = () => {
