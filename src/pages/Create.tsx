@@ -598,13 +598,11 @@ export function Create() {
                                             </div>
 
                                             {/* Wedding Card Preview */}
-                                            <div className="relative aspect-[4/5] overflow-hidden pointer-events-none group-hover:brightness-[1.02] transition-all duration-500">
-                                                <div className="absolute inset-0 scale-[1.01] origin-top">
-                                                    <WeddingCard
-                                                        invitation={previewInvitation}
-                                                        template={template}
-                                                    />
-                                                </div>
+                                            <div className="relative pointer-events-none group-hover:brightness-[1.02] transition-all duration-500 rounded-2xl overflow-hidden">
+                                                <WeddingCard
+                                                    invitation={previewInvitation}
+                                                    template={template}
+                                                />
                                                 {/* Soft Overlay for unselected cards */}
                                                 {!isSelected && (
                                                     <div className="absolute inset-0 bg-slate-900/5 dark:bg-black/20 group-hover:bg-transparent transition-colors duration-500" />
