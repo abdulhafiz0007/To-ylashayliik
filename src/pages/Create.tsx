@@ -525,9 +525,9 @@ export function Create() {
                 )
             case 3:
                 return (
-                    <div className="space-y-8 animate-fade-in -mx-5 -mt-2 pb-32">
+                    <div className="space-y-8 animate-fade-in -mt-2 pb-32">
                         {/* Premium Template List */}
-                        <div className="space-y-10 px-4">
+                        <div className="space-y-10 px-0">
                             {templates.map((template, index) => {
                                 const isSelected = data.template === template.id
                                 const previewInvitation = {
@@ -549,10 +549,10 @@ export function Create() {
                                             type="button"
                                             onClick={() => updateData({ template: template.id })}
                                             className={cn(
-                                                "w-full text-left transition-all duration-500 relative",
+                                                "w-full text-left transition-all duration-500 relative rounded-[32px]",
                                                 isSelected
-                                                    ? "z-10 bg-primary-50 px-[2px] rounded-3xl"
-                                                    : "opacity-80 hover:opacity-100"
+                                                    ? "z-10 bg-primary-50 ring-4 ring-primary-500/30 scale-[1.02] shadow-2xl"
+                                                    : "opacity-80 hover:opacity-100 hover:scale-[1.01]"
                                             )}
                                         >
                                             {isSelected && (
@@ -635,7 +635,7 @@ export function Create() {
 
             <div className={cn(
                 "container mx-auto py-6 max-w-2xl min-h-screen flex flex-col",
-                currentStep === 3 ? "px-0" : "px-4"
+                currentStep === 3 ? "px-[15px] pr-[17px]" : "px-4"
             )}>
                 {/* Step Indicator */}
                 <div className="flex justify-between mb-6 relative px-4">
