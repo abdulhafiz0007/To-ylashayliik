@@ -548,7 +548,7 @@ export function Create() {
                 )
             case 3:
                 return (
-                    <div className="space-y-8 animate-fade-in -mt-2 pb-32">
+                    <div className="space-y-8 animate-fade-in -mt-2 pb-32 mt-4">
                         {/* Premium Template List */}
                         <div className="space-y-10 px-0">
                             {templates.map((template, index) => {
