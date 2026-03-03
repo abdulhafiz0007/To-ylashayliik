@@ -668,16 +668,25 @@ export function Create() {
                 </div>
 
                 <form onSubmit={handleSubmit} className="flex-grow">
-                    <Card className="shadow-xl border-gold-100 dark:border-slate-800 overflow-hidden">
-                        <CardContent className="p-5">
+                    {currentStep === 3 ? (
+                        <>
                             {displayError && (
-                                <div className="mb-4 p-3 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg text-red-600 dark:text-red-400 text-sm">
+                                <div className="mb-4 mx-4 p-3 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg text-red-600 dark:text-red-400 text-sm">
                                     {displayError}
                                 </div>
                             )}
                             {renderStep()}
-                        </CardContent>
-                        {currentStep < 3 && (
+                        </>
+                    ) : (
+                        <Card className="shadow-xl border-gold-100 dark:border-slate-800 overflow-hidden">
+                            <CardContent className="p-5">
+                                {displayError && (
+                                    <div className="mb-4 p-3 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg text-red-600 dark:text-red-400 text-sm">
+                                        {displayError}
+                                    </div>
+                                )}
+                                {renderStep()}
+                            </CardContent>
                             <CardFooter className="flex justify-between border-t border-gold-100 dark:border-slate-800 bg-gold-50/30 dark:bg-slate-900/20 p-4">
                                 <Button
                                     type="button"
@@ -691,8 +700,8 @@ export function Create() {
                                     {currentStep === 2 ? t('chooseTemplate') : <>{t('next')} <ChevronRight className="ml-1 h-4 w-4" /></>}
                                 </Button>
                             </CardFooter>
-                        )}
-                    </Card>
+                        </Card>
+                    )}
                 </form>
             </div>
         </>

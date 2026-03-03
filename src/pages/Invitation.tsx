@@ -133,44 +133,53 @@ export function Invitation() {
     }
 
     const handleDownload = async () => {
-        if (cardRef.current) {
+        if (!cardRef.current) return;
+
+        // Helper: check if an element has problematic external resources
+        const hasExternalBg = (node: HTMLElement) => {
+            if (!node || !node.className || typeof node.className !== 'string') return false;
+            // Skip external texture overlays and animated elements
+            return node.className.includes('bg-[url') ||
+                node.className.includes('animate-pulse') ||
+                node.className.includes('animate-ping');
+        };
+
+        try {
+            const dataUrl = await toPng(cardRef.current, {
+                cacheBust: true,
+                pixelRatio: 2,
+                backgroundColor: '#ffffff',
+                filter: (node: HTMLElement) => !hasExternalBg(node),
+            });
+            download(dataUrl, 'my-wedding-invitation.png');
+        } catch (err) {
+            console.error('Download failed:', err);
+            // Fallback: aggressively skip all potentially problematic nodes
             try {
                 const dataUrl = await toPng(cardRef.current, {
                     cacheBust: true,
                     pixelRatio: 2,
+                    backgroundColor: '#ffffff',
+                    skipFonts: true,
                     filter: (node: HTMLElement) => {
-                        // Skip the external texture overlay (causes CORS errors)
-                        if (node.className && typeof node.className === 'string' && node.className.includes('bg-[url')) {
-                            return false
+                        if (hasExternalBg(node)) return false;
+                        // Also skip any node with inline external bg
+                        const style = node?.style;
+                        if (style?.backgroundImage?.includes('http')) return false;
+                        // Skip external images (cross-origin)
+                        if (node.tagName === 'IMG') {
+                            const src = (node as HTMLImageElement).src;
+                            if (src && src.startsWith('http') && !src.includes(window.location.host)) {
+                                return false;
+                            }
                         }
-                        return true
-                    }
-                })
+                        return true;
+                    },
+                });
                 download(dataUrl, 'my-wedding-invitation.png');
-            } catch (err) {
-                console.error('Download failed:', err);
-                // Fallback: try again without external images
-                try {
-                    const dataUrl = await toPng(cardRef.current, {
-                        cacheBust: true,
-                        pixelRatio: 2,
-                        skipFonts: true,
-                        filter: (node: HTMLElement) => {
-                            // Skip any element with external background images
-                            const style = node.style;
-                            if (style && style.backgroundImage && style.backgroundImage.includes('http')) {
-                                return false;
-                            }
-                            if (node.className && typeof node.className === 'string' && (node.className.includes('bg-[url') || node.className.includes('pointer-events-none'))) {
-                                return false;
-                            }
-                            return true;
-                        }
-                    })
-                    download(dataUrl, 'my-wedding-invitation.png');
-                } catch (err2) {
-                    console.error('Fallback download also failed:', err2);
-                }
+            } catch (err2) {
+                console.error('Fallback download also failed:', err2);
+                alert("Rasmni yuklab olishda xatolik yuz berdi. Iltimos, qayta urinib ko'ring.");
             }
         }
     }

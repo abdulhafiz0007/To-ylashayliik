@@ -43,7 +43,7 @@ function Photo({ src, size = 80, className = "", personType = "groom" }: {
         trimmedSrc !== "undefined" &&
         !trimmedSrc.toLowerCase().includes("null") &&
         !trimmedSrc.toLowerCase().includes("undefined") &&
-        (trimmedSrc.startsWith("http") || trimmedSrc.startsWith("blob:") || trimmedSrc.startsWith("data:"))
+        (trimmedSrc.startsWith("http") || trimmedSrc.startsWith("blob:") || trimmedSrc.startsWith("data:") || trimmedSrc.startsWith("/"))
 
     const finalSrc = isValidSrc ? (trimmedSrc as string) : fallback
     const dimStyle = typeof size === 'number' ? { width: size, height: size } : {}
@@ -58,6 +58,12 @@ function Photo({ src, size = 80, className = "", personType = "groom" }: {
                 alt=""
                 className="w-full h-full object-cover"
                 loading="eager"
+                onError={(e) => {
+                    const target = e.target as HTMLImageElement;
+                    if (target.src !== fallback) {
+                        target.src = fallback;
+                    }
+                }}
             />
         </div>
     )

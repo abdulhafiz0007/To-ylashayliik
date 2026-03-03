@@ -69,7 +69,8 @@ async function fetchApi(path: string, options: RequestInit = {}) {
 
 // Mappings
 const templateMapping: Record<string, string> = {
-    // New 4-template IDs
+    // New 5-template IDs
+    'toylashaylik': 'TEMPLATE_0010',
     'classic_royale': 'TEMPLATE_0000',
     'modern_minimal': 'TEMPLATE_0001',
     'garden_bliss': 'TEMPLATE_1000',
@@ -82,7 +83,7 @@ const templateMapping: Record<string, string> = {
     'pastel': 'TEMPLATE_0000',
     'dark': 'TEMPLATE_1001',
     'minimal': 'TEMPLATE_0001',
-    'default': 'TEMPLATE_0000',
+    'default': 'TEMPLATE_0010',
 };
 
 const musicMapping: Record<string, string | null> = {
@@ -93,6 +94,7 @@ const musicMapping: Record<string, string | null> = {
 };
 
 const reverseTemplateMapping: Record<string, string> = {
+    'TEMPLATE_0010': 'toylashaylik',
     'TEMPLATE_0000': 'classic_royale',
     'TEMPLATE_0001': 'modern_minimal',
     'TEMPLATE_1000': 'garden_bliss',
@@ -189,8 +191,8 @@ export const api = {
     },
 
     saveInvitation: async (invData: any) => {
-        const currentTemplate = invData.template || invData.templateId || 'classic_royale';
-        const templateEnum = templateMapping[currentTemplate] || (currentTemplate.startsWith('TEMPLATE_') ? currentTemplate : 'TEMPLATE_0000');
+        const currentTemplate = invData.template || invData.templateId || 'toylashaylik';
+        const templateEnum = templateMapping[currentTemplate] || (currentTemplate.startsWith('TEMPLATE_') ? currentTemplate : 'TEMPLATE_0010');
 
         let dateISO = invData.date || "";
         if (invData.date && typeof invData.date === 'string' && invData.time && typeof invData.time === 'string') {
