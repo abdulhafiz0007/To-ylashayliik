@@ -674,7 +674,7 @@ export function Create() {
                             }}
                             className={cn(
                                 "flex flex-col items-center relative z-10 group transition-transform active:scale-95",
-                                !canNavigateToStep(idx) && "opacity-50 cursor-not-allowed"
+                                !canNavigateToStep(idx) && ""
                             )}
                         >
                             <div className={cn(
