@@ -182,8 +182,33 @@ export function Create() {
         setCropTarget(null)
     }
 
+    const isStepValid = (stepIdx: number) => {
+        switch (stepIdx) {
+            case 0:
+                return !!data.groomName.trim();
+            case 1:
+                return !!data.brideName.trim();
+            case 2:
+                return !!data.date && !!data.time && !!data.hall.trim() && !!data.location.trim();
+            default:
+                return true;
+        }
+    };
+
+    const canNavigateToStep = (targetIdx: number) => {
+        // Always allow going back
+        if (targetIdx <= currentStep) return true;
+        // To go to any future step, all steps up to that step must be valid
+        for (let i = 0; i < targetIdx; i++) {
+            if (!isStepValid(i)) return false;
+        }
+        return true;
+    };
+
     const nextStep = () => {
-        if (currentStep < STEPS.length - 1) setCurrentStep(prev => prev + 1)
+        if (currentStep < STEPS.length - 1 && isStepValid(currentStep)) {
+            setCurrentStep(prev => prev + 1)
+        }
     }
 
     const prevStep = () => {
@@ -347,7 +372,6 @@ export function Create() {
                                     placeholder="Karimov"
                                     value={data.groomLastname}
                                     onChange={(e) => updateData({ groomLastname: e.target.value })}
-                                    required
                                 />
                             </div>
                             <div className="space-y-2">
@@ -394,7 +418,6 @@ export function Create() {
                                     placeholder="Ismailova"
                                     value={data.brideLastname}
                                     onChange={(e) => updateData({ brideLastname: e.target.value })}
-                                    required
                                 />
                             </div>
                             <div className="space-y-2">
@@ -644,8 +667,15 @@ export function Create() {
                         <button
                             key={step}
                             type="button"
-                            onClick={() => setCurrentStep(idx)}
-                            className="flex flex-col items-center relative z-10 group cursor-pointer transition-transform active:scale-95"
+                            onClick={() => {
+                                if (canNavigateToStep(idx)) {
+                                    setCurrentStep(idx);
+                                }
+                            }}
+                            className={cn(
+                                "flex flex-col items-center relative z-10 group transition-transform active:scale-95",
+                                !canNavigateToStep(idx) && "opacity-50 cursor-not-allowed"
+                            )}
                         >
                             <div className={cn(
                                 "w-10 h-10 rounded-full flex items-center justify-center text-sm font-bold transition-all border-2",
