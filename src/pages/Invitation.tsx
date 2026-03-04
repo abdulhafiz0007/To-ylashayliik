@@ -30,7 +30,7 @@ import { WeddingCard } from "../components/WeddingCard"
 
 export function Invitation() {
     const { id } = useParams<{ id: string }>()
-    const { user: tgUser, tg, switchInlineQuery } = useTelegram()
+    const { user: tgUser, tg } = useTelegram()
     const { updateData, addReceivedInvitation, loading: contextLoading, error: contextError } = useInvitation()
     const { t } = useLanguage()
     const [invitation, setInvitation] = useState<InvitationData | null>(null)
@@ -192,11 +192,16 @@ export function Invitation() {
         const shareText = `Sizni ${invitation?.brideName} & ${invitation?.groomName}larning to'y oqshomiga taklif etamiz! 💍`;
 
         // If in Telegram, use inline share
-        if (tg && switchInlineQuery) {
-            switchInlineQuery(`inv_${id}`);
-            return;
+        if (tg?.switchInlineQuery) {
+            try {
+                tg.switchInlineQuery(`inv_${id}`, ['users', 'groups', 'channels']);
+                return;
+            } catch (err) {
+                console.warn('switchInlineQuery failed, falling back:', err);
+            }
         }
 
+        // Fallback: use native share or clipboard
         if (navigator.share) {
             try {
                 await navigator.share({
