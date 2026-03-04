@@ -47,6 +47,14 @@ export function Invitation() {
 
     const musicUrl = invitation?.backgroundMusic ? MUSIC_MAP[invitation.backgroundMusic as string] : null;
 
+    // Pre-fill sender name from Telegram user data
+    useEffect(() => {
+        if (tgUser && !senderName) {
+            const fullName = [tgUser.first_name, tgUser.last_name].filter(Boolean).join(' ');
+            if (fullName) setSenderName(fullName);
+        }
+    }, [tgUser]);
+
     // Autoplay logic
     useEffect(() => {
         if (!loading && invitation && musicUrl && audioRef.current) {
@@ -189,15 +197,16 @@ export function Invitation() {
         const botUsername = 'etaklif_bot';
         const appShortName = 'taklifnoma';
         const shareUrl = `https://t.me/${botUsername}/${appShortName}?startapp=inv_${id}`;
-        const shareText = `Sizni ${invitation?.brideName} & ${invitation?.groomName}larning to'y oqshomiga taklif etamiz! 💍`;
+        const shareText = `Sizni ${invitation?.groomName} & ${invitation?.brideName}larning to'y oqshomiga taklif etamiz! 💍`;
 
-        // If in Telegram, use inline share
-        if (tg?.switchInlineQuery) {
+        // If in Telegram WebApp, use native Telegram share via openTelegramLink
+        if (tg?.openTelegramLink) {
             try {
-                tg.switchInlineQuery(`inv_${id}`, ['users', 'groups', 'channels']);
+                const tgShareUrl = `https://t.me/share/url?url=${encodeURIComponent(shareUrl)}&text=${encodeURIComponent(shareText)}`;
+                tg.openTelegramLink(tgShareUrl);
                 return;
             } catch (err) {
-                console.warn('switchInlineQuery failed, falling back:', err);
+                console.warn('openTelegramLink failed, falling back:', err);
             }
         }
 
@@ -226,11 +235,9 @@ export function Invitation() {
         if (!newWish.trim() || !senderName.trim() || !id) return;
 
         try {
-            // api.postWish(invitationId, wishText, name)
             const result = await api.postWish(Number(id), newWish, senderName);
             setWishes([result, ...wishes]);
             setNewWish("");
-            setSenderName("");
         } catch (err) {
             console.error("Failed to post wish:", err);
         }
@@ -431,22 +438,78 @@ export function Invitation() {
                         {!Array.isArray(wishes) || wishes.length === 0 ? (
                             <p className="text-center text-gray-400 italic py-8">{t('noReceivedInvitations')}</p>
                         ) : (
-                            wishes.map((wish, i) => (
-                                <motion.div
-                                    key={i}
-                                    initial={{ opacity: 0, y: 20 }}
-                                    animate={{ opacity: 1, y: 0 }}
-                                    className="p-5 bg-white/50 dark:bg-slate-800/30 backdrop-blur-sm rounded-[28px] border border-white/50 dark:border-slate-800/50 flex gap-4"
-                                >
-                                    <div className="h-12 w-12 shrink-0 bg-gradient-to-br from-pink-100 to-purple-100 dark:from-pink-900/30 dark:to-purple-900/30 text-pink-500 rounded-full flex items-center justify-center font-bold text-lg shadow-sm">
+                            wishes.map((wish, i) => {
+                                const hasPhoto = !!wish.photoUrl;
+                                const profileLink = wish.username
+                                    ? `https://t.me/${wish.username}`
+                                    : wish.telegramId
+                                        ? `tg://user?id=${wish.telegramId}`
+                                        : null;
+
+                                const avatarContent = hasPhoto ? (
+                                    <img
+                                        src={wish.photoUrl}
+                                        alt={wish.name}
+                                        className="h-12 w-12 rounded-full object-cover shadow-sm"
+                                        onError={(e) => {
+                                            // Fallback to initials on error
+                                            const target = e.target as HTMLImageElement;
+                                            target.style.display = 'none';
+                                            target.nextElementSibling?.classList.remove('hidden');
+                                        }}
+                                    />
+                                ) : null;
+
+                                const initialsContent = (
+                                    <div className={cn(
+                                        "h-12 w-12 shrink-0 bg-gradient-to-br from-pink-100 to-purple-100 dark:from-pink-900/30 dark:to-purple-900/30 text-pink-500 rounded-full flex items-center justify-center font-bold text-lg shadow-sm",
+                                        hasPhoto ? "hidden" : ""
+                                    )}>
                                         {wish.name?.[0]?.toUpperCase() || 'G'}
                                     </div>
-                                    <div className="space-y-1">
-                                        <p className="font-bold text-gray-900 dark:text-white">{wish.name}</p>
-                                        <p className="text-sm text-gray-600 dark:text-gray-400 leading-relaxed italic">"{wish.wishText}"</p>
-                                    </div>
-                                </motion.div>
-                            ))
+                                );
+
+                                return (
+                                    <motion.div
+                                        key={i}
+                                        initial={{ opacity: 0, y: 20 }}
+                                        animate={{ opacity: 1, y: 0 }}
+                                        className="p-5 bg-white/50 dark:bg-slate-800/30 backdrop-blur-sm rounded-[28px] border border-white/50 dark:border-slate-800/50 flex gap-4"
+                                    >
+                                        {profileLink ? (
+                                            <a
+                                                href={profileLink}
+                                                target="_blank"
+                                                rel="noopener noreferrer"
+                                                className="shrink-0 relative"
+                                            >
+                                                {avatarContent}
+                                                {initialsContent}
+                                            </a>
+                                        ) : (
+                                            <div className="shrink-0 relative">
+                                                {avatarContent}
+                                                {initialsContent}
+                                            </div>
+                                        )}
+                                        <div className="space-y-1 min-w-0">
+                                            {profileLink ? (
+                                                <a
+                                                    href={profileLink}
+                                                    target="_blank"
+                                                    rel="noopener noreferrer"
+                                                    className="font-bold text-gray-900 dark:text-white hover:text-pink-500 transition-colors"
+                                                >
+                                                    {wish.name}
+                                                </a>
+                                            ) : (
+                                                <p className="font-bold text-gray-900 dark:text-white">{wish.name}</p>
+                                            )}
+                                            <p className="text-sm text-gray-600 dark:text-gray-400 leading-relaxed italic">"{wish.wishText}"</p>
+                                        </div>
+                                    </motion.div>
+                                )
+                            })
                         )}
                     </div>
                 </div>
