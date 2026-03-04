@@ -2,6 +2,7 @@ import type { InvitationData } from "../context/InvitationContext"
 import type { TemplateConfig } from "../lib/templates"
 import { Clock, MapPin, Calendar, Heart, Star, Flower2, Diamond, Sparkles } from "lucide-react"
 import { useLanguage } from "../context/LanguageContext"
+import { cn } from "../lib/utils"
 import defaultGroom from "../assets/default_groom.jpg"
 import defaultBride from "../assets/default_bride.jpg"
 
@@ -50,7 +51,7 @@ function Photo({ src, size = 80, className = "", personType = "groom" }: {
 
     return (
         <div
-            className={`overflow-hidden bg-gray-100/10 flex items-center justify-center shrink-0 ${className}`}
+            className={`overflow-hidden bg-gray-100/10 flex items-center justify-center ${className}`}
             style={dimStyle}
         >
             <img
@@ -419,36 +420,40 @@ function MidnightStar({ invitation }: { invitation: Partial<InvitationData> }) {
             </div>
 
             {/* Two square photos side by side */}
-            <div className="flex gap-3 px-8 w-full mb-6">
+            <div className="flex justify-center gap-6 px-8 w-full mb-8">
                 {/* Groom */}
-                <div className="flex-1 flex flex-col gap-2">
-                    <div className="relative">
-                        <div className="absolute inset-0 rounded-2xl border border-amber-500/30" style={{ transform: 'translate(4px, 4px)' }} />
+                <div className="relative group/photo">
+                    {/* Decorative Background Border */}
+                    <div className="absolute inset-0 rounded-2xl border border-amber-500/30 translate-x-1.5 translate-y-1.5 group-hover/photo:translate-x-1 group-hover/photo:translate-y-1 transition-transform" />
+
+                    <div className="relative z-10 w-32 h-32 xs:w-36 xs:h-36 sm:w-40 sm:h-40 rounded-2xl border border-amber-500/20 overflow-hidden shadow-2xl">
                         <Photo
                             src={invitation.groomPictureGetUrl}
-                            className="rounded-2xl border border-amber-500/20 w-full relative z-10"
-                            size={152}
+                            className="w-full h-full"
+                            size="full"
                         />
-                        {/* Groom label */}
-                        <div className="absolute bottom-0 left-0 right-0 z-20 bg-gradient-to-t from-black/90 to-transparent rounded-b-2xl py-2 px-3">
-                            <p className="text-[7px] uppercase tracking-[0.3em] text-amber-400 font-bold">Kuyov</p>
+                        {/* Label Overlay */}
+                        <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent py-2 px-3">
+                            <p className="text-[7px] uppercase tracking-[0.3em] text-amber-400 font-bold text-center">Kuyov</p>
                         </div>
                     </div>
                 </div>
 
                 {/* Bride */}
-                <div className="flex-1 flex flex-col gap-2">
-                    <div className="relative">
-                        <div className="absolute inset-0 rounded-2xl border border-amber-500/30" style={{ transform: 'translate(-4px, 4px)' }} />
+                <div className="relative group/photo">
+                    {/* Decorative Background Border */}
+                    <div className="absolute inset-0 rounded-2xl border border-amber-500/30 -translate-x-1.5 translate-y-1.5 group-hover/photo:-translate-x-1 group-hover/photo:translate-y-1 transition-transform" />
+
+                    <div className="relative z-10 w-32 h-32 xs:w-36 xs:h-36 sm:w-40 sm:h-40 rounded-2xl border border-amber-500/20 overflow-hidden shadow-2xl">
                         <Photo
                             src={invitation.bridePictureGetUrl}
-                            className="rounded-2xl border border-amber-500/20 w-full relative z-10"
-                            size={152}
+                            className="w-full h-full"
+                            size="full"
                             personType="bride"
                         />
-                        {/* Bride label */}
-                        <div className="absolute bottom-0 left-0 right-0 z-20 bg-gradient-to-t from-black/90 to-transparent rounded-b-2xl py-2 px-3">
-                            <p className="text-[7px] uppercase tracking-[0.3em] text-amber-400 font-bold">Kelin</p>
+                        {/* Label Overlay */}
+                        <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent py-2 px-3">
+                            <p className="text-[7px] uppercase tracking-[0.3em] text-amber-400 font-bold text-center">Kelin</p>
                         </div>
                     </div>
                 </div>
@@ -577,9 +582,19 @@ function ToylashaylikTheme({ invitation }: { invitation: Partial<InvitationData>
             </div>
 
             {/* Names & Subtext */}
-            <div className="text-center space-y-1 mb-8">
-                <h1 className="font-serif text-3xl md:text-4xl text-[#7e22ce] dark:text-white flex items-center justify-center gap-2">
-                    {invitation?.groomName || 'Sanjar'} <span className="text-[#f472b6] italic">&</span> {invitation?.brideName || 'Malika'}
+            <div className="text-center space-y-1 mb-8 w-full px-4">
+                <h1 className={cn(
+                    "font-serif text-[#7e22ce] dark:text-white flex items-center justify-center gap-2",
+                    ((invitation?.groomName?.length || 0) > 11 || (invitation?.brideName?.length || 0) > 11)
+                        ? "flex-col text-3xl md:text-3xl space-y-1"
+                        : "text-3xl md:text-4xl"
+                )}>
+                    <span>{invitation?.groomName || 'Sanjar'}</span>
+                    <span className={cn(
+                        "text-[#f472b6] italic",
+                        ((invitation?.groomName?.length || 0) > 11 || (invitation?.brideName?.length || 0) > 11) ? "text-xl" : ""
+                    )}>&</span>
+                    <span>{invitation?.brideName || 'Malika'}</span>
                 </h1>
                 <p className="text-[11px] text-pink-600/70 dark:text-pink-400/70 font-medium italic">
                     Oilalari sizni to'yga taklif qiladi

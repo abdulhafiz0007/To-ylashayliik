@@ -37,10 +37,15 @@ export function useTelegram() {
         tg?.ready();
     }
 
+    const switchInlineQuery = (query: string, chooseTypes: string[] = ['users', 'groups', 'channels']) => {
+        tg?.switchInlineQuery(query, chooseTypes);
+    }
+
     return {
         onClose,
         onExpand,
         onReady,
+        switchInlineQuery,
         tg,
         isTelegram: !!window.Telegram?.WebApp?.initData,
         initData: window.Telegram?.WebApp?.initData || "",

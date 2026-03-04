@@ -169,3 +169,13 @@ input[type="time"] {
   padding: 0;
   cursor: pointer;
 }
+
+/* Fix iOS Zoom on Focus */
+@media screen and (max-width: 768px) {
+
+  input,
+  textarea,
+  select {
+    font-size: 16px !important;
+  }
+}

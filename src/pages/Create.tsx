@@ -538,7 +538,7 @@ export function Create() {
                                 <MessageSquare className="h-4 w-4" /> {t('message')}
                             </label>
                             <textarea
-                                className="flex min-h-[80px] w-full rounded-md border border-gold-200 dark:border-slate-700 bg-white dark:bg-slate-900 px-3 py-2 text-sm focus:ring-2 focus:ring-primary-400 outline-none transition-all shadow-sm dark:text-white"
+                                className="flex min-h-[80px] w-full rounded-md border border-gold-200 dark:border-slate-700 bg-white dark:bg-slate-900 px-3 py-2 text-base focus:ring-2 focus:ring-primary-400 outline-none transition-all shadow-sm dark:text-white"
                                 placeholder="Bizning quvonchli kunimizda sizlarni mehmon qilishdan baxtiyormiz"
                                 value={data.text}
                                 onChange={(e) => updateData({ text: e.target.value })}
@@ -548,7 +548,7 @@ export function Create() {
                 )
             case 3:
                 return (
-                    <div className="space-y-8 animate-fade-in -mt-2 pb-32 mt-4">
+                    <div className="space-y-8 animate-fade-in -mt-2 pb-40 mt-4">
                         {/* Premium Template List */}
                         <div className="space-y-10 px-0">
                             {templates.map((template, index) => {
@@ -657,9 +657,10 @@ export function Create() {
             )}
 
             <div className={cn(
-                "container mx-auto py-6 max-w-2xl min-h-screen flex flex-col",
+                "container mx-auto py-10 max-w-2xl min-h-screen flex flex-col",
                 currentStep === 3 ? "px-[15px] pr-[17px]" : "px-4"
             )}>
+
                 {/* Step Indicator */}
                 <div className="flex justify-between mb-6 relative px-4">
                     <div className="absolute top-5 left-[15%] right-[15%] h-0.5 bg-gold-100 dark:bg-slate-800"></div>

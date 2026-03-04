@@ -30,7 +30,7 @@ import { WeddingCard } from "../components/WeddingCard"
 
 export function Invitation() {
     const { id } = useParams<{ id: string }>()
-    const { user: tgUser } = useTelegram()
+    const { user: tgUser, tg, switchInlineQuery } = useTelegram()
     const { updateData, addReceivedInvitation, loading: contextLoading, error: contextError } = useInvitation()
     const { t } = useLanguage()
     const [invitation, setInvitation] = useState<InvitationData | null>(null)
@@ -190,6 +190,12 @@ export function Invitation() {
         const appShortName = 'taklifnoma';
         const shareUrl = `https://t.me/${botUsername}/${appShortName}?startapp=inv_${id}`;
         const shareText = `Sizni ${invitation?.brideName} & ${invitation?.groomName}larning to'y oqshomiga taklif etamiz! 💍`;
+
+        // If in Telegram, use inline share
+        if (tg && switchInlineQuery) {
+            switchInlineQuery(`inv_${id}`);
+            return;
+        }
 
         if (navigator.share) {
             try {
@@ -367,7 +373,7 @@ export function Invitation() {
             {/* Actions & Wishes Section - Below Card */}
             <div className="w-full max-w-[420px] px-6 space-y-8 pb-32 relative z-10">
                 {/* Download & Share Actions */}
-                <div className="flex gap-3">
+                <div className="flex gap-3 mt-8">
                     <Button
                         variant="ghost"
                         className="flex-1 h-12 rounded-2xl bg-white/70 dark:bg-slate-900/80 backdrop-blur-xl border border-gray-100 dark:border-slate-800 font-bold text-gray-600 dark:text-gray-300 gap-2 shadow-sm"
@@ -404,7 +410,7 @@ export function Invitation() {
                             placeholder={t('addComment')}
                             value={newWish}
                             onChange={(e) => setNewWish(e.target.value)}
-                            className="w-full min-h-[100px] bg-gray-50/50 dark:bg-slate-800/50 rounded-2xl border-none p-4 focus:ring-2 focus:ring-pink-200 resize-none text-sm dark:text-white outline-none"
+                            className="w-full min-h-[100px] bg-gray-50/50 dark:bg-slate-800/50 rounded-2xl border-none p-4 focus:ring-2 focus:ring-pink-200 resize-none text-base dark:text-white outline-none"
                         />
                         <Button
                             onClick={handlePostWish}
