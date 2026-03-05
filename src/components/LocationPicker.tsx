@@ -140,100 +140,91 @@ export function LocationPicker({ isOpen, onClose, onSelect, initialLocation }: L
     if (!isOpen) return null
 
     return (
-        <div className="fixed inset-0 z-[100] flex flex-col items-center justify-center p-4 sm:p-6 overflow-hidden">
-            {/* Backdrop */}
-            <div
-                className="absolute inset-0 bg-slate-900/60 backdrop-blur-sm"
-                onClick={onClose}
-            />
+        <div className="fixed inset-0 z-[100] flex flex-col bg-white dark:bg-slate-950 overflow-hidden">
+            {/* Header */}
+            <div className="flex items-center gap-3 px-4 py-3 border-b border-gray-100 dark:border-slate-800 bg-white dark:bg-slate-950 shrink-0 relative z-20">
+                <button onClick={onClose} className="p-2 -ml-2 hover:bg-gray-100 dark:hover:bg-slate-800 rounded-full">
+                    <X className="h-5 w-5 text-gray-500" />
+                </button>
+                <h2 className="font-bold text-lg dark:text-white flex-1">Lokatsiya tanlang</h2>
+                {marker && (
+                    <Button
+                        onClick={handleConfirm}
+                        className="h-9 px-4 rounded-full bg-pink-500 hover:bg-pink-600 text-white text-sm font-bold gap-1.5"
+                    >
+                        <Check className="h-4 w-4" /> Tasdiqlash
+                    </Button>
+                )}
+            </div>
 
-            {/* Modal Content */}
-            <div className="relative w-full max-w-2xl bg-white dark:bg-slate-950 rounded-[32px] overflow-hidden shadow-2xl flex flex-col max-h-[90vh]">
-                {/* Header */}
-                <div className="flex items-center gap-3 px-6 py-4 border-b border-gray-100 dark:border-slate-800 bg-white dark:bg-slate-950 shrink-0 relative z-20">
-                    <button onClick={onClose} className="p-2 -ml-2 hover:bg-gray-100 dark:hover:bg-slate-800 rounded-full">
-                        <X className="h-5 w-5 text-gray-500" />
-                    </button>
-                    <h2 className="font-bold text-lg dark:text-white flex-1">Lokatsiya tanlang</h2>
-                    {marker && (
-                        <Button
-                            onClick={handleConfirm}
-                            className="h-9 px-4 rounded-full bg-pink-500 hover:bg-pink-600 text-white text-sm font-bold gap-1.5"
-                        >
-                            <Check className="h-4 w-4" /> Tasdiqlash
-                        </Button>
-                    )}
-                </div>
-
-                {/* Search */}
-                <div className="px-6 py-4 bg-white dark:bg-slate-950 shrink-0 relative z-10 border-b border-gray-50 dark:border-slate-800">
-                    <div className="relative group">
-                        <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
-                        <input
-                            type="text"
-                            value={searchQuery}
-                            onChange={(e) => handleSearch(e.target.value)}
-                            placeholder="Manzil yoki joy nomini qidiring..."
-                            className="w-full h-12 pl-11 pr-4 rounded-xl bg-gray-50 dark:bg-slate-900 border-2 border-gray-100 dark:border-slate-800 text-base outline-none focus:border-pink-300 dark:focus:border-pink-700 bg-white"
-                        />
-                        {searching && (
-                            <div className="absolute right-3.5 top-1/2 -translate-y-1/2">
-                                <div className="animate-spin h-4 w-4 border-2 border-pink-500 border-t-transparent rounded-full" />
-                            </div>
-                        )}
-                    </div>
-
-                    {/* Search Results */}
-                    {searchResults.length > 0 && (
-                        <div className="absolute left-0 right-0 top-full bg-white dark:bg-slate-900 rounded-xl shadow-2xl border border-gray-100 dark:border-slate-700 max-h-60 overflow-y-auto z-[2000] mt-1">
-                            {searchResults.map((result, i) => (
-                                <button
-                                    key={i}
-                                    onClick={() => handleSelectSearchResult(result)}
-                                    className="w-full text-left px-4 py-3 hover:bg-pink-50 dark:hover:bg-slate-800 transition-colors flex items-start gap-3 border-b border-gray-50 dark:border-slate-800 last:border-b-0"
-                                >
-                                    <MapPin className="h-4 w-4 text-pink-500 shrink-0 mt-0.5" />
-                                    <span className="text-sm text-gray-700 dark:text-gray-300 line-clamp-2">{result.display_name}</span>
-                                </button>
-                            ))}
+            {/* Search */}
+            <div className="px-4 py-3 bg-white dark:bg-slate-950 shrink-0 relative z-10 border-b border-gray-50 dark:border-slate-800">
+                <div className="relative group">
+                    <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
+                    <input
+                        type="text"
+                        value={searchQuery}
+                        onChange={(e) => handleSearch(e.target.value)}
+                        placeholder="Manzil yoki joy nomini qidiring..."
+                        className="w-full h-12 pl-11 pr-4 rounded-xl bg-gray-50 dark:bg-slate-900 border-2 border-gray-100 dark:border-slate-800 text-base outline-none focus:border-pink-300 dark:focus:border-pink-700"
+                    />
+                    {searching && (
+                        <div className="absolute right-3.5 top-1/2 -translate-y-1/2">
+                            <div className="animate-spin h-4 w-4 border-2 border-pink-500 border-t-transparent rounded-full" />
                         </div>
                     )}
                 </div>
 
-                {/* Selected Address Display */}
-                {address && (
-                    <div className="px-4 py-2 bg-pink-50 dark:bg-pink-900/10 shrink-0 mx-4 mb-2 rounded-xl flex items-start gap-2 border border-pink-100 dark:border-pink-900/20">
-                        <MapPin className="h-4 w-4 text-pink-500 shrink-0 mt-0.5" />
-                        <p className="text-xs text-pink-900 dark:text-pink-300 line-clamp-2">{address}</p>
+                {/* Search Results */}
+                {searchResults.length > 0 && (
+                    <div className="absolute left-0 right-0 top-full bg-white dark:bg-slate-900 rounded-xl shadow-2xl border border-gray-100 dark:border-slate-700 max-h-60 overflow-y-auto z-[2000] mt-1">
+                        {searchResults.map((result, i) => (
+                            <button
+                                key={i}
+                                onClick={() => handleSelectSearchResult(result)}
+                                className="w-full text-left px-4 py-3 hover:bg-pink-50 dark:hover:bg-slate-800 transition-colors flex items-start gap-3 border-b border-gray-50 dark:border-slate-800 last:border-b-0"
+                            >
+                                <MapPin className="h-4 w-4 text-pink-500 shrink-0 mt-0.5" />
+                                <span className="text-sm text-gray-700 dark:text-gray-300 line-clamp-2">{result.display_name}</span>
+                            </button>
+                        ))}
                     </div>
                 )}
+            </div>
 
-                {/* Map Container */}
-                <div className="flex-1 relative mx-4 mb-6 rounded-3xl overflow-hidden border border-gray-100 dark:border-slate-800 shadow-xl shadow-gray-200/50 dark:shadow-none bg-gray-50 dark:bg-slate-900 z-0">
-                    <MapContainer
-                        center={marker || defaultCenter}
-                        zoom={marker ? 16 : 12}
-                        className="h-full w-full"
-                        zoomControl={false}
-                    >
-                        <TileLayer
-                            attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
-                            url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-                        />
-                        <MapClickHandler onLocationSelect={handleMapClick} />
-                        <FlyTo position={flyTarget} />
-                        {marker && <Marker position={marker} />}
-                    </MapContainer>
-
-                    {/* Locate Me Button */}
-                    <button
-                        onClick={handleLocateMe}
-                        className="absolute bottom-4 right-4 z-[500] h-12 w-12 rounded-2xl bg-white/90 dark:bg-slate-800/90 backdrop-blur-md shadow-lg border border-gray-200 dark:border-slate-700 flex items-center justify-center hover:bg-white dark:hover:bg-slate-700 transition-all active:scale-95"
-                        title="Mening joylashuvim"
-                    >
-                        <Navigation className="h-5 w-5 text-pink-500" />
-                    </button>
+            {/* Selected Address Display */}
+            {address && (
+                <div className="px-4 py-2 bg-pink-50 dark:bg-pink-900/10 shrink-0 border-b border-pink-100 dark:border-pink-900/20 flex items-start gap-2">
+                    <MapPin className="h-4 w-4 text-pink-500 shrink-0 mt-0.5" />
+                    <p className="text-xs text-pink-900 dark:text-pink-300 line-clamp-2">{address}</p>
                 </div>
+            )}
+
+            {/* Map Container */}
+            <div className="flex-1 relative bg-gray-50 dark:bg-slate-900 z-0">
+                <MapContainer
+                    center={marker || defaultCenter}
+                    zoom={marker ? 16 : 12}
+                    className="h-full w-full"
+                    zoomControl={false}
+                >
+                    <TileLayer
+                        attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+                        url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+                    />
+                    <MapClickHandler onLocationSelect={handleMapClick} />
+                    <FlyTo position={flyTarget} />
+                    {marker && <Marker position={marker} />}
+                </MapContainer>
+
+                {/* Locate Me Button */}
+                <button
+                    onClick={handleLocateMe}
+                    className="absolute bottom-6 right-4 z-[500] h-12 w-12 rounded-2xl bg-white dark:bg-slate-800 shadow-lg border border-gray-200 dark:border-slate-700 flex items-center justify-center hover:bg-white dark:hover:bg-slate-700 active:scale-95 transition-all"
+                    title="Mening joylashuvim"
+                >
+                    <Navigation className="h-5 w-5 text-pink-500" />
+                </button>
             </div>
         </div>
     )
