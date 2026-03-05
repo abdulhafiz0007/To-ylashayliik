@@ -192,16 +192,16 @@ export function LocationPicker({ isOpen, onClose, onSelect, initialLocation }: L
                 )}
             </div>
 
-            {/* Selected Address */}
+            {/* Selected Address Display */}
             {address && (
-                <div className="px-4 py-2 bg-pink-50 dark:bg-pink-900/20 shrink-0 flex items-start gap-2">
+                <div className="px-4 py-2 bg-pink-50 dark:bg-pink-900/10 shrink-0 mx-4 mb-2 rounded-xl flex items-start gap-2 border border-pink-100 dark:border-pink-900/20">
                     <MapPin className="h-4 w-4 text-pink-500 shrink-0 mt-0.5" />
-                    <p className="text-xs text-pink-800 dark:text-pink-300 line-clamp-2">{address}</p>
+                    <p className="text-xs text-pink-900 dark:text-pink-300 line-clamp-2">{address}</p>
                 </div>
             )}
 
-            {/* Map */}
-            <div className="flex-1 relative">
+            {/* Map Container */}
+            <div className="flex-1 relative mx-4 mb-6 rounded-3xl overflow-hidden border border-gray-100 dark:border-slate-800 shadow-xl shadow-gray-200/50 dark:shadow-none bg-gray-50 dark:bg-slate-900">
                 <MapContainer
                     center={marker || defaultCenter}
                     zoom={marker ? 16 : 12}
@@ -220,7 +220,7 @@ export function LocationPicker({ isOpen, onClose, onSelect, initialLocation }: L
                 {/* Locate Me Button */}
                 <button
                     onClick={handleLocateMe}
-                    className="absolute bottom-6 right-4 z-[500] h-12 w-12 rounded-full bg-white dark:bg-slate-800 shadow-lg border border-gray-200 dark:border-slate-700 flex items-center justify-center hover:bg-gray-50 dark:hover:bg-slate-700 transition-colors"
+                    className="absolute bottom-4 right-4 z-[500] h-12 w-12 rounded-2xl bg-white/90 dark:bg-slate-800/90 backdrop-blur-md shadow-lg border border-gray-200 dark:border-slate-700 flex items-center justify-center hover:bg-white dark:hover:bg-slate-700 transition-all active:scale-95"
                     title="Mening joylashuvim"
                 >
                     <Navigation className="h-5 w-5 text-pink-500" />
