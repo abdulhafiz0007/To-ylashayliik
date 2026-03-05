@@ -25,8 +25,8 @@ import musicDate from "../assets/2026-02-23 09.26.00.mp3"
 
 const MUSIC_OPTIONS = [
     { id: 'music1', name: 'Musiqa 1 (Azizam)', url: musicAzizam },
-    { id: 'music2', name: 'Musiqa 2 (IMG)', url: musicImg },
-    { id: 'music3', name: 'Musiqa 3 (Wedding)', url: musicDate },
+    { id: 'music2', name: 'Musiqa 2 (Vafodorim)', url: musicImg },
+    { id: 'music3', name: 'Musiqa 3 (Bizni sevgimiz boshqacha)', url: musicDate },
     { id: 'none', name: 'Musiqasiz', url: null },
 ]
 
@@ -134,6 +134,7 @@ export function Create() {
     const [isSaving, setIsSaving] = useState(false)
     const [saveError, setSaveError] = useState<string | null>(null)
     const [playingMusic, setPlayingMusic] = useState<string | null>(null)
+    const [showMusicList, setShowMusicList] = useState(false)
     const [showLocationPicker, setShowLocationPicker] = useState(false)
     const [selectedLocation, setSelectedLocation] = useState<{ lat: number; lng: number; address: string } | null>(null)
 
@@ -487,23 +488,16 @@ export function Create() {
                                     type="button"
                                     onClick={() => setShowLocationPicker(true)}
                                     className={cn(
-                                        "w-full flex items-center gap-3 p-3 rounded-xl border-2 border-dashed transition-all text-left",
+                                        "w-full flex items-center gap-3 h-11 px-3 rounded-md border transition-all text-left",
                                         selectedLocation
-                                            ? "border-pink-300 dark:border-pink-700 bg-pink-50/50 dark:bg-pink-900/10"
-                                            : "border-gray-200 dark:border-slate-700 hover:border-pink-300 dark:hover:border-pink-700 bg-gray-50 dark:bg-slate-900"
+                                            ? "border-pink-300 dark:border-pink-700 bg-white dark:bg-slate-900"
+                                            : "border-gold-200 dark:border-slate-700 hover:border-pink-300 dark:hover:border-pink-700 bg-white dark:bg-slate-900"
                                     )}
                                 >
-                                    <div className={cn(
-                                        "h-10 w-10 rounded-xl flex items-center justify-center shrink-0",
-                                        selectedLocation
-                                            ? "bg-pink-100 dark:bg-pink-900/30"
-                                            : "bg-gray-100 dark:bg-slate-800"
-                                    )}>
-                                        <Map className={cn("h-5 w-5", selectedLocation ? "text-pink-500" : "text-gray-400")} />
-                                    </div>
+                                    <Map className={cn("h-4 w-4 shrink-0", selectedLocation ? "text-pink-500" : "text-gray-400")} />
                                     <div className="flex-1 min-w-0">
                                         {selectedLocation ? (
-                                            <p className="text-sm text-gray-700 dark:text-gray-300 line-clamp-2">{selectedLocation.address}</p>
+                                            <p className="text-sm text-gray-700 dark:text-gray-300 truncate">{selectedLocation.address}</p>
                                         ) : (
                                             <p className="text-sm text-gray-400 dark:text-gray-500">Xaritadan joy tanlang</p>
                                         )}
@@ -526,43 +520,101 @@ export function Create() {
                             <label className="text-sm font-medium flex items-center gap-2">
                                 <Music className="h-4 w-4" /> {t('backgroundMusic')}
                             </label>
-                            <div className="flex flex-col gap-2">
-                                {MUSIC_OPTIONS.map((music) => (
-                                    <div
-                                        key={music.id}
-                                        onClick={() => updateData({ backgroundMusic: music.id })}
-                                        className={cn(
-                                            "flex items-center justify-between p-2.5 rounded-lg border-2 transition-all cursor-pointer",
-                                            data.backgroundMusic === music.id
-                                                ? "border-primary-500 bg-primary-50 dark:bg-primary-900/20 shadow-sm"
-                                                : "border-gold-100 dark:border-slate-800 hover:border-gold-300 dark:hover:border-slate-700"
+
+                            <div className="relative">
+                                {/* Selected Music Button (Select-like) */}
+                                <button
+                                    type="button"
+                                    onClick={() => setShowMusicList(!showMusicList)}
+                                    className="w-full flex items-center justify-between h-11 px-3 rounded-md border border-gold-200 dark:border-slate-700 bg-white dark:bg-slate-900 shadow-sm transition-all hover:border-pink-300 active:scale-[0.99]"
+                                >
+                                    <div className="flex items-center gap-3 overflow-hidden">
+                                        {data.backgroundMusic === 'none' ? (
+                                            <VolumeX className="h-4 w-4 text-gray-400 shrink-0" />
+                                        ) : (
+                                            <Volume2 className="h-4 w-4 text-pink-500 shrink-0" />
                                         )}
-                                    >
-                                        <div className="flex items-center gap-2">
-                                            {music.id === 'none' ? <VolumeX className="h-4 w-4 text-gray-400" /> : <Volume2 className="h-4 w-4 text-primary-500" />}
-                                            <span className="text-xs font-medium">{music.name}</span>
-                                        </div>
-                                        {music.url && (
-                                            <button
-                                                type="button"
-                                                onClick={(e) => {
-                                                    e.stopPropagation();
-                                                    const audio = document.getElementById(`preview-${music.id}`) as HTMLAudioElement;
-                                                    if (playingMusic === music.id) {
-                                                        audio.pause(); audio.currentTime = 0; setPlayingMusic(null);
-                                                    } else {
-                                                        document.querySelectorAll('audio').forEach(a => { a.pause(); a.currentTime = 0; });
-                                                        setPlayingMusic(music.id); audio.play();
-                                                    }
-                                                }}
-                                                className="h-7 w-7 rounded-full bg-primary-100 dark:bg-primary-900/40 text-primary-600 flex items-center justify-center hover:bg-primary-200 transition-colors"
-                                            >
-                                                {playingMusic === music.id ? <Pause className="h-3 w-3 fill-current" /> : <Play className="h-3 w-3 fill-current" />}
-                                                <audio id={`preview-${music.id}`} src={music.url} onEnded={() => setPlayingMusic(null)} />
-                                            </button>
-                                        )}
+                                        <p className="text-sm font-medium dark:text-white truncate">
+                                            {MUSIC_OPTIONS.find(m => m.id === data.backgroundMusic)?.name}
+                                        </p>
                                     </div>
-                                ))}
+                                    <ChevronRight className={cn("h-4 w-4 text-gray-300 transition-transform shrink-0", showMusicList && "rotate-90")} />
+                                </button>
+
+                                {/* Music Options List (Dropdown) */}
+                                <AnimatePresence>
+                                    {showMusicList && (
+                                        <motion.div
+                                            initial={{ opacity: 0, y: -10 }}
+                                            animate={{ opacity: 1, y: 0 }}
+                                            exit={{ opacity: 0, y: -10 }}
+                                            className="absolute left-0 right-0 top-[calc(100%+8px)] z-50 bg-white dark:bg-slate-900 rounded-2xl shadow-2xl border border-gray-100 dark:border-slate-800 overflow-hidden"
+                                        >
+                                            <div className="p-2 space-y-1">
+                                                {MUSIC_OPTIONS.map((music) => (
+                                                    <div
+                                                        key={music.id}
+                                                        onClick={() => {
+                                                            updateData({ backgroundMusic: music.id });
+                                                            setShowMusicList(false);
+                                                        }}
+                                                        className={cn(
+                                                            "flex items-center justify-between p-3 rounded-xl transition-all cursor-pointer group",
+                                                            data.backgroundMusic === music.id
+                                                                ? "bg-pink-50 dark:bg-pink-900/20"
+                                                                : "hover:bg-gray-50 dark:hover:bg-slate-800/50"
+                                                        )}
+                                                    >
+                                                        <div className="flex items-center gap-3">
+                                                            <div className={cn(
+                                                                "h-8 w-8 rounded-full flex items-center justify-center transition-colors",
+                                                                data.backgroundMusic === music.id ? "bg-pink-500 text-white" : "bg-gray-100 dark:bg-slate-800 text-gray-400"
+                                                            )}>
+                                                                {music.id === 'none' ? <VolumeX className="h-4 w-4" /> : <Volume2 className="h-4 w-4" />}
+                                                            </div>
+                                                            <span className={cn(
+                                                                "text-sm font-medium",
+                                                                data.backgroundMusic === music.id ? "text-pink-600 dark:text-pink-400" : "text-gray-600 dark:text-gray-400"
+                                                            )}>
+                                                                {music.name}
+                                                            </span>
+                                                        </div>
+
+                                                        <div className="flex items-center gap-2">
+                                                            {music.url && (
+                                                                <button
+                                                                    type="button"
+                                                                    onClick={(e) => {
+                                                                        e.stopPropagation();
+                                                                        const audio = document.getElementById(`preview-${music.id}`) as HTMLAudioElement;
+                                                                        if (playingMusic === music.id) {
+                                                                            audio.pause(); audio.currentTime = 0; setPlayingMusic(null);
+                                                                        } else {
+                                                                            document.querySelectorAll('audio').forEach(a => { a.pause(); a.currentTime = 0; });
+                                                                            setPlayingMusic(music.id); audio.play();
+                                                                        }
+                                                                    }}
+                                                                    className={cn(
+                                                                        "h-8 w-8 rounded-full flex items-center justify-center transition-all",
+                                                                        playingMusic === music.id
+                                                                            ? "bg-pink-500 text-white shadow-lg shadow-pink-200"
+                                                                            : "bg-gray-100 dark:bg-slate-800 text-gray-500 hover:bg-pink-100 hover:text-pink-500"
+                                                                    )}
+                                                                >
+                                                                    {playingMusic === music.id ? <Pause className="h-4 w-4 fill-current" /> : <Play className="h-4 w-4 fill-current ml-0.5" />}
+                                                                    <audio id={`preview-${music.id}`} src={music.url} onEnded={() => setPlayingMusic(null)} />
+                                                                </button>
+                                                            )}
+                                                            {data.backgroundMusic === music.id && (
+                                                                <div className="h-2 w-2 rounded-full bg-pink-500 animate-pulse" />
+                                                            )}
+                                                        </div>
+                                                    </div>
+                                                ))}
+                                            </div>
+                                        </motion.div>
+                                    )}
+                                </AnimatePresence>
                             </div>
                         </div>
 

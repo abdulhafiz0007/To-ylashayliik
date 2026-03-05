@@ -158,7 +158,7 @@ export function LocationPicker({ isOpen, onClose, onSelect, initialLocation }: L
             </div>
 
             {/* Search */}
-            <div className="px-4 py-3 bg-white dark:bg-slate-950 shrink-0 space-y-1 relative z-[110]">
+            <div className="px-4 py-3 bg-white dark:bg-slate-950 shrink-0 space-y-1 relative z-[1001]">
                 <div className="relative">
                     <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
                     <input
@@ -177,7 +177,7 @@ export function LocationPicker({ isOpen, onClose, onSelect, initialLocation }: L
 
                 {/* Search Results */}
                 {searchResults.length > 0 && (
-                    <div className="absolute left-4 right-4 top-[calc(100%)] bg-white dark:bg-slate-900 rounded-xl shadow-2xl border border-gray-100 dark:border-slate-700 max-h-60 overflow-y-auto">
+                    <div className="absolute left-0 right-0 top-full bg-white dark:bg-slate-900 rounded-xl shadow-2xl border border-gray-100 dark:border-slate-700 max-h-60 overflow-y-auto z-[2000] mt-1">
                         {searchResults.map((result, i) => (
                             <button
                                 key={i}
@@ -201,7 +201,7 @@ export function LocationPicker({ isOpen, onClose, onSelect, initialLocation }: L
             )}
 
             {/* Map Container */}
-            <div className="flex-1 relative mx-4 mb-6 rounded-3xl overflow-hidden border border-gray-100 dark:border-slate-800 shadow-xl shadow-gray-200/50 dark:shadow-none bg-gray-50 dark:bg-slate-900">
+            <div className="flex-1 relative mx-4 mb-6 rounded-3xl overflow-hidden border border-gray-100 dark:border-slate-800 shadow-xl shadow-gray-200/50 dark:shadow-none bg-gray-50 dark:bg-slate-900 z-0">
                 <MapContainer
                     center={marker || defaultCenter}
                     zoom={marker ? 16 : 12}
