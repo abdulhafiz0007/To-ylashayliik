@@ -136,6 +136,7 @@ export function Create() {
     const [playingMusic, setPlayingMusic] = useState<string | null>(null)
     const [showMusicList, setShowMusicList] = useState(false)
     const [showLocationPicker, setShowLocationPicker] = useState(false)
+    const musicListRef = useRef<HTMLDivElement>(null)
     const [selectedLocation, setSelectedLocation] = useState<{ lat: number; lng: number; address: string } | null>(null)
 
     // Reset data when entering creation flow to avoid stale photos/info
@@ -150,6 +151,15 @@ export function Create() {
     // Crop modal state
     const [cropSource, setCropSource] = useState<string | null>(null)
     const [cropTarget, setCropTarget] = useState<'groom' | 'bride' | null>(null)
+    useEffect(() => {
+        function handleClickOutside(event: MouseEvent) {
+            if (musicListRef.current && !musicListRef.current.contains(event.target as Node)) {
+                setShowMusicList(false)
+            }
+        }
+        document.addEventListener("mousedown", handleClickOutside)
+        return () => document.removeEventListener("mousedown", handleClickOutside)
+    }, [])
 
     // Store actual File objects for uploading during final submit
     const groomFileRef = useRef<File | null>(null)
@@ -440,7 +450,7 @@ export function Create() {
                 )
             case 2:
                 return (
-                    <div className="space-y-6 animate-fade-in">
+                    <div className="space-y-6 animate-fade-in pb-32">
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                             <div className="space-y-2">
                                 <label className="text-sm font-medium flex items-center gap-2">
@@ -521,7 +531,7 @@ export function Create() {
                                 <Music className="h-4 w-4" /> {t('backgroundMusic')}
                             </label>
 
-                            <div className="relative">
+                            <div className="relative" ref={musicListRef}>
                                 {/* Selected Music Button (Select-like) */}
                                 <button
                                     type="button"
@@ -548,7 +558,7 @@ export function Create() {
                                             initial={{ opacity: 0, y: -10 }}
                                             animate={{ opacity: 1, y: 0 }}
                                             exit={{ opacity: 0, y: -10 }}
-                                            className="absolute left-0 right-0 top-[calc(100%+8px)] z-50 bg-white dark:bg-slate-900 rounded-2xl shadow-2xl border border-gray-100 dark:border-slate-800 overflow-hidden"
+                                            className="absolute left-0 right-0 top-[calc(100%+8px)] z-50 bg-white dark:bg-slate-900 rounded-2xl shadow-2xl border border-gray-100 dark:border-slate-800 overflow-y-auto max-h-[280px]"
                                         >
                                             <div className="p-2 space-y-1">
                                                 {MUSIC_OPTIONS.map((music) => (
