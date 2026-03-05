@@ -552,7 +552,9 @@ export function Create() {
                                 </button>
 
                                 {showMusicList && (
-                                    <div className="absolute left-0 right-0 top-[calc(100%+8px)] z-50 bg-white dark:bg-slate-900 rounded-2xl shadow-2xl border border-gray-100 dark:border-slate-800 overflow-y-auto max-h-[210px]">
+                                    <div
+                                        className="absolute left-0 right-0 top-[calc(100%+8px)] z-50 bg-white dark:bg-slate-900 rounded-2xl shadow-2xl border border-gray-100 dark:border-slate-800 overflow-y-auto max-h-[210px]"
+                                    >
                                         <div className="p-2 space-y-1">
                                             {MUSIC_OPTIONS.map((music) => (
                                                 <div
@@ -600,7 +602,7 @@ export function Create() {
                                                                 className={cn(
                                                                     "h-8 w-8 rounded-full flex items-center justify-center",
                                                                     playingMusic === music.id
-                                                                        ? "bg-pink-500 text-white shadow-lg shadow-pink-200"
+                                                                        ? "bg-pink-500 text-white shadow-lg"
                                                                         : "bg-gray-100 dark:bg-slate-800 text-gray-500 hover:bg-pink-100 hover:text-pink-500"
                                                                 )}
                                                             >
@@ -609,7 +611,7 @@ export function Create() {
                                                             </button>
                                                         )}
                                                         {data.backgroundMusic === music.id && (
-                                                            <div className="h-2 w-2 rounded-full bg-pink-500" />
+                                                            <div className="h-2 w-2 rounded-full bg-pink-500 animate-pulse" />
                                                         )}
                                                     </div>
                                                 </div>

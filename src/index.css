@@ -179,3 +179,15 @@ input[type="time"] {
     font-size: 16px !important;
   }
 }
+
+/* Leaflet map iOS fixes */
+.leaflet-container {
+  width: 100% !important;
+  height: 100% !important;
+  z-index: 0;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.leaflet-tile-pane {
+  will-change: transform;
+}

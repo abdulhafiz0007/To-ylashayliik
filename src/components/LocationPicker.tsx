@@ -41,6 +41,19 @@ function FlyTo({ position }: { position: [number, number] | null }) {
     return null
 }
 
+// Component to fix map size on iOS (invalidateSize after mount)
+function MapResizer() {
+    const map = useMap()
+    useEffect(() => {
+        // Delay to ensure container is fully laid out
+        const timer = setTimeout(() => {
+            map.invalidateSize()
+        }, 300)
+        return () => clearTimeout(timer)
+    }, [map])
+    return null
+}
+
 export function LocationPicker({ isOpen, onClose, onSelect, initialLocation }: LocationPickerProps) {
     // Default center: Tashkent, Uzbekistan
     const defaultCenter: [number, number] = [41.2995, 69.2401]
@@ -140,7 +153,7 @@ export function LocationPicker({ isOpen, onClose, onSelect, initialLocation }: L
     if (!isOpen) return null
 
     return (
-        <div className="fixed inset-0 z-[100] flex flex-col bg-white dark:bg-slate-950 overflow-hidden">
+        <div className="fixed inset-0 z-[100] flex flex-col bg-white dark:bg-slate-950 overflow-hidden" style={{ height: '100dvh' }}>
             {/* Header */}
             <div className="flex items-center gap-3 px-4 py-3 border-b border-gray-100 dark:border-slate-800 bg-white dark:bg-slate-950 shrink-0 relative z-20">
                 <button onClick={onClose} className="p-2 -ml-2 hover:bg-gray-100 dark:hover:bg-slate-800 rounded-full">
@@ -201,26 +214,30 @@ export function LocationPicker({ isOpen, onClose, onSelect, initialLocation }: L
             )}
 
             {/* Map Container */}
-            <div className="flex-1 relative bg-gray-50 dark:bg-slate-900 z-0">
-                <MapContainer
-                    center={marker || defaultCenter}
-                    zoom={marker ? 16 : 12}
-                    className="h-full w-full"
-                    zoomControl={false}
-                >
-                    <TileLayer
-                        attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
-                        url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-                    />
-                    <MapClickHandler onLocationSelect={handleMapClick} />
-                    <FlyTo position={flyTarget} />
-                    {marker && <Marker position={marker} />}
-                </MapContainer>
+            <div className="flex-1 relative bg-gray-50 dark:bg-slate-900 z-0 p-2 pr-4" style={{ minHeight: 0 }}>
+                <div className="h-full w-full rounded-xl overflow-hidden">
+                    <MapContainer
+                        center={marker || defaultCenter}
+                        zoom={marker ? 16 : 12}
+                        className="h-full w-full"
+                        zoomControl={false}
+                        style={{ height: '100%', width: '100%' }}
+                    >
+                        <TileLayer
+                            attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+                            url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+                        />
+                        <MapClickHandler onLocationSelect={handleMapClick} />
+                        <MapResizer />
+                        <FlyTo position={flyTarget} />
+                        {marker && <Marker position={marker} />}
+                    </MapContainer>
+                </div>
 
                 {/* Locate Me Button */}
                 <button
                     onClick={handleLocateMe}
-                    className="absolute bottom-6 right-4 z-[500] h-12 w-12 rounded-2xl bg-white dark:bg-slate-800 shadow-lg border border-gray-200 dark:border-slate-700 flex items-center justify-center hover:bg-white dark:hover:bg-slate-700 active:scale-95 transition-all"
+                    className="absolute bottom-4 right-6 z-[500] h-12 w-12 rounded-2xl bg-white dark:bg-slate-800 shadow-lg border border-gray-200 dark:border-slate-700 flex items-center justify-center hover:bg-white dark:hover:bg-slate-700 active:scale-95 transition-all"
                     title="Mening joylashuvim"
                 >
                     <Navigation className="h-5 w-5 text-pink-500" />
