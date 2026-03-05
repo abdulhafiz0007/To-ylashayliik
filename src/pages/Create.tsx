@@ -4,7 +4,7 @@ import { useInvitation } from "../context/InvitationContext"
 import { Button } from "../components/ui/Button"
 import { Input } from "../components/ui/Input"
 import { Card, CardContent, CardFooter } from "../components/ui/Card"
-import { Calendar, MapPin, MessageSquare, Users, Clock, Camera, ChevronRight, ChevronLeft, Music, Play, Pause, Volume2, VolumeX, Cake, X, Check, ZoomIn } from "lucide-react"
+import { Calendar, MapPin, MessageSquare, Users, Clock, Camera, ChevronRight, ChevronLeft, Music, Play, Pause, Volume2, VolumeX, Cake, X, Check, ZoomIn, Map } from "lucide-react"
 import { useLanguage } from "../context/LanguageContext"
 import { cn } from "../lib/utils"
 import { useTelegram } from "../hooks/useTelegram"
@@ -16,6 +16,7 @@ import defaultBride from "../assets/default_bride.jpg"
 import { templates } from "../lib/templates"
 import { WeddingCard } from "../components/WeddingCard"
 import { motion, AnimatePresence } from "framer-motion"
+import { LocationPicker } from "../components/LocationPicker"
 
 // Import music assets
 import musicAzizam from "../assets/music_azizam.mp3"
@@ -133,6 +134,8 @@ export function Create() {
     const [isSaving, setIsSaving] = useState(false)
     const [saveError, setSaveError] = useState<string | null>(null)
     const [playingMusic, setPlayingMusic] = useState<string | null>(null)
+    const [showLocationPicker, setShowLocationPicker] = useState(false)
+    const [selectedLocation, setSelectedLocation] = useState<{ lat: number; lng: number; address: string } | null>(null)
 
     // Reset data when entering creation flow to avoid stale photos/info
     useEffect(() => {
@@ -480,11 +483,41 @@ export function Create() {
                                 <label className="text-sm font-medium flex items-center gap-2">
                                     <MapPin className="h-4 w-4" /> {t('location')}
                                 </label>
-                                <Input
-                                    placeholder="Toshkent shahri, Shayxontohur tumani"
-                                    value={data.location}
-                                    onChange={(e) => updateData({ location: e.target.value })}
-                                    required
+                                <button
+                                    type="button"
+                                    onClick={() => setShowLocationPicker(true)}
+                                    className={cn(
+                                        "w-full flex items-center gap-3 p-3 rounded-xl border-2 border-dashed transition-all text-left",
+                                        selectedLocation
+                                            ? "border-pink-300 dark:border-pink-700 bg-pink-50/50 dark:bg-pink-900/10"
+                                            : "border-gray-200 dark:border-slate-700 hover:border-pink-300 dark:hover:border-pink-700 bg-gray-50 dark:bg-slate-900"
+                                    )}
+                                >
+                                    <div className={cn(
+                                        "h-10 w-10 rounded-xl flex items-center justify-center shrink-0",
+                                        selectedLocation
+                                            ? "bg-pink-100 dark:bg-pink-900/30"
+                                            : "bg-gray-100 dark:bg-slate-800"
+                                    )}>
+                                        <Map className={cn("h-5 w-5", selectedLocation ? "text-pink-500" : "text-gray-400")} />
+                                    </div>
+                                    <div className="flex-1 min-w-0">
+                                        {selectedLocation ? (
+                                            <p className="text-sm text-gray-700 dark:text-gray-300 line-clamp-2">{selectedLocation.address}</p>
+                                        ) : (
+                                            <p className="text-sm text-gray-400 dark:text-gray-500">Xaritadan joy tanlang</p>
+                                        )}
+                                    </div>
+                                    <ChevronRight className="h-4 w-4 text-gray-300 shrink-0" />
+                                </button>
+                                <LocationPicker
+                                    isOpen={showLocationPicker}
+                                    onClose={() => setShowLocationPicker(false)}
+                                    onSelect={(loc) => {
+                                        setSelectedLocation(loc)
+                                        updateData({ location: loc.address })
+                                    }}
+                                    initialLocation={selectedLocation}
                                 />
                             </div>
                         </div>
@@ -493,7 +526,7 @@ export function Create() {
                             <label className="text-sm font-medium flex items-center gap-2">
                                 <Music className="h-4 w-4" /> {t('backgroundMusic')}
                             </label>
-                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                            <div className="flex flex-col gap-2">
                                 {MUSIC_OPTIONS.map((music) => (
                                     <div
                                         key={music.id}
