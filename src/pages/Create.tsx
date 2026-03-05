@@ -450,7 +450,7 @@ export function Create() {
                 )
             case 2:
                 return (
-                    <div className="space-y-6 animate-fade-in pb-32">
+                    <div className="space-y-6 animate-fade-in pb-10">
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                             <div className="space-y-2">
                                 <label className="text-sm font-medium flex items-center gap-2">
@@ -558,7 +558,7 @@ export function Create() {
                                             initial={{ opacity: 0, y: -10 }}
                                             animate={{ opacity: 1, y: 0 }}
                                             exit={{ opacity: 0, y: -10 }}
-                                            className="absolute left-0 right-0 top-[calc(100%+8px)] z-50 bg-white dark:bg-slate-900 rounded-2xl shadow-2xl border border-gray-100 dark:border-slate-800 overflow-y-auto max-h-[280px]"
+                                            className="absolute left-0 right-0 top-[calc(100%+8px)] z-50 bg-white dark:bg-slate-900 rounded-2xl shadow-2xl border border-gray-100 dark:border-slate-800 overflow-y-auto max-h-[210px]"
                                         >
                                             <div className="p-2 space-y-1">
                                                 {MUSIC_OPTIONS.map((music) => (
