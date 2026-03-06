@@ -613,7 +613,7 @@ export function Create() {
                             </div>
                         </div>
 
-                        <div className="space-y-2">
+                        <div className="space-y-2 mb-[-25px]">
                             <label className="text-sm font-medium flex items-center gap-2">
                                 <MessageSquare className="h-4 w-4" /> {t('message')}
                             </label>
@@ -741,7 +741,7 @@ export function Create() {
                 style={{ height: '100dvh', overflow: 'hidden', overscrollBehavior: 'none' }}
             >
                 {/* Step Indicator — Fixed Top */}
-                <div className="shrink-0 px-4 pt-4 pb-2">
+                <div className="shrink-0 px-4 pt-4 pb-6">
                     <div className="flex justify-between relative px-4">
                         <div className="absolute top-5 left-[15%] right-[15%] h-0.5 bg-gold-100 dark:bg-slate-800"></div>
                         {STEPS.map((step, idx) => (

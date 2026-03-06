@@ -73,7 +73,7 @@ export function Home() {
     return (
         <div className="fixed inset-0 flex flex-col bg-background" style={{ height: '100dvh', overflow: 'hidden', overscrollBehavior: 'none' }}>
             {/* Fixed Top Section */}
-            <div className="shrink-0 px-4 pt-6 pb-2 space-y-6">
+            <div className="shrink-0 px-4 pt-[75px] pb-2 space-y-6">
                 {/* Create Invitation Card */}
                 <Link to="/create">
                     <motion.div
