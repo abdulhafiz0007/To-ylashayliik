@@ -514,15 +514,6 @@ export function Create() {
                                     </div>
                                     <ChevronRight className="h-4 w-4 text-gray-300 shrink-0" />
                                 </button>
-                                <LocationPicker
-                                    isOpen={showLocationPicker}
-                                    onClose={() => setShowLocationPicker(false)}
-                                    onSelect={(loc) => {
-                                        setSelectedLocation(loc)
-                                        updateData({ location: loc.address })
-                                    }}
-                                    initialLocation={selectedLocation}
-                                />
                             </div>
                         </div>
 
@@ -824,6 +815,16 @@ export function Create() {
                     )}
                 </form>
             </div>
+
+            <LocationPicker
+                isOpen={showLocationPicker}
+                onClose={() => setShowLocationPicker(false)}
+                onSelect={(loc) => {
+                    setSelectedLocation(loc)
+                    updateData({ location: loc.address })
+                }}
+                initialLocation={selectedLocation}
+            />
         </>
     )
 }

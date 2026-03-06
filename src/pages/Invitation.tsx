@@ -3,7 +3,28 @@ import { useParams, Link } from "react-router-dom"
 import { useInvitation, type InvitationData } from "../context/InvitationContext"
 import { Button } from "../components/ui/Button"
 import { Input } from "../components/ui/Input"
-import { Heart, Download, X, Music as MusicIcon, VolumeX, Share2 } from "lucide-react"
+import { Download, Share2, Heart, Music, X, VolumeX } from 'lucide-react'
+
+// Animation variants for wishes
+const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+        opacity: 1,
+        transition: {
+            staggerChildren: 0.1
+        }
+    }
+} as const;
+
+const itemVariants = {
+    hidden: { opacity: 0, y: 20, scale: 0.95 },
+    visible: {
+        opacity: 1,
+        y: 0,
+        scale: 1,
+        transition: { type: "spring", stiffness: 100, damping: 15 }
+    }
+} as const;
 
 // Import music assets
 import musicAzizam from "../assets/music_azizam.mp3"
@@ -320,7 +341,7 @@ export function Invitation() {
                                 animate={{ rotate: 360 }}
                                 transition={{ duration: 4, repeat: Infinity, ease: "linear" }}
                             >
-                                <MusicIcon className="h-6 w-6" />
+                                <Music className="h-6 w-6" />
                             </motion.div>
                         ) : (
                             <VolumeX className="h-6 w-6 opacity-40" />
@@ -442,10 +463,15 @@ export function Invitation() {
                         </Button>
                     </div>
 
-                    {/* Wishes List */}
-                    <div className="space-y-4">
+                    {/* Wishes List - Masonry Grid */}
+                    <motion.div
+                        className="columns-2 gap-4 space-y-4"
+                        variants={containerVariants}
+                        initial="hidden"
+                        animate="visible"
+                    >
                         {!Array.isArray(wishes) || wishes.length === 0 ? (
-                            <p className="text-center text-gray-400 italic py-8">{t('noReceivedInvitations')}</p>
+                            <p className="text-center text-gray-400 italic py-8 col-span-2">{t('noReceivedInvitations')}</p>
                         ) : (
                             wishes.map((wish, i) => {
                                 // Support both new nested creator object and old flat properties
@@ -466,9 +492,8 @@ export function Invitation() {
                                     <img
                                         src={photoUrl}
                                         alt={displayName}
-                                        className="h-12 w-12 rounded-full object-cover shadow-sm"
+                                        className="h-10 w-10 rounded-full object-cover shadow-sm ring-2 ring-white dark:ring-slate-800"
                                         onError={(e) => {
-                                            // Fallback to initials on error
                                             const target = e.target as HTMLImageElement;
                                             target.style.display = 'none';
                                             target.nextElementSibling?.classList.remove('hidden');
@@ -478,56 +503,70 @@ export function Invitation() {
 
                                 const initialsContent = (
                                     <div className={cn(
-                                        "h-12 w-12 shrink-0 bg-gradient-to-br from-pink-100 to-purple-100 dark:from-pink-900/30 dark:to-purple-900/30 text-pink-500 rounded-full flex items-center justify-center font-bold text-lg shadow-sm",
+                                        "h-10 w-10 shrink-0 bg-gradient-to-br from-pink-100 to-purple-100 dark:from-pink-900/30 dark:to-purple-900/30 text-pink-500 rounded-full flex items-center justify-center font-bold text-sm shadow-sm ring-2 ring-white dark:ring-slate-800",
                                         hasPhoto ? "hidden" : ""
                                     )}>
                                         {displayName?.[0]?.toUpperCase() || 'M'}
                                     </div>
                                 );
 
+                                // Add a slight random rotation for a "handwritten notes" feel
+                                const rotations = ['rotate-[1deg]', 'rotate-[-1deg]', 'rotate-[0.5deg]', 'rotate-[-0.5deg]'];
+                                const rotation = rotations[i % rotations.length];
+
                                 return (
                                     <motion.div
                                         key={i}
-                                        initial={{ opacity: 0, y: 20 }}
-                                        animate={{ opacity: 1, y: 0 }}
-                                        className="p-5 bg-white/50 dark:bg-slate-800/30 backdrop-blur-sm rounded-[28px] border border-white/50 dark:border-slate-800/50 flex gap-4"
-                                    >
-                                        {profileLink ? (
-                                            <a
-                                                href={profileLink}
-                                                target="_blank"
-                                                rel="noopener noreferrer"
-                                                className="shrink-0 relative"
-                                            >
-                                                {avatarContent}
-                                                {initialsContent}
-                                            </a>
-                                        ) : (
-                                            <div className="shrink-0 relative">
-                                                {avatarContent}
-                                                {initialsContent}
-                                            </div>
+                                        variants={itemVariants}
+                                        className={cn(
+                                            "break-inside-avoid mb-4 p-4 pb-5 bg-white/70 dark:bg-slate-900/50 backdrop-blur-xl rounded-3xl border border-white/40 dark:border-slate-800/50 shadow-[0_8px_32px_rgba(0,0,0,0.04)] flex flex-col gap-3",
+                                            rotation
                                         )}
-                                        <div className="space-y-1 min-w-0">
+                                    >
+                                        <div className="flex items-center gap-3">
                                             {profileLink ? (
                                                 <a
                                                     href={profileLink}
                                                     target="_blank"
                                                     rel="noopener noreferrer"
-                                                    className="font-bold text-gray-900 dark:text-white hover:text-pink-500 transition-colors"
+                                                    className="shrink-0 relative hover:scale-105 transition-transform"
                                                 >
-                                                    {displayName}
+                                                    {avatarContent}
+                                                    {initialsContent}
                                                 </a>
                                             ) : (
-                                                <p className="font-bold text-gray-900 dark:text-white">{displayName}</p>
+                                                <div className="shrink-0 relative">
+                                                    {avatarContent}
+                                                    {initialsContent}
+                                                </div>
                                             )}
-                                            <p className="text-sm text-gray-600 dark:text-gray-400 leading-relaxed italic">"{wish.wishText}"</p>
+                                            <div className="min-w-0">
+                                                {profileLink ? (
+                                                    <a
+                                                        href={profileLink}
+                                                        target="_blank"
+                                                        rel="noopener noreferrer"
+                                                        className="font-bold text-sm text-gray-900 dark:text-white hover:text-pink-500 transition-colors truncate block"
+                                                    >
+                                                        {displayName}
+                                                    </a>
+                                                ) : (
+                                                    <p className="font-bold text-sm text-gray-900 dark:text-white truncate">{displayName}</p>
+                                                )}
+                                            </div>
+                                        </div>
+                                        <div className="relative">
+                                            <p className="text-sm text-gray-700 dark:text-gray-300 leading-relaxed font-medium">
+                                                <span className="text-pink-400 dark:text-pink-600 text-lg font-serif">"</span>
+                                                {wish.wishText}
+                                                <span className="text-pink-400 dark:text-pink-600 text-lg font-serif">"</span>
+                                            </p>
                                         </div>
                                     </motion.div>
                                 )
                             })
                         )}
-                    </div>
+                    </motion.div>
                 </div>
             </div>
 

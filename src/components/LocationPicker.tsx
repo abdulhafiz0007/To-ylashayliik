@@ -178,7 +178,7 @@ export function LocationPicker({ isOpen, onClose, onSelect, initialLocation }: L
 
     return (
         <div
-            className="fixed inset-0 z-[100] flex flex-col bg-white dark:bg-slate-950 overflow-hidden"
+            className="fixed inset-0 z-[9999] flex flex-col bg-white dark:bg-slate-950 overflow-hidden"
             style={{ height: '100dvh', overscrollBehavior: 'none', touchAction: 'none' }}
         >
             {/* Header */}
