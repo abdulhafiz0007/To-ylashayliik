@@ -413,34 +413,29 @@ export function Invitation() {
                 </div>
 
                 {/* Wishes Section */}
-                <div className="space-y-5">
-                    <div className="flex items-center gap-3">
-                        <div className="h-8 w-1 bg-gradient-to-b from-pink-500 to-purple-500 rounded-full" />
+                <div className="space-y-6">
+                    <div className="flex items-center gap-2">
+                        <div className="h-8 w-px bg-pink-500 rounded-full" />
                         <h2 className="font-serif text-2xl font-bold text-gray-900 dark:text-white">{t('congratulations')}</h2>
-                        {wishes.length > 0 && (
-                            <span className="ml-auto text-xs font-bold bg-pink-100 dark:bg-pink-900/30 text-pink-600 dark:text-pink-400 px-2.5 py-1 rounded-full">
-                                {wishes.length}
-                            </span>
-                        )}
                     </div>
 
                     {/* Wish Form */}
-                    <div className="bg-white/80 dark:bg-slate-900/80 backdrop-blur-sm rounded-3xl p-5 shadow-sm border border-gray-100/80 dark:border-slate-800/80 space-y-3">
+                    <div className="bg-white dark:bg-slate-900 rounded-[32px] p-6 shadow-sm border border-white dark:border-slate-800 space-y-4">
                         <Input
                             placeholder={t('name')}
                             value={senderName}
                             onChange={(e) => setSenderName(e.target.value)}
-                            className="bg-gray-50/80 dark:bg-slate-800/50 rounded-2xl border-none h-11 px-4 focus:ring-2 focus:ring-pink-200 dark:text-white outline-none text-sm"
+                            className="bg-gray-50/50 dark:bg-slate-800/50 rounded-2xl border-none h-12 px-4 focus:ring-2 focus:ring-pink-200 dark:text-white outline-none"
                         />
                         <textarea
                             placeholder={t('addComment')}
                             value={newWish}
                             onChange={(e) => setNewWish(e.target.value)}
-                            className="w-full min-h-[80px] bg-gray-50/80 dark:bg-slate-800/50 rounded-2xl border-none p-4 focus:ring-2 focus:ring-pink-200 resize-none text-sm dark:text-white outline-none"
+                            className="w-full min-h-[100px] bg-gray-50/50 dark:bg-slate-800/50 rounded-2xl border-none p-4 focus:ring-2 focus:ring-pink-200 resize-none text-base dark:text-white outline-none"
                         />
                         <Button
                             onClick={handlePostWish}
-                            className="w-full h-11 rounded-2xl bg-gradient-to-r from-pink-500 to-purple-500 hover:from-pink-600 hover:to-purple-600 text-white font-bold shadow-md text-sm"
+                            className="w-full h-12 rounded-2xl bg-gradient-to-r from-pink-500 to-purple-500 hover:from-pink-600 hover:to-purple-600 text-white font-bold shadow-lg shadow-pink-100"
                             disabled={!newWish.trim() || !senderName.trim()}
                         >
                             {t('send')}
@@ -448,92 +443,87 @@ export function Invitation() {
                     </div>
 
                     {/* Wishes List */}
-                    <div className="space-y-3">
+                    <div className="space-y-4">
                         {!Array.isArray(wishes) || wishes.length === 0 ? (
-                            <p className="text-center text-gray-400 italic py-6 text-sm">{t('noReceivedInvitations')}</p>
+                            <p className="text-center text-gray-400 italic py-8">{t('noReceivedInvitations')}</p>
                         ) : (
                             wishes.map((wish, i) => {
                                 // Support both new nested creator object and old flat properties
                                 const creator = wish.creator || {};
                                 const photoUrl = creator.photoUrl || wish.photoUrl;
-                                const tgUsername = creator.telegramUsername || wish.username;
-                                const tgId = creator.telegramId || wish.telegramId;
+                                const username = creator.telegramUsername || wish.username;
+                                const telegramId = creator.telegramId || wish.telegramId;
                                 const displayName = wish.name || creator.firstname || 'Mehmon';
 
                                 const hasPhoto = !!photoUrl;
-                                // Prefer tg://user?id= for Telegram WebApp (more reliable)
-                                const profileLink = tgId
-                                    ? `tg://user?id=${tgId}`
-                                    : tgUsername
-                                        ? `https://t.me/${tgUsername}`
+                                const profileLink = username
+                                    ? `https://t.me/${username}`
+                                    : telegramId
+                                        ? `tg://user?id=${telegramId}`
                                         : null;
 
-                                const timeAgo = wish.createdAt ? (() => {
-                                    const diff = Date.now() - new Date(wish.createdAt).getTime();
-                                    const mins = Math.floor(diff / 60000);
-                                    if (mins < 1) return 'Hozir';
-                                    if (mins < 60) return `${mins} min oldin`;
-                                    const hours = Math.floor(mins / 60);
-                                    if (hours < 24) return `${hours} soat oldin`;
-                                    const days = Math.floor(hours / 24);
-                                    return `${days} kun oldin`;
-                                })() : '';
+                                const avatarContent = hasPhoto ? (
+                                    <img
+                                        src={photoUrl}
+                                        alt={displayName}
+                                        className="h-12 w-12 rounded-full object-cover shadow-sm"
+                                        onError={(e) => {
+                                            // Fallback to initials on error
+                                            const target = e.target as HTMLImageElement;
+                                            target.style.display = 'none';
+                                            target.nextElementSibling?.classList.remove('hidden');
+                                        }}
+                                    />
+                                ) : null;
 
-                                const avatar = (
-                                    <div className="shrink-0">
-                                        {hasPhoto ? (
-                                            <img
-                                                src={photoUrl}
-                                                alt={displayName}
-                                                className="h-10 w-10 rounded-full object-cover ring-2 ring-white dark:ring-slate-800 shadow-sm"
-                                                onError={(e) => {
-                                                    const target = e.target as HTMLImageElement;
-                                                    target.style.display = 'none';
-                                                    target.nextElementSibling?.classList.remove('hidden');
-                                                }}
-                                            />
-                                        ) : null}
-                                        <div className={cn(
-                                            "h-10 w-10 bg-gradient-to-br from-pink-200 to-purple-200 dark:from-pink-800/40 dark:to-purple-800/40 text-pink-600 dark:text-pink-400 rounded-full flex items-center justify-center font-bold text-sm ring-2 ring-white dark:ring-slate-800 shadow-sm",
-                                            hasPhoto ? "hidden" : ""
-                                        )}>
-                                            {displayName?.[0]?.toUpperCase() || 'M'}
-                                        </div>
+                                const initialsContent = (
+                                    <div className={cn(
+                                        "h-12 w-12 shrink-0 bg-gradient-to-br from-pink-100 to-purple-100 dark:from-pink-900/30 dark:to-purple-900/30 text-pink-500 rounded-full flex items-center justify-center font-bold text-lg shadow-sm",
+                                        hasPhoto ? "hidden" : ""
+                                    )}>
+                                        {displayName?.[0]?.toUpperCase() || 'M'}
                                     </div>
                                 );
 
                                 return (
-                                    <div
-                                        key={wish.id || i}
-                                        className="bg-white/60 dark:bg-slate-800/40 backdrop-blur-sm rounded-2xl px-4 py-3.5 border border-gray-100/60 dark:border-slate-700/40 flex gap-3"
+                                    <motion.div
+                                        key={i}
+                                        initial={{ opacity: 0, y: 20 }}
+                                        animate={{ opacity: 1, y: 0 }}
+                                        className="p-5 bg-white/50 dark:bg-slate-800/30 backdrop-blur-sm rounded-[28px] border border-white/50 dark:border-slate-800/50 flex gap-4"
                                     >
                                         {profileLink ? (
-                                            <a href={profileLink} target="_blank" rel="noopener noreferrer">
-                                                {avatar}
+                                            <a
+                                                href={profileLink}
+                                                target="_blank"
+                                                rel="noopener noreferrer"
+                                                className="shrink-0 relative"
+                                            >
+                                                {avatarContent}
+                                                {initialsContent}
                                             </a>
-                                        ) : avatar}
-
-                                        <div className="min-w-0 flex-1 space-y-0.5">
-                                            <div className="flex items-baseline gap-2">
-                                                {profileLink ? (
-                                                    <a
-                                                        href={profileLink}
-                                                        target="_blank"
-                                                        rel="noopener noreferrer"
-                                                        className="font-semibold text-sm text-gray-900 dark:text-white hover:text-pink-500"
-                                                    >
-                                                        {displayName}
-                                                    </a>
-                                                ) : (
-                                                    <span className="font-semibold text-sm text-gray-900 dark:text-white">{displayName}</span>
-                                                )}
-                                                {timeAgo && (
-                                                    <span className="text-[11px] text-gray-400 dark:text-gray-500 shrink-0">{timeAgo}</span>
-                                                )}
+                                        ) : (
+                                            <div className="shrink-0 relative">
+                                                {avatarContent}
+                                                {initialsContent}
                                             </div>
-                                            <p className="text-sm text-gray-600 dark:text-gray-400 leading-relaxed">"{wish.wishText}"</p>
+                                        )}
+                                        <div className="space-y-1 min-w-0">
+                                            {profileLink ? (
+                                                <a
+                                                    href={profileLink}
+                                                    target="_blank"
+                                                    rel="noopener noreferrer"
+                                                    className="font-bold text-gray-900 dark:text-white hover:text-pink-500 transition-colors"
+                                                >
+                                                    {displayName}
+                                                </a>
+                                            ) : (
+                                                <p className="font-bold text-gray-900 dark:text-white">{displayName}</p>
+                                            )}
+                                            <p className="text-sm text-gray-600 dark:text-gray-400 leading-relaxed italic">"{wish.wishText}"</p>
                                         </div>
-                                    </div>
+                                    </motion.div>
                                 )
                             })
                         )}
