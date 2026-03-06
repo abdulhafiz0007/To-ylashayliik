@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom"
 import { useInvitation } from "../context/InvitationContext"
 import { Button } from "../components/ui/Button"
 import { Input } from "../components/ui/Input"
-import { Card, CardContent, CardFooter } from "../components/ui/Card"
+import { Card, CardContent } from "../components/ui/Card"
 import { Calendar, MapPin, MessageSquare, Users, Clock, Camera, ChevronRight, ChevronLeft, Music, Play, Pause, Volume2, VolumeX, Cake, X, Check, ZoomIn, Map } from "lucide-react"
 import { useLanguage } from "../context/LanguageContext"
 import { cn } from "../lib/utils"
@@ -450,9 +450,9 @@ export function Create() {
                 )
             case 2:
                 return (
-                    <div className="space-y-6 animate-fade-in pb-10">
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                            <div className="space-y-2">
+                    <div className="space-y-4 animate-fade-in">
+                        <div className="grid grid-cols-2 gap-3">
+                            <div className="space-y-1.5">
                                 <label className="text-sm font-medium flex items-center gap-2">
                                     <Calendar className="h-4 w-4" /> {t('date')}
                                 </label>
@@ -464,7 +464,7 @@ export function Create() {
                                     className="dark:bg-slate-900 dark:border-slate-700"
                                 />
                             </div>
-                            <div className="space-y-2">
+                            <div className="space-y-1.5">
                                 <label className="text-sm font-medium flex items-center gap-2">
                                     <Clock className="h-4 w-4" /> {t('time')}
                                 </label>
@@ -478,8 +478,8 @@ export function Create() {
                             </div>
                         </div>
 
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                            <div className="space-y-2">
+                        <div className="grid grid-cols-2 gap-3">
+                            <div className="space-y-1.5">
                                 <label className="text-sm font-medium flex items-center gap-2">
                                     <MapPin className="h-4 w-4" /> {t('hall')}
                                 </label>
@@ -490,7 +490,7 @@ export function Create() {
                                     required
                                 />
                             </div>
-                            <div className="space-y-2">
+                            <div className="space-y-1.5">
                                 <label className="text-sm font-medium flex items-center gap-2">
                                     <MapPin className="h-4 w-4" /> {t('location')}
                                 </label>
@@ -517,7 +517,7 @@ export function Create() {
                             </div>
                         </div>
 
-                        <div className="space-y-3">
+                        <div className="space-y-1.5">
                             <label className="text-sm font-medium flex items-center gap-2">
                                 <Music className="h-4 w-4" /> {t('backgroundMusic')}
                             </label>
@@ -613,12 +613,12 @@ export function Create() {
                             </div>
                         </div>
 
-                        <div className="space-y-2">
+                        <div className="space-y-1.5">
                             <label className="text-sm font-medium flex items-center gap-2">
                                 <MessageSquare className="h-4 w-4" /> {t('message')}
                             </label>
                             <textarea
-                                className="flex min-h-[80px] w-full rounded-md border border-gold-200 dark:border-slate-700 bg-white dark:bg-slate-900 px-3 py-2 text-base focus:ring-2 focus:ring-primary-400 outline-none transition-all shadow-sm dark:text-white"
+                                className="flex min-h-[60px] w-full rounded-md border border-gold-200 dark:border-slate-700 bg-white dark:bg-slate-900 px-3 py-2 text-base focus:ring-2 focus:ring-primary-400 outline-none transition-all shadow-sm dark:text-white"
                                 placeholder="Bizning quvonchli kunimizda sizlarni mehmon qilishdan baxtiyormiz"
                                 value={data.text}
                                 onChange={(e) => updateData({ text: e.target.value })}
@@ -736,82 +736,92 @@ export function Create() {
                 />
             )}
 
-            <div className={cn(
-                "container mx-auto py-10 max-w-2xl min-h-screen flex flex-col",
-                currentStep === 3 ? "px-[15px] pr-[17px]" : "px-4"
-            )}>
-
-                {/* Step Indicator */}
-                <div className="flex justify-between mb-6 relative px-4">
-                    <div className="absolute top-5 left-[15%] right-[15%] h-0.5 bg-gold-100 dark:bg-slate-800"></div>
-                    {STEPS.map((step, idx) => (
-                        <button
-                            key={step}
-                            type="button"
-                            onClick={() => {
-                                if (canNavigateToStep(idx)) {
-                                    setCurrentStep(idx);
-                                }
-                            }}
-                            className={cn(
-                                "flex flex-col items-center relative z-10 group transition-transform active:scale-95",
-                                !canNavigateToStep(idx) && ""
-                            )}
-                        >
-                            <div className={cn(
-                                "w-10 h-10 rounded-full flex items-center justify-center text-sm font-bold transition-all border-2",
-                                currentStep === idx
-                                    ? "bg-primary-500 text-white border-primary-500 scale-110 shadow-lg shadow-primary-200"
-                                    : currentStep > idx
-                                        ? "bg-primary-400 text-white border-primary-400 group-hover:bg-primary-500 group-hover:border-primary-500"
-                                        : "bg-white dark:bg-slate-900 text-gold-400 border-gold-200 dark:border-slate-700 group-hover:border-gold-300"
-                            )}>
-                                {currentStep > idx ? '✓' : idx + 1}
-                            </div>
-                            <span className={cn(
-                                "text-[10px] sm:text-xs mt-2 font-medium text-center max-w-[80px] transition-colors",
-                                currentStep === idx ? "text-primary-600 dark:text-primary-400 font-bold" : "text-gray-400 group-hover:text-gray-500"
-                            )}>
-                                {t(step)}
-                            </span>
-                        </button>
-                    ))}
+            <div
+                className="fixed inset-0 z-[100] flex flex-col bg-background"
+                style={{ height: '100dvh', overflow: 'hidden', overscrollBehavior: 'none' }}
+            >
+                {/* Step Indicator — Fixed Top */}
+                <div className="shrink-0 px-4 pt-4 pb-2">
+                    <div className="flex justify-between relative px-4">
+                        <div className="absolute top-5 left-[15%] right-[15%] h-0.5 bg-gold-100 dark:bg-slate-800"></div>
+                        {STEPS.map((step, idx) => (
+                            <button
+                                key={step}
+                                type="button"
+                                onClick={() => {
+                                    if (canNavigateToStep(idx)) {
+                                        setCurrentStep(idx);
+                                    }
+                                }}
+                                className={cn(
+                                    "flex flex-col items-center relative z-10 group transition-transform active:scale-95",
+                                    !canNavigateToStep(idx) && ""
+                                )}
+                            >
+                                <div className={cn(
+                                    "w-10 h-10 rounded-full flex items-center justify-center text-sm font-bold transition-all border-2",
+                                    currentStep === idx
+                                        ? "bg-primary-500 text-white border-primary-500 scale-110 shadow-lg shadow-primary-200"
+                                        : currentStep > idx
+                                            ? "bg-primary-400 text-white border-primary-400 group-hover:bg-primary-500 group-hover:border-primary-500"
+                                            : "bg-white dark:bg-slate-900 text-gold-400 border-gold-200 dark:border-slate-700 group-hover:border-gold-300"
+                                )}>
+                                    {currentStep > idx ? '✓' : idx + 1}
+                                </div>
+                                <span className={cn(
+                                    "text-[10px] sm:text-xs mt-2 font-medium text-center max-w-[80px] transition-colors",
+                                    currentStep === idx ? "text-primary-600 dark:text-primary-400 font-bold" : "text-gray-400 group-hover:text-gray-500"
+                                )}>
+                                    {t(step)}
+                                </span>
+                            </button>
+                        ))}
+                    </div>
                 </div>
 
-                <form onSubmit={handleSubmit} className="flex-grow">
+                {/* Form Content — Center */}
+                <form onSubmit={handleSubmit} className="flex-1 flex flex-col min-h-0">
                     {currentStep === 3 ? (
-                        <>
+                        <div className="flex-1 overflow-y-auto px-[15px] pr-[17px] pb-40" style={{ overscrollBehavior: 'contain' }}>
                             {displayError && (
                                 <div className="mb-4 mx-4 p-3 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg text-red-600 dark:text-red-400 text-sm">
                                     {displayError}
                                 </div>
                             )}
                             {renderStep()}
-                        </>
+                        </div>
                     ) : (
-                        <Card className="shadow-xl border-gold-100 dark:border-slate-800 overflow-hidden">
-                            <CardContent className="p-5">
-                                {displayError && (
-                                    <div className="mb-4 p-3 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg text-red-600 dark:text-red-400 text-sm">
-                                        {displayError}
-                                    </div>
-                                )}
-                                {renderStep()}
-                            </CardContent>
-                            <CardFooter className="flex justify-between border-t border-gold-100 dark:border-slate-800 bg-gold-50/30 dark:bg-slate-900/20 p-4">
-                                <Button
-                                    type="button"
-                                    variant="ghost"
-                                    onClick={currentStep === 0 ? () => navigate("/") : prevStep}
-                                >
-                                    <ChevronLeft className="mr-1 h-4 w-4" />
-                                    {currentStep === 0 ? t('cancel') : t('back')}
-                                </Button>
-                                <Button type="submit" disabled={isSaving}>
-                                    {currentStep === 2 ? t('chooseTemplate') : <>{t('next')} <ChevronRight className="ml-1 h-4 w-4" /></>}
-                                </Button>
-                            </CardFooter>
-                        </Card>
+                        <>
+                            <div className="flex-1 overflow-y-auto px-4" style={{ overscrollBehavior: 'contain' }}>
+                                <Card className="shadow-xl border-gold-100 dark:border-slate-800 overflow-hidden">
+                                    <CardContent className="p-5">
+                                        {displayError && (
+                                            <div className="mb-4 p-3 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg text-red-600 dark:text-red-400 text-sm">
+                                                {displayError}
+                                            </div>
+                                        )}
+                                        {renderStep()}
+                                    </CardContent>
+                                </Card>
+                            </div>
+
+                            {/* Footer — Fixed Bottom */}
+                            <div className="shrink-0 px-4 pb-4 pt-3 border-t border-gold-100 dark:border-slate-800 bg-background">
+                                <div className="flex justify-between gap-3">
+                                    <Button
+                                        type="button"
+                                        variant="ghost"
+                                        onClick={currentStep === 0 ? () => navigate("/") : prevStep}
+                                    >
+                                        <ChevronLeft className="mr-1 h-4 w-4" />
+                                        {currentStep === 0 ? t('cancel') : t('back')}
+                                    </Button>
+                                    <Button type="submit" disabled={isSaving}>
+                                        {currentStep === 2 ? t('chooseTemplate') : <>{t('next')} <ChevronRight className="ml-1 h-4 w-4" /></>}
+                                    </Button>
+                                </div>
+                            </div>
+                        </>
                     )}
                 </form>
             </div>

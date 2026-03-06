@@ -5,26 +5,6 @@ import { Button } from "../components/ui/Button"
 import { Input } from "../components/ui/Input"
 import { Download, Share2, Heart, Music, X, VolumeX } from 'lucide-react'
 
-// Animation variants for wishes
-const containerVariants = {
-    hidden: { opacity: 0 },
-    visible: {
-        opacity: 1,
-        transition: {
-            staggerChildren: 0.1
-        }
-    }
-} as const;
-
-const itemVariants = {
-    hidden: { opacity: 0, y: 20, scale: 0.95 },
-    visible: {
-        opacity: 1,
-        y: 0,
-        scale: 1,
-        transition: { type: "spring", stiffness: 100, damping: 15 }
-    }
-} as const;
 
 // Import music assets
 import musicAzizam from "../assets/music_azizam.mp3"
@@ -433,47 +413,42 @@ export function Invitation() {
                     </Button>
                 </div>
 
-                {/* Wishes Section */}
-                <div className="space-y-6">
-                    <div className="flex items-center gap-2">
-                        <div className="h-8 w-px bg-pink-500 rounded-full" />
-                        <h2 className="font-serif text-2xl font-bold text-gray-900 dark:text-white">{t('congratulations')}</h2>
-                    </div>
+                {/* 💌 Send Your Wishes */}
+                <div className="space-y-4">
+                    <h2 className="text-center text-lg font-bold text-gray-900 dark:text-white">💌 Send Your Wishes</h2>
 
-                    {/* Wish Form */}
-                    <div className="bg-white dark:bg-slate-900 rounded-[32px] p-6 shadow-sm border border-white dark:border-slate-800 space-y-4">
+                    <div className="bg-white dark:bg-slate-900 rounded-2xl p-5 shadow-sm border border-gray-100 dark:border-slate-800 space-y-3">
                         <Input
                             placeholder={t('name')}
                             value={senderName}
                             onChange={(e) => setSenderName(e.target.value)}
-                            className="bg-gray-50/50 dark:bg-slate-800/50 rounded-2xl border-none h-12 px-4 focus:ring-2 focus:ring-pink-200 dark:text-white outline-none"
+                            className="bg-gray-50/50 dark:bg-slate-800/50 rounded-xl border border-gray-100 dark:border-slate-700 h-11 px-4 focus:ring-2 focus:ring-pink-200 dark:text-white outline-none"
                         />
                         <textarea
                             placeholder={t('addComment')}
                             value={newWish}
                             onChange={(e) => setNewWish(e.target.value)}
-                            className="w-full min-h-[100px] bg-gray-50/50 dark:bg-slate-800/50 rounded-2xl border-none p-4 focus:ring-2 focus:ring-pink-200 resize-none text-base dark:text-white outline-none"
+                            className="w-full min-h-[80px] bg-gray-50/50 dark:bg-slate-800/50 rounded-xl border border-gray-100 dark:border-slate-700 p-4 focus:ring-2 focus:ring-pink-200 resize-none text-base dark:text-white outline-none"
                         />
                         <Button
                             onClick={handlePostWish}
-                            className="w-full h-12 rounded-2xl bg-gradient-to-r from-pink-500 to-purple-500 hover:from-pink-600 hover:to-purple-600 text-white font-bold shadow-lg shadow-pink-100"
+                            className="w-full h-11 rounded-xl bg-gradient-to-r from-pink-500 to-purple-500 hover:from-pink-600 hover:to-purple-600 text-white font-bold shadow-md"
                             disabled={!newWish.trim() || !senderName.trim()}
                         >
-                            {t('send')}
+                            Send Wish 💖
                         </Button>
                     </div>
+                </div>
 
-                    {/* Wishes List - Masonry Grid */}
-                    <motion.div
-                        className="columns-2 gap-4 space-y-4"
-                        variants={containerVariants}
-                        initial="hidden"
-                        animate="visible"
-                    >
-                        {!Array.isArray(wishes) || wishes.length === 0 ? (
-                            <p className="text-center text-gray-400 italic py-8 col-span-2">{t('noReceivedInvitations')}</p>
-                        ) : (
-                            wishes.map((wish, i) => {
+                {/* ✨ Guest Wishes */}
+                <div className="space-y-4">
+                    <h2 className="text-center text-lg font-bold text-gray-900 dark:text-white">✨ Guest Wishes</h2>
+
+                    {!Array.isArray(wishes) || wishes.length === 0 ? (
+                        <p className="text-center text-gray-400 italic py-6">{t('noReceivedInvitations')}</p>
+                    ) : (
+                        <div className="space-y-3">
+                            {wishes.map((wish, i) => {
                                 // Support both new nested creator object and old flat properties
                                 const creator = wish.creator || {};
                                 const photoUrl = creator.photoUrl || wish.photoUrl;
@@ -488,11 +463,28 @@ export function Invitation() {
                                         ? `tg://user?id=${telegramId}`
                                         : null;
 
-                                const avatarContent = hasPhoto ? (
+                                // Calculate time ago
+                                const getTimeAgo = (dateStr: string) => {
+                                    if (!dateStr) return '';
+                                    const now = new Date();
+                                    const date = new Date(dateStr);
+                                    const diffMs = now.getTime() - date.getTime();
+                                    const diffMins = Math.floor(diffMs / 60000);
+                                    if (diffMins < 1) return 'Hozirgina';
+                                    if (diffMins < 60) return `${diffMins} daq oldin`;
+                                    const diffHours = Math.floor(diffMins / 60);
+                                    if (diffHours < 24) return `${diffHours} soat oldin`;
+                                    const diffDays = Math.floor(diffHours / 24);
+                                    if (diffDays < 30) return `${diffDays} kun oldin`;
+                                    return `${Math.floor(diffDays / 30)} oy oldin`;
+                                };
+                                const timeAgo = getTimeAgo(wish.createdAt);
+
+                                const avatar = hasPhoto ? (
                                     <img
                                         src={photoUrl}
                                         alt={displayName}
-                                        className="h-10 w-10 rounded-full object-cover shadow-sm ring-2 ring-white dark:ring-slate-800"
+                                        className="h-10 w-10 rounded-full object-cover ring-2 ring-pink-100 dark:ring-slate-700"
                                         onError={(e) => {
                                             const target = e.target as HTMLImageElement;
                                             target.style.display = 'none';
@@ -501,72 +493,63 @@ export function Invitation() {
                                     />
                                 ) : null;
 
-                                const initialsContent = (
+                                const initials = (
                                     <div className={cn(
-                                        "h-10 w-10 shrink-0 bg-gradient-to-br from-pink-100 to-purple-100 dark:from-pink-900/30 dark:to-purple-900/30 text-pink-500 rounded-full flex items-center justify-center font-bold text-sm shadow-sm ring-2 ring-white dark:ring-slate-800",
+                                        "h-10 w-10 shrink-0 bg-gradient-to-br from-pink-100 to-purple-100 dark:from-pink-900/30 dark:to-purple-900/30 text-pink-500 rounded-full flex items-center justify-center font-bold text-sm ring-2 ring-pink-100 dark:ring-slate-700",
                                         hasPhoto ? "hidden" : ""
                                     )}>
                                         {displayName?.[0]?.toUpperCase() || 'M'}
                                     </div>
                                 );
 
-                                // Add a slight random rotation for a "handwritten notes" feel
-                                const rotations = ['rotate-[1deg]', 'rotate-[-1deg]', 'rotate-[0.5deg]', 'rotate-[-0.5deg]'];
-                                const rotation = rotations[i % rotations.length];
-
                                 return (
-                                    <motion.div
+                                    <div
                                         key={i}
-                                        variants={itemVariants}
-                                        className={cn(
-                                            "break-inside-avoid mb-4 p-4 pb-5 bg-white/70 dark:bg-slate-900/50 backdrop-blur-xl rounded-3xl border border-white/40 dark:border-slate-800/50 shadow-[0_8px_32px_rgba(0,0,0,0.04)] flex flex-col gap-3",
-                                            rotation
-                                        )}
+                                        className="bg-white dark:bg-slate-900 rounded-2xl p-4 border border-gray-100 dark:border-slate-800 shadow-sm space-y-3"
                                     >
+                                        {/* Header: Avatar + Name */}
                                         <div className="flex items-center gap-3">
+                                            {profileLink ? (
+                                                <a href={profileLink} target="_blank" rel="noopener noreferrer" className="shrink-0">
+                                                    {avatar}
+                                                    {initials}
+                                                </a>
+                                            ) : (
+                                                <div className="shrink-0">
+                                                    {avatar}
+                                                    {initials}
+                                                </div>
+                                            )}
                                             {profileLink ? (
                                                 <a
                                                     href={profileLink}
                                                     target="_blank"
                                                     rel="noopener noreferrer"
-                                                    className="shrink-0 relative hover:scale-105 transition-transform"
+                                                    className="font-bold text-gray-900 dark:text-white hover:text-pink-500 transition-colors"
                                                 >
-                                                    {avatarContent}
-                                                    {initialsContent}
+                                                    👤 {displayName}
                                                 </a>
                                             ) : (
-                                                <div className="shrink-0 relative">
-                                                    {avatarContent}
-                                                    {initialsContent}
-                                                </div>
+                                                <p className="font-bold text-gray-900 dark:text-white">👤 {displayName}</p>
                                             )}
-                                            <div className="min-w-0">
-                                                {profileLink ? (
-                                                    <a
-                                                        href={profileLink}
-                                                        target="_blank"
-                                                        rel="noopener noreferrer"
-                                                        className="font-bold text-sm text-gray-900 dark:text-white hover:text-pink-500 transition-colors truncate block"
-                                                    >
-                                                        {displayName}
-                                                    </a>
-                                                ) : (
-                                                    <p className="font-bold text-sm text-gray-900 dark:text-white truncate">{displayName}</p>
-                                                )}
-                                            </div>
                                         </div>
-                                        <div className="relative">
-                                            <p className="text-sm text-gray-700 dark:text-gray-300 leading-relaxed font-medium">
-                                                <span className="text-pink-400 dark:text-pink-600 text-lg font-serif">"</span>
-                                                {wish.wishText}
-                                                <span className="text-pink-400 dark:text-pink-600 text-lg font-serif">"</span>
+
+                                        {/* Wish Text */}
+                                        <p className="text-gray-700 dark:text-gray-300 leading-relaxed pl-1">
+                                            "{wish.wishText}"
+                                        </p>
+
+                                        {/* Timestamp */}
+                                        {timeAgo && (
+                                            <p className="text-xs text-gray-400 dark:text-gray-500 pl-1">
+                                                🕒 {timeAgo}
                                             </p>
-                                        </div>
-                                    </motion.div>
-                                )
-                            })
-                        )}
-                    </motion.div>
+                                        )}
+                                    </div>
+                                );
+                            })}
+                        </div>
+                    )}
                 </div>
             </div>
 

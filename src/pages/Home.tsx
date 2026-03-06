@@ -71,69 +71,72 @@ export function Home() {
     }, [])
 
     return (
-        <div className="container mx-auto px-4 py-12 space-y-8 animate-fade-in -mt-5">
-            {/* Create Invitation Card */}
-            <Link to="/create">
-                <motion.div
-                    whileHover={{ scale: 1.02 }}
-                    whileTap={{ scale: 0.98 }}
-                >
-                    <Card className="bg-gradient-to-br from-slate-900 to-primary-900 border-none shadow-xl overflow-hidden relative group">
-                        <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')] opacity-10" />
-                        <div className="absolute -right-8 -bottom-8 w-48 h-48 bg-primary-500/20 blur-3xl rounded-full" />
-                        <CardContent className="p-8 relative">
-                            <div className="flex justify-between items-center">
-                                <div className="space-y-2">
-                                    <h2 className="text-2xl font-bold text-white mb-1">{t('createPrompt')}</h2>
-                                    <p className="text-primary-200 text-sm opacity-80">
-                                        {t('digitalWorld')}
-                                    </p>
+        <div className="fixed inset-0 flex flex-col bg-background" style={{ height: '100dvh', overflow: 'hidden', overscrollBehavior: 'none' }}>
+            {/* Fixed Top Section */}
+            <div className="shrink-0 px-4 pt-4 pb-2 space-y-4">
+                {/* Create Invitation Card */}
+                <Link to="/create">
+                    <motion.div
+                        whileHover={{ scale: 1.02 }}
+                        whileTap={{ scale: 0.98 }}
+                    >
+                        <Card className="bg-gradient-to-br from-slate-900 to-primary-900 border-none shadow-xl overflow-hidden relative group">
+                            <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')] opacity-10" />
+                            <div className="absolute -right-8 -bottom-8 w-48 h-48 bg-primary-500/20 blur-3xl rounded-full" />
+                            <CardContent className="p-6 relative">
+                                <div className="flex justify-between items-center">
+                                    <div className="space-y-1">
+                                        <h2 className="text-xl font-bold text-white">{t('createPrompt')}</h2>
+                                        <p className="text-primary-200 text-sm opacity-80">
+                                            {t('digitalWorld')}
+                                        </p>
+                                    </div>
+                                    <div className="h-12 w-12 rounded-2xl bg-primary-500 text-white flex items-center justify-center shadow-lg group-hover:rotate-12 transition-transform">
+                                        <Plus className="h-7 w-7" />
+                                    </div>
                                 </div>
-                                <div className="h-14 w-14 rounded-2xl bg-primary-500 text-white flex items-center justify-center shadow-lg group-hover:rotate-12 transition-transform">
-                                    <Plus className="h-8 w-8" />
-                                </div>
-                            </div>
-                        </CardContent>
-                    </Card>
-                </motion.div>
-            </Link>
+                            </CardContent>
+                        </Card>
+                    </motion.div>
+                </Link>
 
-            {/* Tabs */}
-            <div className="bg-gray-100 dark:bg-slate-900 p-1.5 rounded-2xl flex gap-1 relative overflow-hidden mt-3">
-                <button
-                    onClick={() => setActiveTab('myEvents')}
-                    className={cn(
-                        "flex-1 py-3 px-4 rounded-xl text-sm font-bold transition-all relative z-10",
-                        activeTab === 'myEvents' ? "text-gray-900 dark:text-white" : "text-gray-500"
-                    )}
-                >
-                    {t('myEvents')}
-                    {activeTab === 'myEvents' && (
-                        <motion.div
-                            layoutId="tab-bg"
-                            className="absolute inset-0 bg-white dark:bg-slate-800 rounded-xl shadow-sm -z-10"
-                        />
-                    )}
-                </button>
-                <button
-                    onClick={() => setActiveTab('invitations')}
-                    className={cn(
-                        "flex-1 py-3 px-4 rounded-xl text-sm font-bold transition-all relative z-10",
-                        activeTab === 'invitations' ? "text-gray-900 dark:text-white" : "text-gray-500"
-                    )}
-                >
-                    {t('receivedInvitations')}
-                    {activeTab === 'invitations' && (
-                        <motion.div
-                            layoutId="tab-bg"
-                            className="absolute inset-0 bg-white dark:bg-slate-800 rounded-xl shadow-sm -z-10"
-                        />
-                    )}
-                </button>
+                {/* Tabs */}
+                <div className="bg-gray-100 dark:bg-slate-900 p-1.5 rounded-2xl flex gap-1 relative overflow-hidden">
+                    <button
+                        onClick={() => setActiveTab('myEvents')}
+                        className={cn(
+                            "flex-1 py-2.5 px-4 rounded-xl text-sm font-bold transition-all relative z-10",
+                            activeTab === 'myEvents' ? "text-gray-900 dark:text-white" : "text-gray-500"
+                        )}
+                    >
+                        {t('myEvents')}
+                        {activeTab === 'myEvents' && (
+                            <motion.div
+                                layoutId="tab-bg"
+                                className="absolute inset-0 bg-white dark:bg-slate-800 rounded-xl shadow-sm -z-10"
+                            />
+                        )}
+                    </button>
+                    <button
+                        onClick={() => setActiveTab('invitations')}
+                        className={cn(
+                            "flex-1 py-2.5 px-4 rounded-xl text-sm font-bold transition-all relative z-10",
+                            activeTab === 'invitations' ? "text-gray-900 dark:text-white" : "text-gray-500"
+                        )}
+                    >
+                        {t('receivedInvitations')}
+                        {activeTab === 'invitations' && (
+                            <motion.div
+                                layoutId="tab-bg"
+                                className="absolute inset-0 bg-white dark:bg-slate-800 rounded-xl shadow-sm -z-10"
+                            />
+                        )}
+                    </button>
+                </div>
             </div>
 
-            {/* List Content */}
-            <div className="space-y-4">
+            {/* Scrollable List Content */}
+            <div className="flex-1 overflow-y-auto px-4 pb-4" style={{ overscrollBehavior: 'contain' }}>
                 <AnimatePresence mode="wait">
                     {activeTab === 'myEvents' ? (
                         <motion.div
@@ -141,7 +144,7 @@ export function Home() {
                             initial={{ opacity: 0, x: -20 }}
                             animate={{ opacity: 1, x: 0 }}
                             exit={{ opacity: 0, x: 20 }}
-                            className="space-y-4"
+                            className="space-y-3"
                         >
                             {loading ? (
                                 Array(3).fill(0).map((_, i) => (
@@ -177,7 +180,7 @@ export function Home() {
                             initial={{ opacity: 0, x: 20 }}
                             animate={{ opacity: 1, x: 0 }}
                             exit={{ opacity: 0, x: -20 }}
-                            className="space-y-4"
+                            className="space-y-3"
                         >
                             {filteredReceived.length > 0 ? (
                                 filteredReceived.map((inv) => (
