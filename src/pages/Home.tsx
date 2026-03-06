@@ -73,7 +73,7 @@ export function Home() {
     return (
         <div className="fixed inset-0 flex flex-col bg-background" style={{ height: '100dvh', overflow: 'hidden', overscrollBehavior: 'none' }}>
             {/* Fixed Top Section */}
-            <div className="shrink-0 px-4 pt-4 pb-2 space-y-4">
+            <div className="shrink-0 px-4 pt-6 pb-2 space-y-6">
                 {/* Create Invitation Card */}
                 <Link to="/create">
                     <motion.div
@@ -83,16 +83,16 @@ export function Home() {
                         <Card className="bg-gradient-to-br from-slate-900 to-primary-900 border-none shadow-xl overflow-hidden relative group">
                             <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')] opacity-10" />
                             <div className="absolute -right-8 -bottom-8 w-48 h-48 bg-primary-500/20 blur-3xl rounded-full" />
-                            <CardContent className="p-6 relative">
+                            <CardContent className="p-8 relative">
                                 <div className="flex justify-between items-center">
-                                    <div className="space-y-1">
-                                        <h2 className="text-xl font-bold text-white">{t('createPrompt')}</h2>
+                                    <div className="space-y-2">
+                                        <h2 className="text-2xl font-bold text-white mb-1">{t('createPrompt')}</h2>
                                         <p className="text-primary-200 text-sm opacity-80">
                                             {t('digitalWorld')}
                                         </p>
                                     </div>
-                                    <div className="h-12 w-12 rounded-2xl bg-primary-500 text-white flex items-center justify-center shadow-lg group-hover:rotate-12 transition-transform">
-                                        <Plus className="h-7 w-7" />
+                                    <div className="h-14 w-14 rounded-2xl bg-primary-500 text-white flex items-center justify-center shadow-lg group-hover:rotate-12 transition-transform">
+                                        <Plus className="h-8 w-8" />
                                     </div>
                                 </div>
                             </CardContent>
@@ -101,11 +101,11 @@ export function Home() {
                 </Link>
 
                 {/* Tabs */}
-                <div className="bg-gray-100 dark:bg-slate-900 p-1.5 rounded-2xl flex gap-1 relative overflow-hidden">
+                <div className="bg-gray-100 dark:bg-slate-900 p-1.5 rounded-2xl flex gap-1 relative overflow-hidden mt-3">
                     <button
                         onClick={() => setActiveTab('myEvents')}
                         className={cn(
-                            "flex-1 py-2.5 px-4 rounded-xl text-sm font-bold transition-all relative z-10",
+                            "flex-1 py-3 px-4 rounded-xl text-sm font-bold transition-all relative z-10",
                             activeTab === 'myEvents' ? "text-gray-900 dark:text-white" : "text-gray-500"
                         )}
                     >

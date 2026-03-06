@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom"
 import { useInvitation } from "../context/InvitationContext"
 import { Button } from "../components/ui/Button"
 import { Input } from "../components/ui/Input"
-import { Card, CardContent } from "../components/ui/Card"
+import { Card, CardContent, CardFooter } from "../components/ui/Card"
 import { Calendar, MapPin, MessageSquare, Users, Clock, Camera, ChevronRight, ChevronLeft, Music, Play, Pause, Volume2, VolumeX, Cake, X, Check, ZoomIn, Map } from "lucide-react"
 import { useLanguage } from "../context/LanguageContext"
 import { cn } from "../lib/utils"
@@ -450,9 +450,9 @@ export function Create() {
                 )
             case 2:
                 return (
-                    <div className="space-y-4 animate-fade-in">
-                        <div className="grid grid-cols-2 gap-3">
-                            <div className="space-y-1.5">
+                    <div className="space-y-6 animate-fade-in pb-10">
+                        <div className="grid grid-cols-2 gap-4">
+                            <div className="space-y-2">
                                 <label className="text-sm font-medium flex items-center gap-2">
                                     <Calendar className="h-4 w-4" /> {t('date')}
                                 </label>
@@ -464,7 +464,7 @@ export function Create() {
                                     className="dark:bg-slate-900 dark:border-slate-700"
                                 />
                             </div>
-                            <div className="space-y-1.5">
+                            <div className="space-y-2">
                                 <label className="text-sm font-medium flex items-center gap-2">
                                     <Clock className="h-4 w-4" /> {t('time')}
                                 </label>
@@ -478,8 +478,8 @@ export function Create() {
                             </div>
                         </div>
 
-                        <div className="grid grid-cols-2 gap-3">
-                            <div className="space-y-1.5">
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div className="space-y-2">
                                 <label className="text-sm font-medium flex items-center gap-2">
                                     <MapPin className="h-4 w-4" /> {t('hall')}
                                 </label>
@@ -490,7 +490,7 @@ export function Create() {
                                     required
                                 />
                             </div>
-                            <div className="space-y-1.5">
+                            <div className="space-y-2">
                                 <label className="text-sm font-medium flex items-center gap-2">
                                     <MapPin className="h-4 w-4" /> {t('location')}
                                 </label>
@@ -517,7 +517,7 @@ export function Create() {
                             </div>
                         </div>
 
-                        <div className="space-y-1.5">
+                        <div className="space-y-3">
                             <label className="text-sm font-medium flex items-center gap-2">
                                 <Music className="h-4 w-4" /> {t('backgroundMusic')}
                             </label>
@@ -613,12 +613,12 @@ export function Create() {
                             </div>
                         </div>
 
-                        <div className="space-y-1.5">
+                        <div className="space-y-2">
                             <label className="text-sm font-medium flex items-center gap-2">
                                 <MessageSquare className="h-4 w-4" /> {t('message')}
                             </label>
                             <textarea
-                                className="flex min-h-[60px] w-full rounded-md border border-gold-200 dark:border-slate-700 bg-white dark:bg-slate-900 px-3 py-2 text-base focus:ring-2 focus:ring-primary-400 outline-none transition-all shadow-sm dark:text-white"
+                                className="flex min-h-[80px] w-full rounded-md border border-gold-200 dark:border-slate-700 bg-white dark:bg-slate-900 px-3 py-2 text-base focus:ring-2 focus:ring-primary-400 outline-none transition-all shadow-sm dark:text-white"
                                 placeholder="Bizning quvonchli kunimizda sizlarni mehmon qilishdan baxtiyormiz"
                                 value={data.text}
                                 onChange={(e) => updateData({ text: e.target.value })}
@@ -791,23 +791,17 @@ export function Create() {
                             {renderStep()}
                         </div>
                     ) : (
-                        <>
-                            <div className="flex-1 overflow-y-auto px-4" style={{ overscrollBehavior: 'contain' }}>
-                                <Card className="shadow-xl border-gold-100 dark:border-slate-800 overflow-hidden">
-                                    <CardContent className="p-5">
-                                        {displayError && (
-                                            <div className="mb-4 p-3 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg text-red-600 dark:text-red-400 text-sm">
-                                                {displayError}
-                                            </div>
-                                        )}
-                                        {renderStep()}
-                                    </CardContent>
-                                </Card>
-                            </div>
-
-                            {/* Footer — Fixed Bottom */}
-                            <div className="shrink-0 px-4 pb-4 pt-3 border-t border-gold-100 dark:border-slate-800 bg-background">
-                                <div className="flex justify-between gap-3">
+                        <div className="flex-1 overflow-y-auto px-4" style={{ overscrollBehavior: 'contain' }}>
+                            <Card className="shadow-xl border-gold-100 dark:border-slate-800 overflow-hidden">
+                                <CardContent className="p-5">
+                                    {displayError && (
+                                        <div className="mb-4 p-3 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg text-red-600 dark:text-red-400 text-sm">
+                                            {displayError}
+                                        </div>
+                                    )}
+                                    {renderStep()}
+                                </CardContent>
+                                <CardFooter className="flex justify-between border-t border-gold-100 dark:border-slate-800 bg-gold-50/30 dark:bg-slate-900/20 p-4">
                                     <Button
                                         type="button"
                                         variant="ghost"
@@ -819,9 +813,9 @@ export function Create() {
                                     <Button type="submit" disabled={isSaving}>
                                         {currentStep === 2 ? t('chooseTemplate') : <>{t('next')} <ChevronRight className="ml-1 h-4 w-4" /></>}
                                     </Button>
-                                </div>
-                            </div>
-                        </>
+                                </CardFooter>
+                            </Card>
+                        </div>
                     )}
                 </form>
             </div>
