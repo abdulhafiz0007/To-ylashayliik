@@ -415,7 +415,7 @@ export function Invitation() {
 
                 {/* 💌 Send Your Wishes */}
                 <div className="space-y-4">
-                    <h2 className="text-center text-lg font-bold text-gray-900 dark:text-white">💌 Send Your Wishes</h2>
+                    <h2 className="text-left text-lg font-bold text-gray-900 dark:text-white">💌 Send Your Wishes</h2>
 
                     <div className="bg-white dark:bg-slate-900 rounded-2xl p-5 shadow-sm border border-gray-100 dark:border-slate-800 space-y-3">
                         <Input
@@ -442,7 +442,7 @@ export function Invitation() {
 
                 {/* ✨ Guest Wishes */}
                 <div className="space-y-4">
-                    <h2 className="text-center text-lg font-bold text-gray-900 dark:text-white">✨ Guest Wishes</h2>
+                    <h2 className="text-left text-lg font-bold text-gray-900 dark:text-white">✨ Guest Wishes</h2>
 
                     {!Array.isArray(wishes) || wishes.length === 0 ? (
                         <p className="text-center text-gray-400 italic py-6">{t('noReceivedInvitations')}</p>

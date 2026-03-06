@@ -136,7 +136,13 @@ export function Home() {
             </div>
 
             {/* Scrollable List Content */}
-            <div className="flex-1 overflow-y-auto px-4 pb-4" style={{ overscrollBehavior: 'contain' }}>
+            <div
+                className="flex-1 overflow-y-auto px-4 pb-20"
+                style={{
+                    overscrollBehavior: 'contain',
+                    maxHeight: 'calc(100svh - 360px)' // Subtraction of header height to force scroll cutoff
+                }}
+            >
                 <AnimatePresence mode="wait">
                     {activeTab === 'myEvents' ? (
                         <motion.div

@@ -613,7 +613,7 @@ export function Create() {
                             </div>
                         </div>
 
-                        <div className="space-y-2 mb-[-25px]">
+                        <div className="space-y-2 mb-[-45px]">
                             <label className="text-sm font-medium flex items-center gap-2">
                                 <MessageSquare className="h-4 w-4" /> {t('message')}
                             </label>
