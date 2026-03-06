@@ -439,17 +439,24 @@ export function Invitation() {
                             <p className="text-center text-gray-400 italic py-8">{t('noReceivedInvitations')}</p>
                         ) : (
                             wishes.map((wish, i) => {
-                                const hasPhoto = !!wish.photoUrl;
-                                const profileLink = wish.username
-                                    ? `https://t.me/${wish.username}`
-                                    : wish.telegramId
-                                        ? `tg://user?id=${wish.telegramId}`
+                                // Support both new nested creator object and old flat properties
+                                const creator = wish.creator || {};
+                                const photoUrl = creator.photoUrl || wish.photoUrl;
+                                const username = creator.telegramUsername || wish.username;
+                                const telegramId = creator.telegramId || wish.telegramId;
+                                const displayName = wish.name || creator.firstname || 'Mehmon';
+
+                                const hasPhoto = !!photoUrl;
+                                const profileLink = username
+                                    ? `https://t.me/${username}`
+                                    : telegramId
+                                        ? `tg://user?id=${telegramId}`
                                         : null;
 
                                 const avatarContent = hasPhoto ? (
                                     <img
-                                        src={wish.photoUrl}
-                                        alt={wish.name}
+                                        src={photoUrl}
+                                        alt={displayName}
                                         className="h-12 w-12 rounded-full object-cover shadow-sm"
                                         onError={(e) => {
                                             // Fallback to initials on error
@@ -465,7 +472,7 @@ export function Invitation() {
                                         "h-12 w-12 shrink-0 bg-gradient-to-br from-pink-100 to-purple-100 dark:from-pink-900/30 dark:to-purple-900/30 text-pink-500 rounded-full flex items-center justify-center font-bold text-lg shadow-sm",
                                         hasPhoto ? "hidden" : ""
                                     )}>
-                                        {wish.name?.[0]?.toUpperCase() || 'G'}
+                                        {displayName?.[0]?.toUpperCase() || 'M'}
                                     </div>
                                 );
 
@@ -500,10 +507,10 @@ export function Invitation() {
                                                     rel="noopener noreferrer"
                                                     className="font-bold text-gray-900 dark:text-white hover:text-pink-500 transition-colors"
                                                 >
-                                                    {wish.name}
+                                                    {displayName}
                                                 </a>
                                             ) : (
-                                                <p className="font-bold text-gray-900 dark:text-white">{wish.name}</p>
+                                                <p className="font-bold text-gray-900 dark:text-white">{displayName}</p>
                                             )}
                                             <p className="text-sm text-gray-600 dark:text-gray-400 leading-relaxed italic">"{wish.wishText}"</p>
                                         </div>

@@ -67,6 +67,30 @@ export function LocationPicker({ isOpen, onClose, onSelect, initialLocation }: L
     const [flyTarget, setFlyTarget] = useState<[number, number] | null>(null)
     const searchTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null)
 
+    // Lock body scroll when picker is open (prevents iOS Safari overscroll issues)
+    useEffect(() => {
+        if (isOpen) {
+            const origOverflow = document.body.style.overflow
+            const origPosition = document.body.style.position
+            const origTop = document.body.style.top
+            const origWidth = document.body.style.width
+            const scrollY = window.scrollY
+
+            document.body.style.overflow = 'hidden'
+            document.body.style.position = 'fixed'
+            document.body.style.top = `-${scrollY}px`
+            document.body.style.width = '100%'
+
+            return () => {
+                document.body.style.overflow = origOverflow
+                document.body.style.position = origPosition
+                document.body.style.top = origTop
+                document.body.style.width = origWidth
+                window.scrollTo(0, scrollY)
+            }
+        }
+    }, [isOpen])
+
     // Reverse geocode to get address
     const reverseGeocode = async (lat: number, lng: number) => {
         try {
@@ -153,9 +177,12 @@ export function LocationPicker({ isOpen, onClose, onSelect, initialLocation }: L
     if (!isOpen) return null
 
     return (
-        <div className="fixed inset-0 z-[100] flex flex-col bg-white dark:bg-slate-950 overflow-hidden" style={{ height: '100dvh' }}>
+        <div
+            className="fixed inset-0 z-[100] flex flex-col bg-white dark:bg-slate-950 overflow-hidden"
+            style={{ height: '100dvh', overscrollBehavior: 'none', touchAction: 'none' }}
+        >
             {/* Header */}
-            <div className="flex items-center gap-3 px-4 py-3 border-b border-gray-100 dark:border-slate-800 bg-white dark:bg-slate-950 shrink-0 relative z-20">
+            <div className="flex items-center gap-3 px-4 py-3 border-b border-gray-100 dark:border-slate-800 bg-white dark:bg-slate-950 shrink-0 relative z-20" style={{ touchAction: 'auto' }}>
                 <button onClick={onClose} className="p-2 -ml-2 hover:bg-gray-100 dark:hover:bg-slate-800 rounded-full">
                     <X className="h-5 w-5 text-gray-500" />
                 </button>
@@ -171,7 +198,7 @@ export function LocationPicker({ isOpen, onClose, onSelect, initialLocation }: L
             </div>
 
             {/* Search */}
-            <div className="px-4 py-3 bg-white dark:bg-slate-950 shrink-0 relative z-10 border-b border-gray-50 dark:border-slate-800">
+            <div className="px-4 py-3 bg-white dark:bg-slate-950 shrink-0 relative z-10 border-b border-gray-50 dark:border-slate-800" style={{ touchAction: 'auto' }}>
                 <div className="relative group">
                     <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
                     <input
@@ -214,8 +241,8 @@ export function LocationPicker({ isOpen, onClose, onSelect, initialLocation }: L
             )}
 
             {/* Map Container */}
-            <div className="flex-1 relative bg-gray-50 dark:bg-slate-900 z-0 p-2 pr-4" style={{ minHeight: 0 }}>
-                <div className="h-full w-full rounded-xl overflow-hidden">
+            <div className="flex-1 relative bg-gray-50 dark:bg-slate-900 z-0 p-2 pr-4" style={{ minHeight: 0, touchAction: 'auto' }}>
+                <div className="h-full w-full rounded-xl overflow-hidden" style={{ touchAction: 'auto' }}>
                     <MapContainer
                         center={marker || defaultCenter}
                         zoom={marker ? 16 : 12}
