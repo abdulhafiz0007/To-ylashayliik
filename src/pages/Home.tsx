@@ -14,9 +14,10 @@ interface InvitationCardProps {
     date: string
     location: string
     image?: string
+    onDelete?: (e: React.MouseEvent) => void
 }
 
-function InvitationSmallCard({ title, date, location, image }: InvitationCardProps) {
+function InvitationSmallCard({ title, date, location, image, onDelete }: InvitationCardProps) {
     return (
         <Card className="overflow-hidden border-none shadow-sm dark:bg-slate-800/50 hover:bg-slate-50 dark:hover:bg-slate-800 transition-all group">
             <CardContent className="p-4 flex items-center gap-4">
@@ -39,7 +40,17 @@ function InvitationSmallCard({ title, date, location, image }: InvitationCardPro
                         <span className="truncate">{location}</span>
                     </div>
                 </div>
-                <ChevronRight className="h-5 w-5 text-gray-300 group-hover:text-primary-500 transition-colors" />
+                <div className="flex items-center gap-2">
+                    {onDelete && (
+                        <button
+                            onClick={onDelete}
+                            className="p-2 text-gray-400 hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-xl transition-all"
+                        >
+                            <Plus className="h-5 w-5 rotate-45" />
+                        </button>
+                    )}
+                    <ChevronRight className="h-5 w-5 text-gray-300 group-hover:text-primary-500 transition-colors" />
+                </div>
             </CardContent>
         </Card>
     )
@@ -47,7 +58,7 @@ function InvitationSmallCard({ title, date, location, image }: InvitationCardPro
 
 export function Home() {
     const { t } = useLanguage()
-    const { receivedInvitations } = useInvitation()
+    const { receivedInvitations, refreshReceivedInvitations } = useInvitation()
     const [activeTab, setActiveTab] = useState<'myEvents' | 'invitations'>('myEvents')
     const [invitations, setInvitations] = useState<any[]>([])
     const [loading, setLoading] = useState(true)
@@ -56,19 +67,47 @@ export function Home() {
     const myInvitationIds = new Set(invitations.map(inv => String(inv.id)))
     const filteredReceived = receivedInvitations.filter(inv => !myInvitationIds.has(String(inv.id)))
 
-    useEffect(() => {
-        const fetchMyInvitations = async () => {
-            try {
-                const data = await api.getMyInvitations()
-                setInvitations(data || [])
-            } catch (err) {
-                console.error("Home: Failed to fetch invitations", err)
-            } finally {
-                setLoading(false)
-            }
+    const fetchMyInvitations = async () => {
+        try {
+            const data = await api.getMyInvitations()
+            setInvitations(data || [])
+        } catch (err) {
+            console.error("Home: Failed to fetch invitations", err)
+        } finally {
+            setLoading(false)
         }
+    }
+
+    useEffect(() => {
         fetchMyInvitations()
+        refreshReceivedInvitations()
     }, [])
+
+    const handleTabChange = (tab: 'myEvents' | 'invitations') => {
+        setActiveTab(tab)
+        if (tab === 'myEvents') {
+            fetchMyInvitations()
+        } else {
+            refreshReceivedInvitations()
+        }
+    }
+
+    const handleDelete = async (e: React.MouseEvent, id: string | number) => {
+        e.preventDefault()
+        e.stopPropagation()
+
+        if (!window.confirm(t('deleteConfirm') || "Haqiqatdan ham ushbu taklifnomani o'chirib tashlamoqchimisiz?")) {
+            return
+        }
+
+        try {
+            await api.deleteInvitation(id)
+            fetchMyInvitations() // Refresh list
+        } catch (err) {
+            console.error("Failed to delete invitation", err)
+            alert("O'chirishda xatolik yuz berdi")
+        }
+    }
 
     return (
         <div className="fixed inset-0 flex flex-col bg-background" style={{ height: '100dvh', overflow: 'hidden', overscrollBehavior: 'none' }}>
@@ -103,7 +142,7 @@ export function Home() {
                 {/* Tabs */}
                 <div className="bg-gray-100 dark:bg-slate-900 p-1.5 rounded-2xl flex gap-1 relative overflow-hidden mt-3">
                     <button
-                        onClick={() => setActiveTab('myEvents')}
+                        onClick={() => handleTabChange('myEvents')}
                         className={cn(
                             "flex-1 py-3 px-4 rounded-xl text-sm font-bold transition-all relative z-10",
                             activeTab === 'myEvents' ? "text-gray-900 dark:text-white" : "text-gray-500"
@@ -118,7 +157,7 @@ export function Home() {
                         )}
                     </button>
                     <button
-                        onClick={() => setActiveTab('invitations')}
+                        onClick={() => handleTabChange('invitations')}
                         className={cn(
                             "flex-1 py-2.5 px-4 rounded-xl text-sm font-bold transition-all relative z-10",
                             activeTab === 'invitations' ? "text-gray-900 dark:text-white" : "text-gray-500"
@@ -136,13 +175,7 @@ export function Home() {
             </div>
 
             {/* Scrollable List Content */}
-            <div
-                className="flex-1 overflow-y-auto px-4 pb-20"
-                style={{
-                    overscrollBehavior: 'contain',
-                    maxHeight: 'calc(100svh - 360px)' // Subtraction of header height to force scroll cutoff
-                }}
-            >
+            <div className="flex-1 overflow-y-auto px-4 pb-4" style={{ overscrollBehavior: 'contain' }}>
                 <AnimatePresence mode="wait">
                     {activeTab === 'myEvents' ? (
                         <motion.div
@@ -163,6 +196,7 @@ export function Home() {
                                             title={`${inv.groomName} & ${inv.brideName}`}
                                             date={inv.date}
                                             location={inv.hall || inv.location}
+                                            onDelete={(e) => handleDelete(e, inv.id)}
                                         />
                                     </Link>
                                 ))
@@ -210,6 +244,9 @@ export function Home() {
                     )}
                 </AnimatePresence>
             </div>
+
+            {/* Bottom Spacer for Floating BottomNav */}
+            <div className="shrink-0 h-[100px]" />
         </div>
     )
 }

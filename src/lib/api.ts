@@ -220,6 +220,8 @@ export const api = {
             location: invData.location || "",
             template: templateEnum,
             text: invData.text || invData.message || "",
+            weddingHallLongitude: invData.weddingHallLongitude || 0,
+            weddingHallLatitude: invData.weddingHallLatitude || 0,
         };
 
         // Only add ID if we are UPDATING (avoids alphabetical shift for new records).
@@ -259,6 +261,13 @@ export const api = {
         return list.map(mapBackendToFrontend);
     },
 
+    getReceivedInvitations: async () => {
+        const response = await fetchApi('/api/invitations/received?page=0&size=50&sort=id,desc');
+        console.log("DEBUG: Received invitations response:", response);
+        const list = Array.isArray(response) ? response : (response.content || []);
+        return list.map(mapBackendToFrontend);
+    },
+
     getCount: () => fetchApi('/api/invitations/self/count'),
 
     // User
@@ -275,5 +284,13 @@ export const api = {
             wishText,
             invitation: { id: invitationId }
         })
+    }),
+
+    // Sights (New API)
+    getSights: (invitationId: string | number) => fetchApi(`/api/sights/by-invitation/${invitationId}`),
+
+    // Delete Invitation
+    deleteInvitation: (id: string | number) => fetchApi(`/api/invitations/${id}`, {
+        method: 'DELETE'
     }),
 };

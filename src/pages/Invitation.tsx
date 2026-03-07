@@ -32,12 +32,13 @@ import { WeddingCard } from "../components/WeddingCard"
 export function Invitation() {
     const { id } = useParams<{ id: string }>()
     const { user: tgUser, tg } = useTelegram()
-    const { updateData, addReceivedInvitation, loading: contextLoading, error: contextError } = useInvitation()
+    const { updateData, loading: contextLoading, error: contextError } = useInvitation()
     const { t } = useLanguage()
     const [invitation, setInvitation] = useState<InvitationData | null>(null)
     const [loading, setLoading] = useState(true)
     const [showTemplates, setShowTemplates] = useState(false)
     const [wishes, setWishes] = useState<any[]>([])
+    const [sights, setSights] = useState<any[]>([])
     const [newWish, setNewWish] = useState("")
     const [senderName, setSenderName] = useState("")
     const [isPlaying, setIsPlaying] = useState(false)
@@ -100,13 +101,6 @@ export function Invitation() {
                 if (data) {
                     data.id = data.id || id
                     setInvitation(data)
-
-                    // Only add to received invitations if viewer is NOT the creator
-                    const tgUserId = tgUser?.id?.toString()
-                    const creatorTgId = data.creator?.telegramId?.toString()
-                    if (!tgUserId || !creatorTgId || tgUserId !== creatorTgId) {
-                        addReceivedInvitation(data)
-                    }
                 }
 
                 // Load wishes separately
@@ -119,6 +113,23 @@ export function Invitation() {
                 } catch (err) {
                     console.error("Failed to load wishes:", err)
                     setWishes([])
+                }
+
+                // NEW: Load sights if user is the creator
+                if (data) {
+                    const tgUserId = tgUser?.id?.toString()
+                    const creatorTgId = (data.creator?.telegramId || data.creatorId)?.toString()
+                    if (tgUserId && creatorTgId && tgUserId === creatorTgId) {
+                        try {
+                            const sightsData = await api.getSights(id)
+                            const sightsArray = Array.isArray(sightsData)
+                                ? sightsData
+                                : (sightsData?.content || sightsData?.data || [])
+                            setSights(Array.isArray(sightsArray) ? sightsArray : [])
+                        } catch (err) {
+                            console.error("Failed to load sights:", err)
+                        }
+                    }
                 }
             }
             setLoading(false)
@@ -551,6 +562,49 @@ export function Invitation() {
                         </div>
                     )}
                 </div>
+
+                {/* 👀 Who Viewed Section (Only for Creator) */}
+                {(() => {
+                    const tgUserId = tgUser?.id?.toString()
+                    const creatorTgId = (invitation?.creator?.telegramId || invitation?.creatorId)?.toString()
+                    const isCreator = tgUserId && creatorTgId && tgUserId === creatorTgId
+
+                    if (isCreator && sights.length > 0) {
+                        return (
+                            <div className="space-y-4 pt-6 border-t border-gray-100 dark:border-slate-800">
+                                <h2 className="text-left text-lg font-bold text-gray-900 dark:text-white">
+                                    👀 Kimlar ko'rdi ({sights.length})
+                                </h2>
+                                <div className="flex flex-wrap gap-2 pb-6">
+                                    {sights.map((sight, idx) => {
+                                        const viewer = sight.creator || sight.user
+                                        const name = viewer?.firstname || viewer?.telegramUsername || viewer?.first_name || 'Mehmon'
+                                        const photo = viewer?.photoUrl || viewer?.photo_url
+
+                                        return (
+                                            <div
+                                                key={sight.id || idx}
+                                                className="flex items-center gap-2 bg-white dark:bg-slate-900 px-3 py-1.5 rounded-full border border-gray-100 dark:border-slate-800 shadow-sm"
+                                            >
+                                                <div className="h-6 w-6 rounded-full bg-primary-100 dark:bg-primary-900/30 overflow-hidden flex items-center justify-center text-[10px] font-bold text-primary-600">
+                                                    {photo ? (
+                                                        <img src={photo} alt={name} className="h-full w-full object-cover" />
+                                                    ) : (
+                                                        name[0]?.toUpperCase() || '?'
+                                                    )}
+                                                </div>
+                                                <span className="text-xs font-semibold text-gray-700 dark:text-gray-300">
+                                                    {name}
+                                                </span>
+                                            </div>
+                                        )
+                                    })}
+                                </div>
+                            </div>
+                        )
+                    }
+                    return null
+                })()}
             </div>
 
             {/* Background Texture Overlay */}

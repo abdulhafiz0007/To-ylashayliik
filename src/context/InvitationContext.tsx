@@ -23,6 +23,17 @@ export interface InvitationData {
     text: string
     backgroundMusic: string
     template: string
+    weddingHallLongitude?: number
+    weddingHallLatitude?: number
+    creatorId?: number | string
+    creator?: {
+        id: number | string
+        telegramId: number | string
+        telegramUsername?: string
+        firstname?: string
+        lastname?: string
+        photoUrl?: string
+    }
     [key: string]: unknown;
 }
 
@@ -37,7 +48,7 @@ interface InvitationContextType {
     resetData: () => void
     saveInvitation: (data?: any) => Promise<string | null>
     getInvitation: (id: string) => Promise<InvitationData | null>
-    addReceivedInvitation: (inv: InvitationData) => void
+    refreshReceivedInvitations: () => Promise<void>
 }
 
 const defaultData: InvitationData = {
@@ -71,17 +82,21 @@ export function InvitationProvider({ children }: { children: ReactNode }) {
     const [loading, setLoading] = useState(false)
     const [error, setError] = useState<string | null>(null)
 
-    // Load received invitations from localStorage on mount
+    // Fetch received invitations from backend when current user is set
     useEffect(() => {
-        const saved = localStorage.getItem('received_invitations')
-        if (saved) {
-            try {
-                setReceivedInvitations(JSON.parse(saved))
-            } catch (e) {
-                console.error("Failed to parse received invitations", e)
-            }
+        if (currentUser) {
+            refreshReceivedInvitations()
         }
-    }, [])
+    }, [currentUser])
+
+    const refreshReceivedInvitations = async () => {
+        try {
+            const data = await api.getReceivedInvitations()
+            setReceivedInvitations(data || [])
+        } catch (err) {
+            console.error("Failed to fetch received invitations", err)
+        }
+    }
 
     const updateData = (updates: Partial<InvitationData>) => {
         setData((prev) => ({ ...prev, ...updates }))
@@ -92,19 +107,13 @@ export function InvitationProvider({ children }: { children: ReactNode }) {
         setError(null)
     }
 
+    // This is now handled by the backend sights system, 
+    // so we don't need manual add anymore
+    /*
     const addReceivedInvitation = (inv: InvitationData) => {
-        if (!inv.id) return
-
-        setReceivedInvitations(prev => {
-            // Check if already exists
-            const exists = prev.find(item => String(item.id) === String(inv.id))
-            if (exists) return prev
-
-            const updated = [inv, ...prev]
-            localStorage.setItem('received_invitations', JSON.stringify(updated))
-            return updated
-        })
+        ...
     }
+    */
 
     const saveInvitation = async (overrideData?: any): Promise<string | null> => {
         setLoading(true)
@@ -171,7 +180,7 @@ export function InvitationProvider({ children }: { children: ReactNode }) {
             resetData,
             saveInvitation,
             getInvitation,
-            addReceivedInvitation
+            refreshReceivedInvitations
         }}>
             {children}
         </InvitationContext.Provider>

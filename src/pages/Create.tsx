@@ -825,7 +825,11 @@ export function Create() {
                 onClose={() => setShowLocationPicker(false)}
                 onSelect={(loc) => {
                     setSelectedLocation(loc)
-                    updateData({ location: loc.address })
+                    updateData({
+                        location: loc.address,
+                        weddingHallLatitude: loc.lat,
+                        weddingHallLongitude: loc.lng
+                    })
                 }}
                 initialLocation={selectedLocation}
             />
