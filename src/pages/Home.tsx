@@ -277,9 +277,6 @@ export function Home() {
                                     <Trash2 className="h-8 w-8 text-red-500" />
                                 </div>
                                 <h3 className="text-xl font-black text-gray-900 dark:text-white mb-2">Haqiqatdan ham o'chirmoqchimisiz?</h3>
-                                <p className="text-sm text-gray-500 dark:text-gray-400 mb-8 leading-relaxed">
-                                    Ushbu taklifnoma butunlay o'chib ketadi. Amallarni ortga qaytarib bo'lmaydi.
-                                </p>
 
                                 <div className="grid grid-cols-2 gap-3">
                                     <Button

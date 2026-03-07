@@ -1,6 +1,6 @@
 import type { InvitationData } from "../context/InvitationContext"
 import type { TemplateConfig } from "../lib/templates"
-import { Clock, MapPin, Calendar, Heart, Star, Flower2, Diamond, Sparkles } from "lucide-react"
+import { Clock, MapPin, Calendar, Heart, Star, Flower2, Diamond, Sparkles, Building2 } from "lucide-react"
 import { useLanguage } from "../context/LanguageContext"
 import { cn } from "../lib/utils"
 import defaultGroom from "../assets/default_groom.jpg"
@@ -596,7 +596,7 @@ function ToylashaylikTheme({ invitation }: { invitation: Partial<InvitationData>
 
             {/* Main Info Card */}
             <div className="w-full bg-white dark:bg-slate-900 rounded-[32px] p-6 shadow-[0_20px_40px_-10px_rgba(244,114,182,0.15)] space-y-5 border border-white dark:border-slate-800">
-                <div className="flex flex-col items-center gap-1 mb-1">
+                <div className="flex flex-col items-center gap-1 mb-3">
                     <div className="h-10 w-10 bg-gradient-to-br from-orange-400 to-red-500 rounded-2xl flex items-center justify-center shadow-lg transform rotate-3">
                         <Calendar className="h-5 w-5 text-white" />
                     </div>
@@ -626,7 +626,7 @@ function ToylashaylikTheme({ invitation }: { invitation: Partial<InvitationData>
                 {/* Location Box */}
                 <div className="bg-[#fffbeb] dark:bg-orange-900/10 rounded-2xl p-4 flex items-center gap-4 border border-orange-50 dark:border-orange-900/20">
                     <div className="h-10 w-10 bg-orange-100 dark:bg-orange-900/30 rounded-full flex items-center justify-center shrink-0">
-                        <MapPin className="h-5 w-5 text-orange-500" />
+                        <Building2 className="h-5 w-5 text-orange-500" />
                     </div>
                     <div className="flex-1 min-w-0">
                         <p className="text-sm font-bold text-gray-800 dark:text-white truncate">

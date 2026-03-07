@@ -427,7 +427,7 @@ export function Invitation() {
                 )}
                 {/* Map Selection Modal */}
                 {showMapOptions && (
-                    <div className="fixed inset-0 z-[1000] flex items-center justify-center p-4 px-[20%]">
+                    <div className="fixed inset-0 z-[1000] flex items-center justify-center p-4 px-[15%]">
                         <motion.div
                             initial={{ opacity: 0 }}
                             animate={{ opacity: 1 }}
@@ -524,7 +524,7 @@ export function Invitation() {
                 )}
 
                 {/* 💌 Send Your Wishes */}
-                <div className="space-y-4">
+                <div className="space-y-4 mt-[30px]">
                     <h2 className="text-left text-lg font-bold text-gray-900 dark:text-white flex items-center gap-2">
                         <Mail className="h-5 w-5 text-pink-500" />
                         Send Your Wishes
