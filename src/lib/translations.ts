@@ -83,7 +83,8 @@ export const translations = {
         dateOfBirth: "Tug'ilgan sana",
         premiumDesigns: "Premium dizaynlar",
         digitalWorld: "Elegant va raqamli taklifnomalar olami",
-        noReceivedInvitations: "Hozircha qabul qilingan taklifnomalar yo'q"
+        noReceivedInvitations: "Hozircha qabul qilingan taklifnomalar yo'q",
+        viewOnMap: "Xaritada ko'rish"
     },
     ru: {
         appName: "To'ylashaylik",
@@ -167,7 +168,8 @@ export const translations = {
         dateOfBirth: "Дата рождения",
         premiumDesigns: "Премиум дизайны",
         digitalWorld: "Мир элегантных цифровых приглашений",
-        noReceivedInvitations: "Принятых приглашений пока нет"
+        noReceivedInvitations: "Принятых приглашений пока нет",
+        viewOnMap: "Посмотреть на карте"
     },
     en: {
         appName: "To'ylashaylik",
@@ -251,6 +253,7 @@ export const translations = {
         dateOfBirth: "Date of Birth",
         premiumDesigns: "Premium Designs",
         digitalWorld: "World of elegant digital invitations",
-        noReceivedInvitations: "No received invitations yet"
+        noReceivedInvitations: "No received invitations yet",
+        viewOnMap: "View on Map"
     },
 };

@@ -137,7 +137,16 @@ export function Create() {
     const [showMusicList, setShowMusicList] = useState(false)
     const [showLocationPicker, setShowLocationPicker] = useState(false)
     const musicListRef = useRef<HTMLDivElement>(null)
-    const [selectedLocation, setSelectedLocation] = useState<{ lat: number; lng: number; address: string } | null>(null)
+    const [selectedLocation, setSelectedLocation] = useState<{ lat: number; lng: number; address: string } | null>(() => {
+        if (data.weddingHallLatitude && data.weddingHallLongitude) {
+            return {
+                lat: Number(data.weddingHallLatitude),
+                lng: Number(data.weddingHallLongitude),
+                address: data.location || ""
+            }
+        }
+        return null
+    })
 
     // Reset data when entering creation flow to avoid stale photos/info
     useEffect(() => {

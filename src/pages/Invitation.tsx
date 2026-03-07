@@ -3,7 +3,7 @@ import { useParams, Link } from "react-router-dom"
 import { useInvitation, type InvitationData } from "../context/InvitationContext"
 import { Button } from "../components/ui/Button"
 import { Input } from "../components/ui/Input"
-import { Download, Share2, Heart, Music, X, VolumeX } from 'lucide-react'
+import { Download, Share2, Heart, Music, X, VolumeX, MapPin } from 'lucide-react'
 
 
 // Import music assets
@@ -304,8 +304,17 @@ export function Invitation() {
         }
     }
 
+    const handleOpenMap = () => {
+        if (invitation?.weddingHallLatitude && invitation?.weddingHallLongitude) {
+            const url = `https://www.google.com/maps/search/?api=1&query=${invitation.weddingHallLatitude},${invitation.weddingHallLongitude}`
+            window.open(url, '_blank')
+        }
+    }
 
-
+    const tgUserId = tgUser?.id?.toString()
+    const creatorTgId = (invitation?.creator?.telegramId || invitation?.creatorId)?.toString()
+    const isCreator = tgUserId && creatorTgId && tgUserId === creatorTgId
+    const hasCoords = invitation?.weddingHallLatitude && invitation?.weddingHallLongitude
 
     return (
         <div className="min-h-screen flex flex-col items-center relative pb-10 bg-gradient-to-b from-[#fff5f5] via-[#fffdf9] to-[#fffef2] dark:from-slate-950 dark:to-slate-900 transition-colors duration-500 overflow-y-auto overflow-x-hidden">
@@ -405,24 +414,41 @@ export function Invitation() {
 
             {/* Actions & Wishes Section - Below Card */}
             <div className="w-full max-w-[420px] px-6 space-y-8 pb-32 relative z-10">
-                {/* Download & Share Actions */}
-                <div className="flex gap-3 mt-8">
-                    <Button
-                        variant="ghost"
-                        className="flex-1 h-12 rounded-2xl bg-white/70 dark:bg-slate-900/80 backdrop-blur-xl border border-gray-100 dark:border-slate-800 font-bold text-gray-600 dark:text-gray-300 gap-2 shadow-sm"
-                        onClick={handleDownload}
-                    >
-                        <Download className="h-5 w-5 text-pink-500" />
-                        <span>{t('save')}</span>
-                    </Button>
-                    <Button
-                        className="flex-1 h-12 rounded-2xl bg-[#ec4899] hover:bg-[#db2777] text-white font-bold shadow-lg shadow-pink-200 gap-2"
-                        onClick={handleShare}
-                    >
-                        <Share2 className="h-5 w-5 fill-current" />
-                        <span>{t('share')}</span>
-                    </Button>
-                </div>
+                {/* Download & Share Actions (Only for Creator) */}
+                {isCreator ? (
+                    <div className="flex gap-3 mt-8">
+                        <Button
+                            variant="ghost"
+                            className="flex-1 h-12 rounded-2xl bg-white/70 dark:bg-slate-900/80 backdrop-blur-xl border border-gray-100 dark:border-slate-800 font-bold text-gray-600 dark:text-gray-300 gap-2 shadow-sm"
+                            onClick={handleDownload}
+                        >
+                            <Download className="h-5 w-5 text-pink-500" />
+                            <span>{t('save')}</span>
+                        </Button>
+                        <Button
+                            className="flex-1 h-12 rounded-2xl bg-[#ec4899] hover:bg-[#db2777] text-white font-bold shadow-lg shadow-pink-200 gap-2"
+                            onClick={handleShare}
+                        >
+                            <Share2 className="h-5 w-5 fill-current" />
+                            <span>{t('share')}</span>
+                        </Button>
+                    </div>
+                ) : (
+                    /* View on Map Action (For Guests if coordinates exist) */
+                    hasCoords && (
+                        <div className="mt-8">
+                            <Button
+                                className="w-full h-14 rounded-2xl bg-gradient-to-r from-blue-500 to-indigo-600 hover:from-blue-600 hover:to-indigo-700 text-white font-extrabold shadow-lg shadow-blue-100 flex items-center justify-center gap-3 text-lg transition-all active:scale-[0.98]"
+                                onClick={handleOpenMap}
+                            >
+                                <div className="bg-white/20 p-2 rounded-xl">
+                                    <MapPin className="h-6 w-6 text-white" />
+                                </div>
+                                <span>{t('viewOnMap')}</span>
+                            </Button>
+                        </div>
+                    )
+                )}
 
                 {/* 💌 Send Your Wishes */}
                 <div className="space-y-4">
@@ -565,10 +591,6 @@ export function Invitation() {
 
                 {/* 👀 Who Viewed Section (Only for Creator) */}
                 {(() => {
-                    const tgUserId = tgUser?.id?.toString()
-                    const creatorTgId = (invitation?.creator?.telegramId || invitation?.creatorId)?.toString()
-                    const isCreator = tgUserId && creatorTgId && tgUserId === creatorTgId
-
                     if (isCreator && sights.length > 0) {
                         return (
                             <div className="space-y-4 pt-6 border-t border-gray-100 dark:border-slate-800">
