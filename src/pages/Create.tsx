@@ -775,7 +775,7 @@ export function Create() {
                                             ? "bg-primary-400 text-white border-primary-400 group-hover:bg-primary-500 group-hover:border-primary-500"
                                             : "bg-white dark:bg-slate-900 text-gold-400 border-gold-200 dark:border-slate-700 group-hover:border-gold-300"
                                 )}>
-                                    {currentStep > idx ? '✓' : idx + 1}
+                                    {currentStep > idx ? <Check className="h-5 w-5 stroke-[4]" /> : idx + 1}
                                 </div>
                                 <span className={cn(
                                     "text-[10px] sm:text-xs mt-2 font-medium text-center max-w-[80px] transition-colors",

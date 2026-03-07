@@ -3,7 +3,7 @@ import { useParams, Link } from "react-router-dom"
 import { useInvitation, type InvitationData } from "../context/InvitationContext"
 import { Button } from "../components/ui/Button"
 import { Input } from "../components/ui/Input"
-import { Download, Share2, Heart, Music, X, VolumeX, MapPin } from 'lucide-react'
+import { Download, Share2, Heart, Music, X, VolumeX, MapPin, Mail, Sparkles, Clock, User, Eye, ChevronRight } from 'lucide-react'
 
 
 // Import music assets
@@ -42,6 +42,7 @@ export function Invitation() {
     const [newWish, setNewWish] = useState("")
     const [senderName, setSenderName] = useState("")
     const [isPlaying, setIsPlaying] = useState(false)
+    const [showMapOptions, setShowMapOptions] = useState(false)
     const audioRef = useRef<HTMLAudioElement | null>(null)
 
     // Ref for the invitation card to capture as image
@@ -306,9 +307,31 @@ export function Invitation() {
 
     const handleOpenMap = () => {
         if (invitation?.weddingHallLatitude && invitation?.weddingHallLongitude) {
-            const url = `https://www.google.com/maps/search/?api=1&query=${invitation.weddingHallLatitude},${invitation.weddingHallLongitude}`
-            window.open(url, '_blank')
+            setShowMapOptions(true)
         }
+    }
+
+    const openDeepLink = (type: 'google' | 'yandex') => {
+        if (!invitation?.weddingHallLatitude || !invitation?.weddingHallLongitude) return
+
+        const lat = invitation.weddingHallLatitude
+        const lng = invitation.weddingHallLongitude
+
+        let url = ""
+        if (type === 'google') {
+            url = `https://www.google.com/maps/search/?api=1&query=${lat},${lng}`
+        } else {
+            // Yandex Maps LBS (location based service) url
+            url = `yandexmaps://maps.yandex.ru/?pt=${lng},${lat}&z=16&l=map`
+            // Fallback for browser if app not installed
+            const fallbackUrl = `https://yandex.com/maps/?pt=${lng},${lat}&z=16&l=map`
+
+            // Try to open app, if it fails (not easy to check in web), we just open the link
+            // For web, we usually just provide the web link or a more complex intent
+            url = fallbackUrl
+        }
+        window.open(url, '_blank')
+        setShowMapOptions(false)
     }
 
     const tgUserId = tgUser?.id?.toString()
@@ -402,7 +425,65 @@ export function Invitation() {
                         </motion.div>
                     </>
                 )}
+                {/* Map Selection Modal */}
+                {showMapOptions && (
+                    <div className="fixed inset-0 z-[1000] flex items-center justify-center p-4">
+                        <motion.div
+                            initial={{ opacity: 0 }}
+                            animate={{ opacity: 1 }}
+                            exit={{ opacity: 0 }}
+                            className="absolute inset-0 bg-black/60 backdrop-blur-sm"
+                            onClick={() => setShowMapOptions(false)}
+                        />
+                        <motion.div
+                            initial={{ opacity: 0, scale: 0.9, y: 20 }}
+                            animate={{ opacity: 1, scale: 1, y: 0 }}
+                            exit={{ opacity: 0, scale: 0.9, y: 20 }}
+                            className="bg-white dark:bg-slate-900 w-full max-w-sm rounded-[32px] overflow-hidden relative z-10 shadow-2xl"
+                        >
+                            <div className="p-6 text-center space-y-4">
+                                <div className="h-14 w-14 bg-blue-50 dark:bg-blue-900/20 rounded-2xl flex items-center justify-center mx-auto mb-2">
+                                    <MapPin className="h-7 w-7 text-blue-500" />
+                                </div>
+                                <h3 className="text-xl font-black text-gray-900 dark:text-white">Xaritani tanlang</h3>
+                                <p className="text-sm text-gray-500 dark:text-gray-400">Manzilni qaysi xarita orqali ko'rmoqchisiz?</p>
+
+                                <div className="grid grid-cols-1 gap-3 pt-2">
+                                    <button
+                                        onClick={() => openDeepLink('google')}
+                                        className="w-full h-14 rounded-2xl bg-white dark:bg-slate-800 border-2 border-slate-100 dark:border-slate-800 flex items-center gap-4 px-6 hover:border-blue-400 transition-all group"
+                                    >
+                                        <div className="h-8 w-8 rounded-lg overflow-hidden shrink-0">
+                                            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/3/39/Google_Maps_icon_%282020%29.svg/1024px-Google_Maps_icon_%282020%29.svg.png" alt="Google" className="h-full w-full object-contain" />
+                                        </div>
+                                        <span className="font-bold text-gray-800 dark:text-gray-200">Google Maps</span>
+                                        <ChevronRight className="h-5 w-5 ml-auto text-gray-300 group-hover:text-blue-500" />
+                                    </button>
+
+                                    <button
+                                        onClick={() => openDeepLink('yandex')}
+                                        className="w-full h-14 rounded-2xl bg-white dark:bg-slate-800 border-2 border-slate-100 dark:border-slate-800 flex items-center gap-4 px-6 hover:border-red-400 transition-all group"
+                                    >
+                                        <div className="h-8 w-8 rounded-lg overflow-hidden shrink-0">
+                                            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/4/44/Yandex_Maps_icon.svg/1024px-Yandex_Maps_icon.svg.png" alt="Yandex" className="h-full w-full object-contain" />
+                                        </div>
+                                        <span className="font-bold text-gray-800 dark:text-gray-200">Yandex Maps</span>
+                                        <ChevronRight className="h-5 w-5 ml-auto text-gray-300 group-hover:text-red-500" />
+                                    </button>
+                                </div>
+
+                                <button
+                                    onClick={() => setShowMapOptions(false)}
+                                    className="w-full py-3 text-sm font-bold text-gray-400 hover:text-gray-600 transition-colors"
+                                >
+                                    Bekor qilish
+                                </button>
+                            </div>
+                        </motion.div>
+                    </div>
+                )}
             </AnimatePresence>
+
 
             {/* Main Content View */}
             <WeddingCard
@@ -438,7 +519,7 @@ export function Invitation() {
                     hasCoords && (
                         <div className="mt-8">
                             <Button
-                                className="w-full h-14 rounded-2xl bg-gradient-to-r from-blue-500 to-indigo-600 hover:from-blue-600 hover:to-indigo-700 text-white font-extrabold shadow-lg shadow-blue-100 flex items-center justify-center gap-3 text-lg transition-all active:scale-[0.98]"
+                                className="w-full h-14 rounded-2xl bg-gradient-to-r bg-[#ec4899] hover:bg-[#db2777] text-white font-extrabold shadow-lg shadow-blue-100 flex items-center justify-center gap-3 text-lg transition-all active:scale-[0.98]"
                                 onClick={handleOpenMap}
                             >
                                 <div className="bg-white/20 p-2 rounded-xl">
@@ -452,7 +533,10 @@ export function Invitation() {
 
                 {/* 💌 Send Your Wishes */}
                 <div className="space-y-4">
-                    <h2 className="text-left text-lg font-bold text-gray-900 dark:text-white">💌 Send Your Wishes</h2>
+                    <h2 className="text-left text-lg font-bold text-gray-900 dark:text-white flex items-center gap-2">
+                        <Mail className="h-5 w-5 text-pink-500" />
+                        Send Your Wishes
+                    </h2>
 
                     <div className="bg-white dark:bg-slate-900 rounded-2xl p-5 shadow-sm border border-gray-100 dark:border-slate-800 space-y-3">
                         <Input
@@ -469,17 +553,20 @@ export function Invitation() {
                         />
                         <Button
                             onClick={handlePostWish}
-                            className="w-full h-11 rounded-xl bg-gradient-to-r from-pink-500 to-purple-500 hover:from-pink-600 hover:to-purple-600 text-white font-bold shadow-md"
+                            className="w-full h-11 rounded-xl bg-gradient-to-r from-pink-500 to-purple-500 hover:from-pink-600 hover:to-purple-600 text-white font-bold shadow-md flex items-center justify-center gap-2"
                             disabled={!newWish.trim() || !senderName.trim()}
                         >
-                            Send Wish 💖
+                            Send Wish <Heart className="h-4 w-4 fill-current" />
                         </Button>
                     </div>
                 </div>
 
                 {/* ✨ Guest Wishes */}
                 <div className="space-y-4">
-                    <h2 className="text-left text-lg font-bold text-gray-900 dark:text-white">✨ Guest Wishes</h2>
+                    <h2 className="text-left text-lg font-bold text-gray-900 dark:text-white flex items-center gap-2">
+                        <Sparkles className="h-5 w-5 text-gold-500" />
+                        Guest Wishes
+                    </h2>
 
                     {!Array.isArray(wishes) || wishes.length === 0 ? (
                         <p className="text-center text-gray-400 italic py-6">{t('noReceivedInvitations')}</p>
@@ -562,12 +649,14 @@ export function Invitation() {
                                                     href={profileLink}
                                                     target="_blank"
                                                     rel="noopener noreferrer"
-                                                    className="font-bold text-gray-900 dark:text-white hover:text-pink-500 transition-colors"
+                                                    className="font-bold text-gray-900 dark:text-white hover:text-pink-500 transition-colors flex items-center gap-1.5"
                                                 >
-                                                    👤 {displayName}
+                                                    <User className="h-4 w-4 text-gray-400" /> {displayName}
                                                 </a>
                                             ) : (
-                                                <p className="font-bold text-gray-900 dark:text-white">👤 {displayName}</p>
+                                                <p className="font-bold text-gray-900 dark:text-white flex items-center gap-1.5">
+                                                    <User className="h-4 w-4 text-gray-400" /> {displayName}
+                                                </p>
                                             )}
                                         </div>
 
@@ -578,8 +667,8 @@ export function Invitation() {
 
                                         {/* Timestamp */}
                                         {timeAgo && (
-                                            <p className="text-xs text-gray-400 dark:text-gray-500 pl-1">
-                                                🕒 {timeAgo}
+                                            <p className="text-xs text-gray-400 dark:text-gray-500 pl-1 flex items-center gap-1">
+                                                <Clock className="h-3 w-3" /> {timeAgo}
                                             </p>
                                         )}
                                     </div>
@@ -594,8 +683,9 @@ export function Invitation() {
                     if (isCreator && sights.length > 0) {
                         return (
                             <div className="space-y-4 pt-6 border-t border-gray-100 dark:border-slate-800">
-                                <h2 className="text-left text-lg font-bold text-gray-900 dark:text-white">
-                                    👀 Kimlar ko'rdi ({sights.length})
+                                <h2 className="text-left text-lg font-bold text-gray-900 dark:text-white flex items-center gap-2">
+                                    <Eye className="h-5 w-5 text-primary-500" />
+                                    Kimlar ko'rdi ({sights.length})
                                 </h2>
                                 <div className="flex flex-wrap gap-2 pb-6">
                                     {sights.map((sight, idx) => {
