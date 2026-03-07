@@ -4,7 +4,7 @@ import { useInvitation } from "../context/InvitationContext"
 import { Button } from "../components/ui/Button"
 import { Input } from "../components/ui/Input"
 import { Card, CardContent, CardFooter } from "../components/ui/Card"
-import { Calendar, MapPin, MessageSquare, Users, Clock, Camera, ChevronRight, ChevronLeft, Music, Play, Pause, Volume2, VolumeX, Cake, X, Check, ZoomIn, Map } from "lucide-react"
+import { Calendar, MapPin, MessageSquare, Users, Clock, Camera, ChevronRight, ChevronLeft, Music, Play, Pause, Volume2, VolumeX, Cake, X, Check, ZoomIn, Map, Building2 } from "lucide-react"
 import { useLanguage } from "../context/LanguageContext"
 import { cn } from "../lib/utils"
 import { useTelegram } from "../hooks/useTelegram"
@@ -490,7 +490,7 @@ export function Create() {
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                             <div className="space-y-2">
                                 <label className="text-sm font-medium flex items-center gap-2">
-                                    <MapPin className="h-4 w-4" /> {t('hall')}
+                                    <Building2 className="h-4 w-4" /> {t('hall')}
                                 </label>
                                 <Input
                                     placeholder="Zarafshon Tantanalar Saroyi"

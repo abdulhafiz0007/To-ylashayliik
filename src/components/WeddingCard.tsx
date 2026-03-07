@@ -174,7 +174,6 @@ function ClassicRoyale({ invitation }: { invitation: Partial<InvitationData> }) 
                     <MapPin className="h-4 w-4 mt-0.5 shrink-0 opacity-60" />
                     <div className="text-center">
                         <p className="font-black text-sm">{invitation.hall || "Zarafshon Saroyi"}</p>
-                        <p className="text-[10px] opacity-60 mt-0.5">{invitation.location || "Manzil ko'rsatilmagan"}</p>
                     </div>
                 </div>
             </div>
@@ -252,12 +251,8 @@ function ModernMinimal({ invitation }: { invitation: Partial<InvitationData> }) 
                     <p className="text-[9px] uppercase tracking-widest text-slate-500 font-black">Vaqt</p>
                 </div>
                 <div className="flex flex-col items-center py-6 gap-1 bg-slate-50/50">
-                    <MapPin className="h-4 w-4 text-slate-400 mb-1" />
                     <p className="text-xs font-black text-slate-900 leading-tight text-center px-2">
                         {invitation.hall || "Zarafshon"}
-                    </p>
-                    <p className="text-[8px] text-slate-500 text-center px-2 leading-tight font-bold">
-                        {invitation.location?.split(',')[0] || "Toshkent"}
                     </p>
                 </div>
             </div>
@@ -369,7 +364,6 @@ function GardenBliss({ invitation }: { invitation: Partial<InvitationData> }) {
                     <div className="flex-1 min-w-0">
                         <p className="text-[8px] uppercase tracking-widest text-slate-400 font-bold">Manzil</p>
                         <p className="font-black text-slate-800 text-sm truncate">{invitation.hall || "Zarafshon Saroyi"}</p>
-                        <p className="text-[10px] text-slate-400 leading-tight">{invitation.location || "Toshkent"}</p>
                     </div>
                 </div>
             </div>
@@ -502,7 +496,6 @@ function MidnightStar({ invitation }: { invitation: Partial<InvitationData> }) {
                         <MapPin className="h-4 w-4 text-amber-400 shrink-0" />
                         <div className="min-w-0 flex-1">
                             <p className="font-black text-amber-100 text-sm">{invitation.hall || "Zarafshon Saroyi"}</p>
-                            <p className="text-[10px] text-slate-400">{invitation.location || "Toshkent"}</p>
                         </div>
                     </div>
                 </div>
@@ -638,9 +631,6 @@ function ToylashaylikTheme({ invitation }: { invitation: Partial<InvitationData>
                     <div className="flex-1 min-w-0">
                         <p className="text-sm font-bold text-gray-800 dark:text-white truncate">
                             {invitation?.hall || 'Mumtoz to\'yxonasi'}
-                        </p>
-                        <p className="text-[10px] text-gray-500 dark:text-gray-400 truncate leading-tight mt-0.5">
-                            {invitation?.location}
                         </p>
                     </div>
                 </div>

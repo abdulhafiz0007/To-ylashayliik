@@ -3,7 +3,7 @@ import { useParams, Link } from "react-router-dom"
 import { useInvitation, type InvitationData } from "../context/InvitationContext"
 import { Button } from "../components/ui/Button"
 import { Input } from "../components/ui/Input"
-import { Download, Share2, Heart, Music, X, VolumeX, MapPin, Mail, Sparkles, Clock, User, Eye, ChevronRight } from 'lucide-react'
+import { Download, Share2, Heart, Music, X, VolumeX, MapPin, Mail, Sparkles, Clock, User, Eye, ChevronRight, SendHorizontal } from 'lucide-react'
 
 
 // Import music assets
@@ -427,7 +427,7 @@ export function Invitation() {
                 )}
                 {/* Map Selection Modal */}
                 {showMapOptions && (
-                    <div className="fixed inset-0 z-[1000] flex items-center justify-center p-4">
+                    <div className="fixed inset-0 z-[1000] flex items-center justify-center p-4 px-[20%]">
                         <motion.div
                             initial={{ opacity: 0 }}
                             animate={{ opacity: 1 }}
@@ -445,17 +445,12 @@ export function Invitation() {
                                 <div className="h-14 w-14 bg-blue-50 dark:bg-blue-900/20 rounded-2xl flex items-center justify-center mx-auto mb-2">
                                     <MapPin className="h-7 w-7 text-blue-500" />
                                 </div>
-                                <h3 className="text-xl font-black text-gray-900 dark:text-white">Xaritani tanlang</h3>
-                                <p className="text-sm text-gray-500 dark:text-gray-400">Manzilni qaysi xarita orqali ko'rmoqchisiz?</p>
 
                                 <div className="grid grid-cols-1 gap-3 pt-2">
                                     <button
                                         onClick={() => openDeepLink('google')}
                                         className="w-full h-14 rounded-2xl bg-white dark:bg-slate-800 border-2 border-slate-100 dark:border-slate-800 flex items-center gap-4 px-6 hover:border-blue-400 transition-all group"
                                     >
-                                        <div className="h-8 w-8 rounded-lg overflow-hidden shrink-0">
-                                            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/3/39/Google_Maps_icon_%282020%29.svg/1024px-Google_Maps_icon_%282020%29.svg.png" alt="Google" className="h-full w-full object-contain" />
-                                        </div>
                                         <span className="font-bold text-gray-800 dark:text-gray-200">Google Maps</span>
                                         <ChevronRight className="h-5 w-5 ml-auto text-gray-300 group-hover:text-blue-500" />
                                     </button>
@@ -464,9 +459,6 @@ export function Invitation() {
                                         onClick={() => openDeepLink('yandex')}
                                         className="w-full h-14 rounded-2xl bg-white dark:bg-slate-800 border-2 border-slate-100 dark:border-slate-800 flex items-center gap-4 px-6 hover:border-red-400 transition-all group"
                                     >
-                                        <div className="h-8 w-8 rounded-lg overflow-hidden shrink-0">
-                                            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/4/44/Yandex_Maps_icon.svg/1024px-Yandex_Maps_icon.svg.png" alt="Yandex" className="h-full w-full object-contain" />
-                                        </div>
                                         <span className="font-bold text-gray-800 dark:text-gray-200">Yandex Maps</span>
                                         <ChevronRight className="h-5 w-5 ml-auto text-gray-300 group-hover:text-red-500" />
                                     </button>
@@ -556,7 +548,7 @@ export function Invitation() {
                             className="w-full h-11 rounded-xl bg-gradient-to-r from-pink-500 to-purple-500 hover:from-pink-600 hover:to-purple-600 text-white font-bold shadow-md flex items-center justify-center gap-2"
                             disabled={!newWish.trim() || !senderName.trim()}
                         >
-                            Send Wish <Heart className="h-4 w-4 fill-current" />
+                            {t('send')} <SendHorizontal className="h-4 w-4" />
                         </Button>
                     </div>
                 </div>

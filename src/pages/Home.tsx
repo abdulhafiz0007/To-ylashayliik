@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react"
 import { Link } from "react-router-dom"
 import { AnimatePresence, motion } from "framer-motion"
-import { Plus, Calendar, MapPin, ChevronRight, Heart } from "lucide-react"
+import { Plus, Calendar, MapPin, ChevronRight, Heart, Trash2 } from "lucide-react"
 import { useLanguage } from "../context/LanguageContext"
 import { useInvitation } from "../context/InvitationContext"
 import { api } from "../lib/api"
@@ -62,6 +62,8 @@ export function Home() {
     const [activeTab, setActiveTab] = useState<'myEvents' | 'invitations'>('myEvents')
     const [invitations, setInvitations] = useState<any[]>([])
     const [loading, setLoading] = useState(true)
+    const [deleteModal, setDeleteModal] = useState<{ show: boolean; id: string | number | null }>({ show: false, id: null })
+    const [isDeleting, setIsDeleting] = useState(false)
 
     // Filter received invitations to exclude user's own created invitations
     const myInvitationIds = new Set(invitations.map(inv => String(inv.id)))
@@ -92,20 +94,25 @@ export function Home() {
         }
     }
 
-    const handleDelete = async (e: React.MouseEvent, id: string | number) => {
+    const handleDelete = (e: React.MouseEvent, id: string | number) => {
         e.preventDefault()
         e.stopPropagation()
+        setDeleteModal({ show: true, id })
+    }
 
-        if (!window.confirm(t('deleteConfirm') || "Haqiqatdan ham ushbu taklifnomani o'chirib tashlamoqchimisiz?")) {
-            return
-        }
+    const confirmDelete = async () => {
+        if (!deleteModal.id) return
 
+        setIsDeleting(true)
         try {
-            await api.deleteInvitation(id)
-            fetchMyInvitations() // Refresh list
+            await api.deleteInvitation(deleteModal.id)
+            setDeleteModal({ show: false, id: null })
+            fetchMyInvitations()
         } catch (err) {
             console.error("Failed to delete invitation", err)
             alert("O'chirishda xatolik yuz berdi")
+        } finally {
+            setIsDeleting(false)
         }
     }
 
@@ -247,6 +254,59 @@ export function Home() {
 
             {/* Bottom Spacer for Floating BottomNav */}
             <div className="shrink-0 h-[100px]" />
+
+            {/* Custom Delete Modal */}
+            <AnimatePresence>
+                {deleteModal.show && (
+                    <div className="fixed inset-0 z-[9999] flex items-center justify-center p-6">
+                        <motion.div
+                            initial={{ opacity: 0 }}
+                            animate={{ opacity: 1 }}
+                            exit={{ opacity: 0 }}
+                            className="absolute inset-0 bg-slate-950/40 backdrop-blur-sm"
+                            onClick={() => !isDeleting && setDeleteModal({ show: false, id: null })}
+                        />
+                        <motion.div
+                            initial={{ opacity: 0, scale: 0.9, y: 20 }}
+                            animate={{ opacity: 1, scale: 1, y: 0 }}
+                            exit={{ opacity: 0, scale: 0.9, y: 20 }}
+                            className="bg-white dark:bg-slate-900 w-full max-w-sm rounded-[32px] overflow-hidden relative z-10 shadow-2xl border border-slate-100 dark:border-slate-800"
+                        >
+                            <div className="p-8 text-center">
+                                <div className="h-16 w-16 bg-red-50 dark:bg-red-900/20 rounded-2xl flex items-center justify-center mx-auto mb-6">
+                                    <Trash2 className="h-8 w-8 text-red-500" />
+                                </div>
+                                <h3 className="text-xl font-black text-gray-900 dark:text-white mb-2">Haqiqatdan ham o'chirmoqchimisiz?</h3>
+                                <p className="text-sm text-gray-500 dark:text-gray-400 mb-8 leading-relaxed">
+                                    Ushbu taklifnoma butunlay o'chib ketadi. Amallarni ortga qaytarib bo'lmaydi.
+                                </p>
+
+                                <div className="grid grid-cols-2 gap-3">
+                                    <Button
+                                        variant="ghost"
+                                        className="h-13 rounded-2xl font-bold bg-slate-50 dark:bg-slate-800 text-gray-600 dark:text-gray-300"
+                                        onClick={() => setDeleteModal({ show: false, id: null })}
+                                        disabled={isDeleting}
+                                    >
+                                        Bekor qilish
+                                    </Button>
+                                    <Button
+                                        className="h-13 rounded-2xl font-black bg-red-500 hover:bg-red-600 text-white shadow-lg shadow-red-100 dark:shadow-none flex items-center justify-center gap-2"
+                                        onClick={confirmDelete}
+                                        disabled={isDeleting}
+                                    >
+                                        {isDeleting ? (
+                                            <div className="h-4 w-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                                        ) : (
+                                            "O'chirish"
+                                        )}
+                                    </Button>
+                                </div>
+                            </div>
+                        </motion.div>
+                    </div>
+                )}
+            </AnimatePresence>
         </div>
     )
 }
