@@ -18,10 +18,11 @@ interface InvitationCardProps {
     location: string
     groomPicture?: string
     bridePicture?: string
-    onMenu: (e: React.MouseEvent, id: string | number) => void
+    showMenu?: boolean
+    onMenu?: (e: React.MouseEvent, id: string | number) => void
 }
 
-function InvitationSmallCard({ id, title, date, location, groomPicture, bridePicture, onMenu }: InvitationCardProps) {
+function InvitationSmallCard({ id, title, date, location, groomPicture, bridePicture, showMenu = true, onMenu }: InvitationCardProps) {
     return (
         <Card className="overflow-hidden border-none shadow-sm dark:bg-slate-800/50 hover:bg-slate-50 dark:hover:bg-slate-800 transition-all group relative">
             <CardContent className="p-4 flex items-center gap-4">
@@ -29,10 +30,20 @@ function InvitationSmallCard({ id, title, date, location, groomPicture, bridePic
                 <div className="h-16 w-16 relative flex-shrink-0">
                     <div className="relative h-full w-full">
                         <div className="absolute top-0 right-0 h-11 w-11 rounded-xl overflow-hidden border-2 border-white dark:border-slate-800 shadow-md z-10 transform translate-x-1 -translate-y-1">
-                            <img src={bridePicture || defaultBride} alt="Bride" className="h-full w-full object-cover" />
+                            <img
+                                src={bridePicture || defaultBride}
+                                alt="Bride"
+                                className="h-full w-full object-cover"
+                                onError={(e) => { e.currentTarget.src = defaultBride; }}
+                            />
                         </div>
                         <div className="absolute bottom-0 left-0 h-11 w-11 rounded-xl overflow-hidden border-2 border-white dark:border-slate-800 shadow-sm z-0">
-                            <img src={groomPicture || defaultGroom} alt="Groom" className="h-full w-full object-cover" />
+                            <img
+                                src={groomPicture || defaultGroom}
+                                alt="Groom"
+                                className="h-full w-full object-cover"
+                                onError={(e) => { e.currentTarget.src = defaultGroom; }}
+                            />
                         </div>
                     </div>
                 </div>
@@ -48,12 +59,18 @@ function InvitationSmallCard({ id, title, date, location, groomPicture, bridePic
                     </div>
                 </div>
 
-                <button
-                    onClick={(e) => onMenu(e, id)}
-                    className="p-2 text-gray-400 hover:text-primary-500 hover:bg-primary-50 dark:hover:bg-primary-900/20 rounded-xl transition-all"
-                >
-                    <MoreVertical className="h-5 w-5" />
-                </button>
+                {showMenu && onMenu && (
+                    <button
+                        onClick={(e) => {
+                            e.preventDefault();
+                            e.stopPropagation();
+                            onMenu(e, id);
+                        }}
+                        className="p-2 text-gray-400 hover:text-primary-500 hover:bg-primary-50 dark:hover:bg-primary-900/20 rounded-xl transition-all"
+                    >
+                        <MoreVertical className="h-5 w-5" />
+                    </button>
+                )}
             </CardContent>
         </Card>
     )
@@ -246,7 +263,7 @@ export function Home() {
                                             location={inv.hall || inv.location}
                                             groomPicture={inv.groomPictureGetUrl}
                                             bridePicture={inv.bridePictureGetUrl}
-                                            onMenu={handleMenu}
+                                            showMenu={false}
                                         />
                                     </Link>
                                 ))
