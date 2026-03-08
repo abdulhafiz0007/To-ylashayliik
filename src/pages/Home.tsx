@@ -1,13 +1,15 @@
 import { useState, useEffect } from "react"
 import { Link } from "react-router-dom"
 import { AnimatePresence, motion } from "framer-motion"
-import { Plus, Calendar, MapPin, Heart, Trash2, MoreVertical, Eye, MessageCircle } from "lucide-react"
+import { Plus, Calendar, MapPin, Trash2, MoreVertical, Eye, MessageCircle } from "lucide-react"
 import { useLanguage } from "../context/LanguageContext"
 import { useInvitation } from "../context/InvitationContext"
 import { api } from "../lib/api"
 import { cn } from "../lib/utils"
 import { Button } from "../components/ui/Button"
 import { Card, CardContent } from "../components/ui/Card"
+import defaultGroom from "../assets/default_groom.jpg"
+import defaultBride from "../assets/default_bride.jpg"
 
 interface InvitationCardProps {
     id: string | number
@@ -25,29 +27,14 @@ function InvitationSmallCard({ id, title, date, location, groomPicture, bridePic
             <CardContent className="p-4 flex items-center gap-4">
                 {/* Overlapping Thumbnails */}
                 <div className="h-16 w-16 relative flex-shrink-0">
-                    {groomPicture || bridePicture ? (
-                        <div className="relative h-full w-full">
-                            {bridePicture && (
-                                <div className="absolute top-0 right-0 h-11 w-11 rounded-xl overflow-hidden border-2 border-white dark:border-slate-800 shadow-md z-10 transform translate-x-1 -translate-y-1">
-                                    <img src={bridePicture} alt="Bride" className="h-full w-full object-cover" />
-                                </div>
-                            )}
-                            {groomPicture && (
-                                <div className="absolute bottom-0 left-0 h-11 w-11 rounded-xl overflow-hidden border-2 border-white dark:border-slate-800 shadow-sm z-0">
-                                    <img src={groomPicture} alt="Groom" className="h-full w-full object-cover" />
-                                </div>
-                            )}
-                            {(!groomPicture || !bridePicture) && (
-                                <div className="absolute inset-0 flex items-center justify-center opacity-10">
-                                    <Heart className="h-8 w-8 text-primary-300" />
-                                </div>
-                            )}
+                    <div className="relative h-full w-full">
+                        <div className="absolute top-0 right-0 h-11 w-11 rounded-xl overflow-hidden border-2 border-white dark:border-slate-800 shadow-md z-10 transform translate-x-1 -translate-y-1">
+                            <img src={bridePicture || defaultBride} alt="Bride" className="h-full w-full object-cover" />
                         </div>
-                    ) : (
-                        <div className="h-full w-full bg-gold-50 dark:bg-slate-700 rounded-xl flex items-center justify-center">
-                            <Heart className="h-8 w-8 text-primary-300" />
+                        <div className="absolute bottom-0 left-0 h-11 w-11 rounded-xl overflow-hidden border-2 border-white dark:border-slate-800 shadow-sm z-0">
+                            <img src={groomPicture || defaultGroom} alt="Groom" className="h-full w-full object-cover" />
                         </div>
-                    )}
+                    </div>
                 </div>
 
                 <div className="flex-1 min-w-0">
@@ -282,7 +269,7 @@ export function Home() {
             {/* Action Menu Modal */}
             <AnimatePresence>
                 {menuModal.show && (
-                    <div className="fixed inset-0 z-[9998] flex items-end justify-center p-4">
+                    <div className="fixed inset-0 z-[10000] flex items-end justify-center p-4">
                         <motion.div
                             initial={{ opacity: 0 }}
                             animate={{ opacity: 1 }}
@@ -295,7 +282,7 @@ export function Home() {
                             animate={{ y: 0 }}
                             exit={{ y: "100%" }}
                             transition={{ type: "spring", damping: 25, stiffness: 200 }}
-                            className="bg-white dark:bg-slate-900 w-full max-w-sm rounded-[32px] overflow-hidden relative z-10 shadow-2xl pb-8"
+                            className="bg-white dark:bg-slate-900 w-full max-w-sm rounded-[32px] overflow-hidden relative z-10 shadow-2xl pb-12 mb-20"
                         >
                             <div className="p-2">
                                 <div className="h-1.5 w-12 bg-gray-200 dark:bg-slate-800 rounded-full mx-auto my-4" />
@@ -358,7 +345,7 @@ export function Home() {
             {/* Custom Delete Modal */}
             <AnimatePresence>
                 {deleteModal.show && (
-                    <div className="fixed inset-0 z-[9999] flex items-center justify-center p-6">
+                    <div className="fixed inset-0 z-[10010] flex items-center justify-center p-6">
                         <motion.div
                             initial={{ opacity: 0 }}
                             animate={{ opacity: 1 }}
