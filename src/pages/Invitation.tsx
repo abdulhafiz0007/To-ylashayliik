@@ -1,5 +1,5 @@
 import { useEffect, useState, useRef } from "react"
-import { useParams, Link } from "react-router-dom"
+import { useParams, Link, useLocation } from "react-router-dom"
 import { useInvitation, type InvitationData } from "../context/InvitationContext"
 import { Button } from "../components/ui/Button"
 import { Input } from "../components/ui/Input"
@@ -34,6 +34,7 @@ export function Invitation() {
     const { user: tgUser, tg } = useTelegram()
     const { updateData, loading: contextLoading, error: contextError } = useInvitation()
     const { t } = useLanguage()
+    const location = useLocation()
     const [invitation, setInvitation] = useState<InvitationData | null>(null)
     const [loading, setLoading] = useState(true)
     const [showTemplates, setShowTemplates] = useState(false)
@@ -74,6 +75,25 @@ export function Invitation() {
             playAudio();
         }
     }, [loading, invitation, musicUrl])
+
+    // Handle initial scroll from Home menu
+    useEffect(() => {
+        if (!loading && invitation) {
+            const searchParams = new URLSearchParams(location.search)
+            const view = searchParams.get('view')
+            const hash = location.hash
+
+            setTimeout(() => {
+                if (view === 'sights') {
+                    const el = document.getElementById('sights')
+                    if (el) el.scrollIntoView({ behavior: 'smooth' })
+                } else if (hash === '#wishes') {
+                    const el = document.getElementById('wishes')
+                    if (el) el.scrollIntoView({ behavior: 'smooth' })
+                }
+            }, 500)
+        }
+    }, [loading, invitation, location])
 
     useEffect(() => {
         const loadInvitation = async () => {
@@ -524,7 +544,7 @@ export function Invitation() {
                 )}
 
                 {/* 💌 Send Your Wishes */}
-                <div className="space-y-4 mt-[30px]">
+                <div id="wishes" className="space-y-4 mt-[30px] scroll-mt-20">
                     <h2 className="text-left text-lg font-bold text-gray-900 dark:text-white flex items-center gap-2">
                         <Mail className="h-5 w-5 text-pink-500" />
                         Send Your Wishes
@@ -674,7 +694,7 @@ export function Invitation() {
                 {(() => {
                     if (isCreator && sights.length > 0) {
                         return (
-                            <div className="space-y-4 pt-6 border-t border-gray-100 dark:border-slate-800">
+                            <div id="sights" className="space-y-4 pt-6 border-t border-gray-100 dark:border-slate-800 scroll-mt-20">
                                 <h2 className="text-left text-lg font-bold text-gray-900 dark:text-white flex items-center gap-2">
                                     <Eye className="h-5 w-5 text-primary-500" />
                                     Kimlar ko'rdi ({sights.length})

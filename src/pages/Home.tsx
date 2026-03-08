@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react"
 import { Link } from "react-router-dom"
 import { AnimatePresence, motion } from "framer-motion"
-import { Plus, Calendar, MapPin, ChevronRight, Heart, Trash2 } from "lucide-react"
+import { Plus, Calendar, MapPin, Heart, Trash2, MoreVertical, Eye, MessageCircle } from "lucide-react"
 import { useLanguage } from "../context/LanguageContext"
 import { useInvitation } from "../context/InvitationContext"
 import { api } from "../lib/api"
@@ -10,26 +10,46 @@ import { Button } from "../components/ui/Button"
 import { Card, CardContent } from "../components/ui/Card"
 
 interface InvitationCardProps {
+    id: string | number
     title: string
     date: string
     location: string
-    image?: string
-    onDelete?: (e: React.MouseEvent) => void
+    groomPicture?: string
+    bridePicture?: string
+    onMenu: (e: React.MouseEvent, id: string | number) => void
 }
 
-function InvitationSmallCard({ title, date, location, image, onDelete }: InvitationCardProps) {
+function InvitationSmallCard({ id, title, date, location, groomPicture, bridePicture, onMenu }: InvitationCardProps) {
     return (
-        <Card className="overflow-hidden border-none shadow-sm dark:bg-slate-800/50 hover:bg-slate-50 dark:hover:bg-slate-800 transition-all group">
+        <Card className="overflow-hidden border-none shadow-sm dark:bg-slate-800/50 hover:bg-slate-50 dark:hover:bg-slate-800 transition-all group relative">
             <CardContent className="p-4 flex items-center gap-4">
-                <div className="h-16 w-16 rounded-xl overflow-hidden flex-shrink-0 bg-gold-100 dark:bg-slate-700">
-                    {image ? (
-                        <img src={image} alt={title} className="h-full w-full object-cover" />
+                {/* Overlapping Thumbnails */}
+                <div className="h-16 w-16 relative flex-shrink-0">
+                    {groomPicture || bridePicture ? (
+                        <div className="relative h-full w-full">
+                            {bridePicture && (
+                                <div className="absolute top-0 right-0 h-11 w-11 rounded-xl overflow-hidden border-2 border-white dark:border-slate-800 shadow-md z-10 transform translate-x-1 -translate-y-1">
+                                    <img src={bridePicture} alt="Bride" className="h-full w-full object-cover" />
+                                </div>
+                            )}
+                            {groomPicture && (
+                                <div className="absolute bottom-0 left-0 h-11 w-11 rounded-xl overflow-hidden border-2 border-white dark:border-slate-800 shadow-sm z-0">
+                                    <img src={groomPicture} alt="Groom" className="h-full w-full object-cover" />
+                                </div>
+                            )}
+                            {(!groomPicture || !bridePicture) && (
+                                <div className="absolute inset-0 flex items-center justify-center opacity-10">
+                                    <Heart className="h-8 w-8 text-primary-300" />
+                                </div>
+                            )}
+                        </div>
                     ) : (
-                        <div className="h-full w-full flex items-center justify-center">
+                        <div className="h-full w-full bg-gold-50 dark:bg-slate-700 rounded-xl flex items-center justify-center">
                             <Heart className="h-8 w-8 text-primary-300" />
                         </div>
                     )}
                 </div>
+
                 <div className="flex-1 min-w-0">
                     <h3 className="font-bold text-gray-900 dark:text-white truncate">{title}</h3>
                     <div className="flex items-center gap-2 text-xs text-gray-500 dark:text-gray-400 mt-1">
@@ -40,17 +60,13 @@ function InvitationSmallCard({ title, date, location, image, onDelete }: Invitat
                         <span className="truncate">{location}</span>
                     </div>
                 </div>
-                <div className="flex items-center gap-2">
-                    {onDelete && (
-                        <button
-                            onClick={onDelete}
-                            className="p-2 text-gray-400 hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-xl transition-all"
-                        >
-                            <Plus className="h-5 w-5 rotate-45" />
-                        </button>
-                    )}
-                    <ChevronRight className="h-5 w-5 text-gray-300 group-hover:text-primary-500 transition-colors" />
-                </div>
+
+                <button
+                    onClick={(e) => onMenu(e, id)}
+                    className="p-2 text-gray-400 hover:text-primary-500 hover:bg-primary-50 dark:hover:bg-primary-900/20 rounded-xl transition-all"
+                >
+                    <MoreVertical className="h-5 w-5" />
+                </button>
             </CardContent>
         </Card>
     )
@@ -64,6 +80,7 @@ export function Home() {
     const [loading, setLoading] = useState(true)
     const [deleteModal, setDeleteModal] = useState<{ show: boolean; id: string | number | null }>({ show: false, id: null })
     const [isDeleting, setIsDeleting] = useState(false)
+    const [menuModal, setMenuModal] = useState<{ show: boolean; id: string | number | null }>({ show: false, id: null })
 
     // Filter received invitations to exclude user's own created invitations
     const myInvitationIds = new Set(invitations.map(inv => String(inv.id)))
@@ -94,10 +111,10 @@ export function Home() {
         }
     }
 
-    const handleDelete = (e: React.MouseEvent, id: string | number) => {
+    const handleMenu = (e: React.MouseEvent, id: string | number) => {
         e.preventDefault()
         e.stopPropagation()
-        setDeleteModal({ show: true, id })
+        setMenuModal({ show: true, id })
     }
 
     const confirmDelete = async () => {
@@ -197,13 +214,16 @@ export function Home() {
                                     <div key={i} className="h-24 bg-gray-100 dark:bg-slate-800 animate-pulse rounded-2xl w-full" />
                                 ))
                             ) : invitations.length > 0 ? (
-                                invitations.map((inv) => (
-                                    <Link key={inv.id} to={`/invitation/${inv.id}`}>
+                                invitations.map((inv, i) => (
+                                    <Link key={inv.id || i} to={`/invitation/${inv.id}`}>
                                         <InvitationSmallCard
+                                            id={inv.id || ''}
                                             title={`${inv.groomName} & ${inv.brideName}`}
                                             date={inv.date}
                                             location={inv.hall || inv.location}
-                                            onDelete={(e) => handleDelete(e, inv.id)}
+                                            groomPicture={inv.groomPictureGetUrl}
+                                            bridePicture={inv.bridePictureGetUrl}
+                                            onMenu={handleMenu}
                                         />
                                     </Link>
                                 ))
@@ -230,12 +250,16 @@ export function Home() {
                             className="space-y-3"
                         >
                             {filteredReceived.length > 0 ? (
-                                filteredReceived.map((inv) => (
-                                    <Link key={inv.id} to={`/invitation/${inv.id}`}>
+                                filteredReceived.map((inv, i) => (
+                                    <Link key={inv.id || i} to={`/invitation/${inv.id}`}>
                                         <InvitationSmallCard
+                                            id={inv.id || ''}
                                             title={`${inv.groomName} & ${inv.brideName}`}
                                             date={inv.date}
                                             location={inv.hall || inv.location}
+                                            groomPicture={inv.groomPictureGetUrl}
+                                            bridePicture={inv.bridePictureGetUrl}
+                                            onMenu={handleMenu}
                                         />
                                     </Link>
                                 ))
@@ -254,6 +278,82 @@ export function Home() {
 
             {/* Bottom Spacer for Floating BottomNav */}
             <div className="shrink-0 h-[100px]" />
+
+            {/* Action Menu Modal */}
+            <AnimatePresence>
+                {menuModal.show && (
+                    <div className="fixed inset-0 z-[9998] flex items-end justify-center p-4">
+                        <motion.div
+                            initial={{ opacity: 0 }}
+                            animate={{ opacity: 1 }}
+                            exit={{ opacity: 0 }}
+                            className="absolute inset-0 bg-slate-950/40 backdrop-blur-sm"
+                            onClick={() => setMenuModal({ show: false, id: null })}
+                        />
+                        <motion.div
+                            initial={{ y: "100%" }}
+                            animate={{ y: 0 }}
+                            exit={{ y: "100%" }}
+                            transition={{ type: "spring", damping: 25, stiffness: 200 }}
+                            className="bg-white dark:bg-slate-900 w-full max-w-sm rounded-[32px] overflow-hidden relative z-10 shadow-2xl pb-8"
+                        >
+                            <div className="p-2">
+                                <div className="h-1.5 w-12 bg-gray-200 dark:bg-slate-800 rounded-full mx-auto my-4" />
+
+                                <div className="space-y-1 px-4">
+                                    <button
+                                        onClick={() => {
+                                            if (menuModal.id) {
+                                                window.location.href = `/invitation/${menuModal.id}?view=sights`
+                                                setMenuModal({ show: false, id: null })
+                                            }
+                                        }}
+                                        className="w-full h-14 rounded-2xl flex items-center gap-4 px-6 hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors group"
+                                    >
+                                        <div className="h-10 w-10 rounded-xl bg-blue-50 dark:bg-blue-900/20 flex items-center justify-center text-blue-500 group-hover:scale-110 transition-transform">
+                                            <Eye className="h-5 w-5" />
+                                        </div>
+                                        <span className="font-bold text-gray-700 dark:text-gray-200">Kimlar ko'rganligi</span>
+                                    </button>
+
+                                    <button
+                                        onClick={() => {
+                                            if (menuModal.id) {
+                                                window.location.href = `/invitation/${menuModal.id}#wishes`
+                                                setMenuModal({ show: false, id: null })
+                                            }
+                                        }}
+                                        className="w-full h-14 rounded-2xl flex items-center gap-4 px-6 hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors group"
+                                    >
+                                        <div className="h-10 w-10 rounded-xl bg-pink-50 dark:bg-pink-900/20 flex items-center justify-center text-pink-500 group-hover:scale-110 transition-transform">
+                                            <MessageCircle className="h-5 w-5" />
+                                        </div>
+                                        <span className="font-bold text-gray-700 dark:text-gray-200">Tilaklarni boshqarish</span>
+                                    </button>
+
+                                    <div className="h-px bg-gray-100 dark:bg-slate-800 my-2 mx-4" />
+
+                                    <button
+                                        onClick={() => {
+                                            const id = menuModal.id
+                                            if (id) {
+                                                setMenuModal({ show: false, id: null })
+                                                setTimeout(() => setDeleteModal({ show: true, id }), 300)
+                                            }
+                                        }}
+                                        className="w-full h-14 rounded-2xl flex items-center gap-4 px-6 hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors group"
+                                    >
+                                        <div className="h-10 w-10 rounded-xl bg-red-50 dark:bg-red-900/20 flex items-center justify-center text-red-500 group-hover:scale-110 transition-transform">
+                                            <Trash2 className="h-5 w-5" />
+                                        </div>
+                                        <span className="font-bold text-red-600">O'chirib tashlash</span>
+                                    </button>
+                                </div>
+                            </div>
+                        </motion.div>
+                    </div>
+                )}
+            </AnimatePresence>
 
             {/* Custom Delete Modal */}
             <AnimatePresence>
