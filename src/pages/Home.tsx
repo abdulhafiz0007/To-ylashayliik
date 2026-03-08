@@ -31,18 +31,18 @@ function InvitationSmallCard({ id, title, date, location, groomPicture, bridePic
                     <div className="relative h-full w-full">
                         <div className="absolute top-0 right-0 h-11 w-11 rounded-xl overflow-hidden border-2 border-white dark:border-slate-800 shadow-md z-10 transform translate-x-1 -translate-y-1">
                             <img
-                                src={bridePicture || defaultBride}
-                                alt="Bride"
-                                className="h-full w-full object-cover"
-                                onError={(e) => { e.currentTarget.src = defaultBride; }}
-                            />
-                        </div>
-                        <div className="absolute bottom-0 left-0 h-11 w-11 rounded-xl overflow-hidden border-2 border-white dark:border-slate-800 shadow-sm z-0">
-                            <img
                                 src={groomPicture || defaultGroom}
                                 alt="Groom"
                                 className="h-full w-full object-cover"
                                 onError={(e) => { e.currentTarget.src = defaultGroom; }}
+                            />
+                        </div>
+                        <div className="absolute bottom-0 left-0 h-11 w-11 rounded-xl overflow-hidden border-2 border-white dark:border-slate-800 shadow-sm z-0">
+                            <img
+                                src={bridePicture || defaultBride}
+                                alt="Bride"
+                                className="h-full w-full object-cover"
+                                onError={(e) => { e.currentTarget.src = defaultBride; }}
                             />
                         </div>
                     </div>
@@ -84,7 +84,7 @@ export function Home() {
     const [loading, setLoading] = useState(true)
     const [deleteModal, setDeleteModal] = useState<{ show: boolean; id: string | number | null }>({ show: false, id: null })
     const [isDeleting, setIsDeleting] = useState(false)
-    const [menuModal, setMenuModal] = useState<{ show: boolean; id: string | number | null }>({ show: false, id: null })
+    const [menuModal, setMenuModal] = useState<{ show: boolean; id: string | number | null; x: number; y: number }>({ show: false, id: null, x: 0, y: 0 })
 
     // Filter received invitations to exclude user's own created invitations
     const myInvitationIds = new Set(invitations.map(inv => String(inv.id)))
@@ -118,7 +118,7 @@ export function Home() {
     const handleMenu = (e: React.MouseEvent, id: string | number) => {
         e.preventDefault()
         e.stopPropagation()
-        setMenuModal({ show: true, id })
+        setMenuModal({ show: true, id, x: e.clientX, y: e.clientY })
     }
 
     const confirmDelete = async () => {
@@ -211,7 +211,7 @@ export function Home() {
                             initial={{ opacity: 0, x: -20 }}
                             animate={{ opacity: 1, x: 0 }}
                             exit={{ opacity: 0, x: 20 }}
-                            className="space-y-3"
+                            className="space-y-1"
                         >
                             {loading ? (
                                 Array(3).fill(0).map((_, i) => (
@@ -251,7 +251,7 @@ export function Home() {
                             initial={{ opacity: 0, x: 20 }}
                             animate={{ opacity: 1, x: 0 }}
                             exit={{ opacity: 0, x: -20 }}
-                            className="space-y-3"
+                            className="space-y-1"
                         >
                             {filteredReceived.length > 0 ? (
                                 filteredReceived.map((inv, i) => (
@@ -283,76 +283,76 @@ export function Home() {
             {/* Bottom Spacer for Floating BottomNav */}
             <div className="shrink-0 h-[100px]" />
 
-            {/* Action Menu Modal */}
+            {/* Action Menu Modal (Popover) */}
             <AnimatePresence>
                 {menuModal.show && (
-                    <div className="fixed inset-0 z-[10000] flex items-end justify-center p-4">
+                    <div className="fixed inset-0 z-[10000]">
                         <motion.div
                             initial={{ opacity: 0 }}
                             animate={{ opacity: 1 }}
                             exit={{ opacity: 0 }}
-                            className="absolute inset-0 bg-slate-950/40 backdrop-blur-sm"
-                            onClick={() => setMenuModal({ show: false, id: null })}
+                            className="absolute inset-0 bg-transparent"
+                            onClick={() => setMenuModal({ show: false, id: null, x: 0, y: 0 })}
                         />
                         <motion.div
-                            initial={{ y: "100%" }}
-                            animate={{ y: 0 }}
-                            exit={{ y: "100%" }}
-                            transition={{ type: "spring", damping: 25, stiffness: 200 }}
-                            className="bg-white dark:bg-slate-900 w-full max-w-sm rounded-[32px] overflow-hidden relative z-10 shadow-2xl pb-12 mb-20"
+                            initial={{ opacity: 0, scale: 0.9, y: -10 }}
+                            animate={{ opacity: 1, scale: 1, y: 0 }}
+                            exit={{ opacity: 0, scale: 0.9, y: -10 }}
+                            transition={{ type: "spring", damping: 30, stiffness: 450 }}
+                            style={{
+                                top: Math.min(menuModal.y, window.innerHeight - 180),
+                                left: Math.min(menuModal.x - 170, window.innerWidth - 190)
+                            }}
+                            className="fixed w-44 bg-white dark:bg-slate-900 rounded-2xl overflow-hidden z-10 shadow-2xl border border-gray-100 dark:border-slate-800"
                         >
-                            <div className="p-2">
-                                <div className="h-1.5 w-12 bg-gray-200 dark:bg-slate-800 rounded-full mx-auto my-4" />
+                            <div className="p-1.5 space-y-0.5">
+                                <button
+                                    onClick={() => {
+                                        if (menuModal.id) {
+                                            window.location.href = `/invitation/${menuModal.id}?view=sights`
+                                            setMenuModal({ show: false, id: null, x: 0, y: 0 })
+                                        }
+                                    }}
+                                    className="w-full h-10 rounded-xl flex items-center gap-3 px-3 hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors group"
+                                >
+                                    <div className="h-7 w-7 rounded-lg bg-blue-50 dark:bg-blue-900/20 flex items-center justify-center text-blue-500">
+                                        <Eye className="h-4 w-4" />
+                                    </div>
+                                    <span className="text-sm font-bold text-gray-700 dark:text-gray-200">Ko'rganlar</span>
+                                </button>
 
-                                <div className="space-y-1 px-4">
-                                    <button
-                                        onClick={() => {
-                                            if (menuModal.id) {
-                                                window.location.href = `/invitation/${menuModal.id}?view=sights`
-                                                setMenuModal({ show: false, id: null })
-                                            }
-                                        }}
-                                        className="w-full h-14 rounded-2xl flex items-center gap-4 px-6 hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors group"
-                                    >
-                                        <div className="h-10 w-10 rounded-xl bg-blue-50 dark:bg-blue-900/20 flex items-center justify-center text-blue-500 group-hover:scale-110 transition-transform">
-                                            <Eye className="h-5 w-5" />
-                                        </div>
-                                        <span className="font-bold text-gray-700 dark:text-gray-200">Kimlar ko'rganligi</span>
-                                    </button>
+                                <button
+                                    onClick={() => {
+                                        if (menuModal.id) {
+                                            window.location.href = `/invitation/${menuModal.id}#wishes`
+                                            setMenuModal({ show: false, id: null, x: 0, y: 0 })
+                                        }
+                                    }}
+                                    className="w-full h-10 rounded-xl flex items-center gap-3 px-3 hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors group"
+                                >
+                                    <div className="h-7 w-7 rounded-lg bg-pink-50 dark:bg-pink-900/20 flex items-center justify-center text-pink-500">
+                                        <MessageCircle className="h-4 w-4" />
+                                    </div>
+                                    <span className="text-sm font-bold text-gray-700 dark:text-gray-200">Tilaklar</span>
+                                </button>
 
-                                    <button
-                                        onClick={() => {
-                                            if (menuModal.id) {
-                                                window.location.href = `/invitation/${menuModal.id}#wishes`
-                                                setMenuModal({ show: false, id: null })
-                                            }
-                                        }}
-                                        className="w-full h-14 rounded-2xl flex items-center gap-4 px-6 hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors group"
-                                    >
-                                        <div className="h-10 w-10 rounded-xl bg-pink-50 dark:bg-pink-900/20 flex items-center justify-center text-pink-500 group-hover:scale-110 transition-transform">
-                                            <MessageCircle className="h-5 w-5" />
-                                        </div>
-                                        <span className="font-bold text-gray-700 dark:text-gray-200">Tilaklarni boshqarish</span>
-                                    </button>
+                                <div className="h-px bg-gray-100 dark:bg-slate-800 mx-2 my-1" />
 
-                                    <div className="h-px bg-gray-100 dark:bg-slate-800 my-2 mx-4" />
-
-                                    <button
-                                        onClick={() => {
-                                            const id = menuModal.id
-                                            if (id) {
-                                                setMenuModal({ show: false, id: null })
-                                                setTimeout(() => setDeleteModal({ show: true, id }), 300)
-                                            }
-                                        }}
-                                        className="w-full h-14 rounded-2xl flex items-center gap-4 px-6 hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors group"
-                                    >
-                                        <div className="h-10 w-10 rounded-xl bg-red-50 dark:bg-red-900/20 flex items-center justify-center text-red-500 group-hover:scale-110 transition-transform">
-                                            <Trash2 className="h-5 w-5" />
-                                        </div>
-                                        <span className="font-bold text-red-600">O'chirib tashlash</span>
-                                    </button>
-                                </div>
+                                <button
+                                    onClick={() => {
+                                        if (menuModal.id) {
+                                            const id = menuModal.id;
+                                            setMenuModal({ show: false, id: null, x: 0, y: 0 })
+                                            setDeleteModal({ show: true, id })
+                                        }
+                                    }}
+                                    className="w-full h-10 rounded-xl flex items-center gap-3 px-3 hover:bg-red-50 dark:hover:bg-red-900/10 transition-colors group"
+                                >
+                                    <div className="h-7 w-7 rounded-lg bg-red-50 dark:bg-red-900/20 flex items-center justify-center text-red-500">
+                                        <Trash2 className="h-4 w-4" />
+                                    </div>
+                                    <span className="text-sm font-bold text-red-600">O'chirish</span>
+                                </button>
                             </div>
                         </motion.div>
                     </div>
