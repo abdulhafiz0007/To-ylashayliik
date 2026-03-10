@@ -377,8 +377,8 @@ export function Create() {
                         />
                         <div className="grid grid-cols-1 gap-4">
                             <div className="space-y-2">
-                                <label className="text-sm font-medium flex items-center gap-2">
-                                    <Users className="h-4 w-4" /> {t('groomName')} <span className="text-primary-500 ml-1 font-bold">*</span>
+                                <label className="text-sm font-medium flex items-center">
+                                    <Users className="h-4 w-4 mr-2" /> {t('groomName')}<span className="text-primary-500 ml-0.5 font-bold">*</span>
                                 </label>
                                 <Input
                                     placeholder="Sanjar"
@@ -423,8 +423,8 @@ export function Create() {
                         />
                         <div className="grid grid-cols-1 gap-4">
                             <div className="space-y-2">
-                                <label className="text-sm font-medium flex items-center gap-2">
-                                    <Users className="h-4 w-4" /> {t('brideName')} <span className="text-primary-500 ml-1 font-bold">*</span>
+                                <label className="text-sm font-medium flex items-center">
+                                    <Users className="h-4 w-4 mr-2" /> {t('brideName')}<span className="text-primary-500 ml-0.5 font-bold">*</span>
                                 </label>
                                 <Input
                                     placeholder="Malika"
@@ -462,8 +462,8 @@ export function Create() {
                     <div className="space-y-6 animate-fade-in pb-10">
                         <div className="grid grid-cols-2 gap-4">
                             <div className="space-y-2">
-                                <label className="text-sm font-medium flex items-center gap-2">
-                                    <Calendar className="h-4 w-4" /> {t('date')} <span className="text-primary-500 ml-1 font-bold">*</span>
+                                <label className="text-sm font-medium flex items-center">
+                                    <Calendar className="h-4 w-4 mr-2" /> {t('date')}<span className="text-primary-500 ml-0.5 font-bold">*</span>
                                 </label>
                                 <Input
                                     type="date"
@@ -474,8 +474,8 @@ export function Create() {
                                 />
                             </div>
                             <div className="space-y-2">
-                                <label className="text-sm font-medium flex items-center gap-2">
-                                    <Clock className="h-4 w-4" /> {t('time')} <span className="text-primary-500 ml-1 font-bold">*</span>
+                                <label className="text-sm font-medium flex items-center">
+                                    <Clock className="h-4 w-4 mr-2" /> {t('time')}<span className="text-primary-500 ml-0.5 font-bold">*</span>
                                 </label>
                                 <Input
                                     type="time"
@@ -489,8 +489,8 @@ export function Create() {
 
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                             <div className="space-y-2">
-                                <label className="text-sm font-medium flex items-center gap-2">
-                                    <Building2 className="h-4 w-4" /> {t('hall')} <span className="text-primary-500 ml-1 font-bold">*</span>
+                                <label className="text-sm font-medium flex items-center">
+                                    <Building2 className="h-4 w-4 mr-2" /> {t('hall')}<span className="text-primary-500 ml-0.5 font-bold">*</span>
                                 </label>
                                 <Input
                                     placeholder="Zarafshon Tantanalar Saroyi"
@@ -500,8 +500,8 @@ export function Create() {
                                 />
                             </div>
                             <div className="space-y-2">
-                                <label className="text-sm font-medium flex items-center gap-2">
-                                    <MapPin className="h-4 w-4" /> {t('location')} <span className="text-primary-500 ml-1 font-bold">*</span>
+                                <label className="text-sm font-medium flex items-center">
+                                    <MapPin className="h-4 w-4 mr-2" /> {t('location')}<span className="text-primary-500 ml-0.5 font-bold">*</span>
                                 </label>
                                 <Input
                                     placeholder="Shuhrat ko'chasi, 12-uy"
@@ -649,9 +649,9 @@ export function Create() {
                             </div>
                         </div>
 
-                        <div className="space-y-2 mb-[-45px]">
-                            <label className="text-sm font-medium flex items-center gap-2">
-                                <MessageSquare className="h-4 w-4" /> {t('message')} <span className="text-primary-500 ml-1 font-bold">*</span>
+                        <div className="space-y-2">
+                            <label className="text-sm font-medium flex items-center">
+                                <MessageSquare className="h-4 w-4 mr-2" /> {t('message')}<span className="text-primary-500 ml-0.5 font-bold">*</span>
                             </label>
                             <textarea
                                 className="flex min-h-[80px] w-full rounded-md border border-gold-200 dark:border-slate-700 bg-white dark:bg-slate-900 px-3 py-2 text-base focus:ring-2 focus:ring-primary-400 outline-none transition-all shadow-sm dark:text-white"
