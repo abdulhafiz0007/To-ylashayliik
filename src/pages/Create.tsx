@@ -862,7 +862,8 @@ export function Create() {
                 onSelect={(loc) => {
                     setSelectedLocation(loc)
                     updateData({
-                        location: loc.address,
+                        // Only overwrite location if it's currently empty
+                        location: data.location.trim() ? data.location : loc.address,
                         weddingHallLatitude: loc.lat,
                         weddingHallLongitude: loc.lng
                     })
