@@ -45,23 +45,6 @@ function InvitationSmallCard({ id, title, date, location, groomPicture, bridePic
                     <div className="relative h-full w-full">
                         <div className="absolute top-0 right-0 h-11 w-11 rounded-xl overflow-hidden border-2 border-white dark:border-slate-800 shadow-md z-10 transform translate-x-1 -translate-y-1 bg-gray-50 dark:bg-slate-900">
                             <img
-                                src={groomImg}
-                                alt="Groom"
-                                className={cn(
-                                    "h-full w-full object-cover transition-opacity duration-300",
-                                    groomLoaded ? "opacity-100" : "opacity-0"
-                                )}
-                                onLoad={() => setGroomLoaded(true)}
-                                onError={() => {
-                                    if (groomImg !== defaultGroom) {
-                                        setGroomImg(defaultGroom);
-                                        setGroomLoaded(true);
-                                    }
-                                }}
-                            />
-                        </div>
-                        <div className="absolute bottom-0 left-0 h-11 w-11 rounded-xl overflow-hidden border-2 border-white dark:border-slate-800 shadow-sm z-0 bg-gray-50 dark:bg-slate-900">
-                            <img
                                 src={brideImg}
                                 alt="Bride"
                                 className={cn(
@@ -73,6 +56,23 @@ function InvitationSmallCard({ id, title, date, location, groomPicture, bridePic
                                     if (brideImg !== defaultBride) {
                                         setBrideImg(defaultBride);
                                         setBrideLoaded(true);
+                                    }
+                                }}
+                            />
+                        </div>
+                        <div className="absolute bottom-0 left-0 h-11 w-11 rounded-xl overflow-hidden border-2 border-white dark:border-slate-800 shadow-sm z-0 bg-gray-50 dark:bg-slate-900">
+                            <img
+                                src={groomImg}
+                                alt="Groom"
+                                className={cn(
+                                    "h-full w-full object-cover transition-opacity duration-300",
+                                    groomLoaded ? "opacity-100" : "opacity-0"
+                                )}
+                                onLoad={() => setGroomLoaded(true)}
+                                onError={() => {
+                                    if (groomImg !== defaultGroom) {
+                                        setGroomImg(defaultGroom);
+                                        setGroomLoaded(true);
                                     }
                                 }}
                             />
@@ -392,7 +392,7 @@ export function Home() {
                             exit={{ opacity: 0, scale: 0.9, y: -10 }}
                             transition={{ type: "spring", damping: 30, stiffness: 450 }}
                             style={{
-                                top: Math.min(menuModal.y, window.innerHeight + window.scrollY - 200),
+                                top: Math.min(menuModal.y, window.innerHeight - 200),
                                 left: Math.min(menuModal.x - 170, window.innerWidth - 190)
                             }}
                             className="fixed w-44 bg-white dark:bg-slate-900 rounded-2xl overflow-hidden z-[100001] shadow-2xl border border-gray-100 dark:border-slate-800"
@@ -408,9 +408,7 @@ export function Home() {
                                     className="w-full h-10 rounded-xl flex items-center gap-3 px-3 hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors group"
                                 >
                                     <div className="h-7 w-7 rounded-lg bg-blue-50 dark:bg-blue-900/20 flex items-center justify-center text-blue-500">
-                                        <div className="h-7 w-7 rounded-lg bg-blue-50 dark:bg-blue-900/20 flex items-center justify-center text-blue-500">
-                                            <Eye className="h-4 w-4" />
-                                        </div>
+                                        <Eye className="h-4 w-4" />
                                     </div>
                                     <span className="text-sm font-bold text-gray-700 dark:text-gray-200">{t('honoredGuests')}</span>
                                 </button>
