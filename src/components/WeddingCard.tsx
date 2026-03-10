@@ -85,6 +85,7 @@ function Photo({ src, size = 80, className = "", personType = "groom" }: {
 // Gold bordered, vertical layout, side-by-side oval portraits, info below
 // ════════════════════════════════════════════════════════════════════════════
 function ClassicRoyale({ invitation }: { invitation: Partial<InvitationData> }) {
+    const { t } = useLanguage()
     return (
         <div className="relative w-full min-h-[620px] bg-[#fffdf5] flex flex-col items-center overflow-hidden select-none">
             {/* Texture overlay */}
@@ -101,7 +102,7 @@ function ClassicRoyale({ invitation }: { invitation: Partial<InvitationData> }) 
 
             {/* Header */}
             <div className="mt-10 mb-6 text-center">
-                <p className="text-[9px] uppercase tracking-[0.5em] text-amber-600 font-bold">— To'y Taklifnomasi —</p>
+                <p className="text-[9px] uppercase tracking-[0.5em] text-amber-600 font-bold">— {t('weddingInvitation')} —</p>
             </div>
 
             {/* Portrait row */}
@@ -117,9 +118,9 @@ function ClassicRoyale({ invitation }: { invitation: Partial<InvitationData> }) 
                         />
                     </div>
                     <div className="bg-amber-50 border border-amber-200 rounded-xl px-4 py-1.5 mt-1">
-                        <p className="text-[8px] uppercase tracking-[0.3em] text-amber-600 font-bold text-center">Kuyov</p>
+                        <p className="text-[8px] uppercase tracking-[0.3em] text-amber-600 font-bold text-center">{t('groom')}</p>
                         <p className="text-sm font-black text-slate-800 text-center mt-0.5">
-                            {invitation.groomName || "Sanjar"}
+                            {invitation.groomName || t('placeholders.groomName')}
                         </p>
                     </div>
                 </div>
@@ -143,9 +144,9 @@ function ClassicRoyale({ invitation }: { invitation: Partial<InvitationData> }) 
                         />
                     </div>
                     <div className="bg-pink-50 border border-pink-200 rounded-xl px-4 py-1.5 mt-1">
-                        <p className="text-[8px] uppercase tracking-[0.3em] text-pink-500 font-bold text-center">Kelin</p>
+                        <p className="text-[8px] uppercase tracking-[0.3em] text-pink-500 font-bold text-center">{t('bride')}</p>
                         <p className="text-sm font-black text-slate-800 text-center mt-0.5">
-                            {invitation.brideName || "Malika"}
+                            {invitation.brideName || t('placeholders.brideName')}
                         </p>
                     </div>
                 </div>
@@ -160,7 +161,7 @@ function ClassicRoyale({ invitation }: { invitation: Partial<InvitationData> }) 
 
             {/* Invitation text */}
             <p className="text-[10px] text-slate-500 text-center px-10 leading-relaxed italic mb-6">
-                {invitation.text || "Allohning izni bilan ikki qalbning to'yiga siz azizlarni taklif etamiz."}
+                {invitation.text || t('inviteGodsWill')}
             </p>
 
             {/* Wedding details */}
@@ -168,7 +169,7 @@ function ClassicRoyale({ invitation }: { invitation: Partial<InvitationData> }) 
                 <div className="flex items-center justify-center gap-6">
                     <div className="flex flex-col items-center text-amber-700">
                         <Calendar className="h-4 w-4 mb-1 opacity-60" />
-                        <p className="text-[8px] uppercase tracking-widest opacity-60 font-bold">Sana</p>
+                        <p className="text-[8px] uppercase tracking-widest opacity-60 font-bold">{t('date')}</p>
                         <p className="font-black text-base leading-tight mt-0.5">
                             {getDay(invitation.date)} {getMonth(invitation.date)}
                         </p>
@@ -176,7 +177,7 @@ function ClassicRoyale({ invitation }: { invitation: Partial<InvitationData> }) 
                     <div className="w-px h-10 bg-amber-200" />
                     <div className="flex flex-col items-center text-amber-700">
                         <Clock className="h-4 w-4 mb-1 opacity-60" />
-                        <p className="text-[8px] uppercase tracking-widest opacity-60 font-bold">Vaqt</p>
+                        <p className="text-[8px] uppercase tracking-widest opacity-60 font-bold">{t('time')}</p>
                         <p className="font-black text-base leading-tight mt-0.5">{invitation.time || "18:00"}</p>
                     </div>
                 </div>
@@ -193,7 +194,7 @@ function ClassicRoyale({ invitation }: { invitation: Partial<InvitationData> }) 
 
             {/* Footer */}
             <div className="mt-auto pt-6 pb-8">
-                <p className="text-[8px] text-amber-400 uppercase tracking-[0.4em] text-center">✦ Siz bilan birga ✦</p>
+                <p className="text-[8px] text-amber-400 uppercase tracking-[0.4em] text-center">✦ {t('withYou')} ✦</p>
             </div>
         </div>
     )
@@ -204,6 +205,7 @@ function ClassicRoyale({ invitation }: { invitation: Partial<InvitationData> }) 
 // Black/white split, groom left panel, bride right panel, details below
 // ════════════════════════════════════════════════════════════════════════════
 function ModernMinimal({ invitation }: { invitation: Partial<InvitationData> }) {
+    const { t } = useLanguage()
     return (
         <div className="w-full min-h-[620px] bg-white flex flex-col overflow-hidden select-none">
             {/* Split photo hero */}
@@ -215,7 +217,7 @@ function ModernMinimal({ invitation }: { invitation: Partial<InvitationData> }) 
                         <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/40 to-transparent" />
                     </div>
                     <div className="relative z-10 text-center">
-                        <p className="text-[8px] uppercase tracking-[0.3em] text-slate-400 font-bold">Kuyov</p>
+                        <p className="text-[8px] uppercase tracking-[0.3em] text-slate-400 font-bold">{t('groom')}</p>
                     </div>
                 </div>
 
@@ -226,7 +228,7 @@ function ModernMinimal({ invitation }: { invitation: Partial<InvitationData> }) 
                         <div className="absolute inset-0 bg-gradient-to-t from-white via-white/10 to-transparent" />
                     </div>
                     <div className="relative z-10 text-center">
-                        <p className="text-[8px] uppercase tracking-[0.3em] text-slate-500 font-black">Kelin</p>
+                        <p className="text-[8px] uppercase tracking-[0.3em] text-slate-500 font-black">{t('bride')}</p>
                     </div>
                 </div>
 
@@ -238,16 +240,16 @@ function ModernMinimal({ invitation }: { invitation: Partial<InvitationData> }) 
 
             {/* Center text block */}
             <div className="flex flex-col items-center py-8 px-8 text-center border-b border-slate-100">
-                <p className="text-[8px] uppercase tracking-[0.5em] text-slate-400 font-bold mb-4">— To'y Taklifnomasi —</p>
+                <p className="text-[8px] uppercase tracking-[0.5em] text-slate-400 font-bold mb-4">— {t('weddingInvitation')} —</p>
                 <h2 className="text-3xl font-black text-slate-900 tracking-tight leading-none">
                     {invitation.groomName?.split(' ')[0] || "Sanjar"}
                 </h2>
                 <p className="text-sm text-slate-400 font-bold tracking-[0.15em] my-1">&</p>
                 <h2 className="text-3xl font-black text-slate-900 tracking-tight leading-none">
-                    {invitation.brideName?.split(' ')[0] || "Malika"}
+                    {invitation.brideName?.split(' ')[0] || t('placeholders.brideName')}
                 </h2>
                 <p className="text-[10px] text-slate-400 mt-4 leading-relaxed max-w-[240px]">
-                    {invitation.text || "Ikki qalbning birikishiga guvoh bo'lishingizni so'raymiz."}
+                    {invitation.text || t('inviteHeartsMsg')}
                 </p>
             </div>
 
@@ -261,7 +263,7 @@ function ModernMinimal({ invitation }: { invitation: Partial<InvitationData> }) 
                 <div className="flex flex-col items-center py-6 gap-1 border-r border-slate-100">
                     <Clock className="h-4 w-4 text-slate-400 mb-1" />
                     <p className="text-2xl font-black text-slate-900 leading-none">{invitation.time || "18:00"}</p>
-                    <p className="text-[9px] uppercase tracking-widest text-slate-500 font-black">Vaqt</p>
+                    <p className="text-[9px] uppercase tracking-widest text-slate-500 font-black">{t('time')}</p>
                 </div>
                 <div className="flex flex-col items-center py-6 gap-1 bg-slate-50/50 min-w-0 px-2">
                     <p className="text-xs font-black text-slate-900 leading-tight text-center truncate w-full">
@@ -275,7 +277,7 @@ function ModernMinimal({ invitation }: { invitation: Partial<InvitationData> }) 
 
             {/* Footer bar */}
             <div className="mt-auto bg-slate-950 py-6 flex items-center justify-center">
-                <p className="text-[9px] uppercase tracking-[0.5em] text-slate-400 font-black">Sizni kutib qolamiz</p>
+                <p className="text-[9px] uppercase tracking-[0.5em] text-slate-400 font-black">{t('waitingForYou')}</p>
             </div>
         </div>
     )
@@ -286,6 +288,7 @@ function ModernMinimal({ invitation }: { invitation: Partial<InvitationData> }) 
 // Soft floral, overlapping oval portraits at top, botanical accent elements
 // ════════════════════════════════════════════════════════════════════════════
 function GardenBliss({ invitation }: { invitation: Partial<InvitationData> }) {
+    const { t } = useLanguage()
     return (
         <div className="w-full min-h-[620px] bg-[#fdfaf5] flex flex-col items-center overflow-hidden select-none relative">
             {/* Background Pattern */}
@@ -308,7 +311,7 @@ function GardenBliss({ invitation }: { invitation: Partial<InvitationData> }) {
                             />
                         </div>
                         <div className="text-center mt-2">
-                            <p className="text-[8px] text-emerald-600 uppercase tracking-[0.3em] font-bold">Kuyov</p>
+                            <p className="text-[8px] text-emerald-600 uppercase tracking-[0.3em] font-bold">{t('groom')}</p>
                         </div>
                     </div>
 
@@ -331,7 +334,7 @@ function GardenBliss({ invitation }: { invitation: Partial<InvitationData> }) {
                             />
                         </div>
                         <div className="text-center mt-2">
-                            <p className="text-[8px] text-pink-500 uppercase tracking-[0.3em] font-bold">Kelin</p>
+                            <p className="text-[8px] text-pink-500 uppercase tracking-[0.3em] font-bold">{t('bride')}</p>
                         </div>
                     </div>
                 </div>
@@ -346,17 +349,17 @@ function GardenBliss({ invitation }: { invitation: Partial<InvitationData> }) {
 
             {/* Header text */}
             <div className="text-center px-8 mb-4">
-                <p className="text-[9px] uppercase tracking-[0.4em] text-emerald-600 font-bold mb-2">To'y Taklifnomasi</p>
+                <p className="text-[9px] uppercase tracking-[0.4em] text-emerald-600 font-bold mb-2">{t('weddingInvitation')}</p>
                 <h2 className="text-2xl font-black text-pink-600 leading-tight">
-                    {invitation.groomName?.split(' ')[0] || "Sanjar"}
+                    {invitation.groomName?.split(' ')[0] || t('placeholders.groomName')}
                     <span className="text-emerald-400 mx-2 font-serif italic">&</span>
-                    {invitation.brideName?.split(' ')[0] || "Malika"}
+                    {invitation.brideName?.split(' ')[0] || t('placeholders.brideName')}
                 </h2>
             </div>
 
             {/* Message */}
             <p className="text-[10px] text-slate-500 text-center px-10 leading-relaxed italic mb-6">
-                {invitation.text || "Baxtimizni siz azizlar bilan ulashishdan mamnunmiz."}
+                {invitation.text || t('inviteMsg')}
             </p>
 
             {/* Wedding info cards */}
@@ -366,7 +369,7 @@ function GardenBliss({ invitation }: { invitation: Partial<InvitationData> }) {
                         <Calendar className="h-4 w-4 text-pink-500" />
                     </div>
                     <div className="flex-1">
-                        <p className="text-[8px] uppercase tracking-widest text-slate-400 font-bold">Sana & Vaqt</p>
+                        <p className="text-[8px] uppercase tracking-widest text-slate-400 font-bold">{t('date')} & {t('time')}</p>
                         <p className="font-black text-slate-800 text-sm">
                             {getDay(invitation.date)} {getMonth(invitation.date)} — {invitation.time || "18:00"}
                         </p>
@@ -378,8 +381,8 @@ function GardenBliss({ invitation }: { invitation: Partial<InvitationData> }) {
                         <MapPin className="h-4 w-4 text-emerald-500" />
                     </div>
                     <div className="flex-1 min-w-0">
-                        <p className="text-[8px] uppercase tracking-widest text-slate-400 font-bold">Manzil</p>
-                        <p className="font-black text-slate-800 text-sm truncate">{invitation.hall || "Zarafshon Saroyi"}</p>
+                        <p className="text-[8px] uppercase tracking-widest text-slate-400 font-bold">{t('location')}</p>
+                        <p className="font-black text-slate-800 text-sm truncate">{invitation.hall || t('placeholders.hall')}</p>
                         {invitation.location && (
                             <p className="text-[10px] text-emerald-600/70 font-medium truncate">{invitation.location}</p>
                         )}
@@ -390,7 +393,7 @@ function GardenBliss({ invitation }: { invitation: Partial<InvitationData> }) {
             {/* Footer floral */}
             <div className="mt-auto pt-6 pb-6 flex items-center gap-2 opacity-50">
                 <Flower2 className="h-4 w-4 text-pink-300" />
-                <p className="text-[8px] uppercase tracking-[0.3em] text-slate-400">Baxt bilan</p>
+                <p className="text-[8px] uppercase tracking-[0.3em] text-slate-400">{t('withHappiness')}</p>
                 <Flower2 className="h-4 w-4 text-emerald-300" />
             </div>
             <div className="w-full h-3 bg-gradient-to-r from-emerald-200 via-pink-200 to-emerald-200" />
@@ -403,6 +406,7 @@ function GardenBliss({ invitation }: { invitation: Partial<InvitationData> }) {
 // Dark luxury, square grid photos top, gold star motif, dark bg throughout
 // ════════════════════════════════════════════════════════════════════════════
 function MidnightStar({ invitation }: { invitation: Partial<InvitationData> }) {
+    const { t } = useLanguage()
     return (
         <div className="w-full min-h-[580px] bg-[#05070a] flex flex-col items-center overflow-hidden select-none relative">
             {/* Stars background - Enhanced */}
@@ -429,7 +433,7 @@ function MidnightStar({ invitation }: { invitation: Partial<InvitationData> }) {
                     <Star className="h-3 w-3 text-amber-400 fill-amber-400" />
                     <div className="h-px w-8 bg-amber-500/50" />
                 </div>
-                <p className="text-[8px] uppercase tracking-[0.6em] text-amber-400 font-bold">To'y Taklifnomasi</p>
+                <p className="text-[8px] uppercase tracking-[0.6em] text-amber-400 font-bold">{t('weddingInvitation')}</p>
             </div>
 
             {/* Two square photos side by side */}
@@ -447,7 +451,7 @@ function MidnightStar({ invitation }: { invitation: Partial<InvitationData> }) {
                         />
                         {/* Label Overlay */}
                         <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent py-2 px-3">
-                            <p className="text-[7px] uppercase tracking-[0.3em] text-amber-400 font-bold text-center">Kuyov</p>
+                            <p className="text-[7px] uppercase tracking-[0.3em] text-amber-400 font-bold text-center">{t('groom')}</p>
                         </div>
                     </div>
                 </div>
@@ -466,7 +470,7 @@ function MidnightStar({ invitation }: { invitation: Partial<InvitationData> }) {
                         />
                         {/* Label Overlay */}
                         <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent py-2 px-3">
-                            <p className="text-[7px] uppercase tracking-[0.3em] text-amber-400 font-bold text-center">Kelin</p>
+                            <p className="text-[7px] uppercase tracking-[0.3em] text-amber-400 font-bold text-center">{t('bride')}</p>
                         </div>
                     </div>
                 </div>
@@ -475,7 +479,7 @@ function MidnightStar({ invitation }: { invitation: Partial<InvitationData> }) {
             {/* Names */}
             <div className="text-center px-6 mb-8 relative">
                 <h2 className="text-4xl font-black text-transparent bg-clip-text bg-gradient-to-b from-amber-200 to-amber-500 italic font-serif tracking-wider leading-tight drop-shadow-sm">
-                    {invitation.groomName?.split(' ')[0] || "Sanjar"}
+                    {invitation.groomName?.split(' ')[0] || t('placeholders.groomName')}
                 </h2>
                 <div className="flex items-center justify-center gap-4 my-2">
                     <div className="h-px flex-1 bg-gradient-to-r from-transparent to-amber-500/30" />
@@ -483,7 +487,7 @@ function MidnightStar({ invitation }: { invitation: Partial<InvitationData> }) {
                     <div className="h-px flex-1 bg-gradient-to-l from-transparent to-amber-500/30" />
                 </div>
                 <h2 className="text-4xl font-black text-transparent bg-clip-text bg-gradient-to-b from-amber-200 to-amber-500 italic font-serif tracking-wider leading-tight drop-shadow-sm">
-                    {invitation.brideName?.split(' ')[0] || "Malika"}
+                    {invitation.brideName?.split(' ')[0] || t('placeholders.brideName')}
                 </h2>
             </div>
 
@@ -492,7 +496,7 @@ function MidnightStar({ invitation }: { invitation: Partial<InvitationData> }) {
 
             {/* Message */}
             <p className="text-[10px] text-slate-400 text-center px-10 leading-relaxed italic mb-6">
-                {invitation.text || "Muhtaram mehmonlar, sizlarni to'y bazmi uchun taklif etamiz."}
+                {invitation.text || t('inviteMsg')}
             </p>
 
             {/* Details row */}
@@ -508,13 +512,13 @@ function MidnightStar({ invitation }: { invitation: Partial<InvitationData> }) {
                         <div className="flex flex-col items-center py-5 gap-1">
                             <Clock className="h-4 w-4 text-amber-400 mb-1" />
                             <p className="text-2xl font-black text-amber-100 leading-none">{invitation.time || "18:00"}</p>
-                            <p className="text-[9px] uppercase tracking-widest text-amber-400/70 font-bold">Vaqt</p>
+                            <p className="text-[9px] uppercase tracking-widest text-amber-400/70 font-bold">{t('time')}</p>
                         </div>
                     </div>
                     <div className="border-t border-amber-500/20 flex items-center gap-3 px-5 py-4">
                         <MapPin className="h-4 w-4 text-amber-400 shrink-0" />
                         <div className="min-w-0 flex-1">
-                            <p className="font-black text-amber-100 text-sm truncate">{invitation.hall || "Zarafshon Saroyi"}</p>
+                            <p className="font-black text-amber-100 text-sm truncate">{invitation.hall || t('placeholders.hall')}</p>
                             {invitation.location && (
                                 <p className="text-[10px] text-amber-500/60 font-medium truncate">{invitation.location}</p>
                             )}
@@ -530,7 +534,7 @@ function MidnightStar({ invitation }: { invitation: Partial<InvitationData> }) {
                     <Star className="h-3 w-3 text-amber-400 fill-amber-400" />
                     <div className="h-px w-12 bg-amber-500/30" />
                 </div>
-                <p className="text-[8px] uppercase tracking-[0.4em] text-amber-400/60 font-bold">Sizni kutib qolamiz</p>
+                <p className="text-[8px] uppercase tracking-[0.4em] text-amber-400/60 font-bold">{t('waitingForYou')}</p>
             </div>
 
             {/* Gold bottom accent */}
@@ -554,7 +558,7 @@ function ToylashaylikTheme({ invitation }: { invitation: Partial<InvitationData>
                     <Sparkles className="h-6 w-6 text-[#f472b6] opacity-60" />
                 </div>
                 <p className="text-[10px] tracking-[0.6em] text-gray-400 uppercase ml-2">
-                    TO'Y TAKLIFI
+                    {t('weddingInvitation')}
                 </p>
             </div>
 
@@ -604,15 +608,15 @@ function ToylashaylikTheme({ invitation }: { invitation: Partial<InvitationData>
                         ? "flex-col text-3xl md:text-3xl space-y-1"
                         : "text-3xl md:text-4xl"
                 )}>
-                    <span>{invitation?.groomName || 'Sanjar'}</span>
+                    <span>{invitation?.groomName || t('placeholders.groomName')}</span>
                     <span className={cn(
                         "text-[#f472b6] italic",
                         ((invitation?.groomName?.length || 0) > 11 || (invitation?.brideName?.length || 0) > 11) ? "text-xl" : ""
                     )}>&</span>
-                    <span>{invitation?.brideName || 'Malika'}</span>
+                    <span>{invitation?.brideName || t('placeholders.brideName')}</span>
                 </h1>
                 <p className="text-[11px] text-pink-600/70 dark:text-pink-400/70 font-medium italic">
-                    Oilalari sizni to'yga taklif qiladi
+                    {t('inviteMsg')}
                 </p>
             </div>
 
@@ -622,7 +626,7 @@ function ToylashaylikTheme({ invitation }: { invitation: Partial<InvitationData>
                     <div className="h-10 w-10 bg-gradient-to-br from-orange-400 to-red-500 rounded-2xl flex items-center justify-center shadow-lg transform rotate-3">
                         <Calendar className="h-5 w-5 text-white" />
                     </div>
-                    <h3 className="text-xs font-bold text-gray-800 dark:text-white mt-1 uppercase tracking-widest">To'y marosimi</h3>
+                    <h3 className="text-xs font-bold text-gray-800 dark:text-white mt-1 uppercase tracking-widest">{t('weddingCeremony')}</h3>
                 </div>
 
                 {/* Date/Time Row */}
@@ -652,7 +656,7 @@ function ToylashaylikTheme({ invitation }: { invitation: Partial<InvitationData>
                     </div>
                     <div className="flex-1 min-w-0">
                         <p className="text-sm font-bold text-gray-800 dark:text-white truncate">
-                            {invitation?.hall || 'Mumtoz to\'yxonasi'}
+                            {invitation?.hall || t('placeholders.hall')}
                         </p>
                         {invitation?.location && (
                             <p className="text-[11px] text-orange-600/60 dark:text-orange-400/60 font-medium truncate mt-0.5">
