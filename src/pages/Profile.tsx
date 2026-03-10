@@ -1,12 +1,14 @@
 import { useTelegram } from "../hooks/useTelegram";
-import { Card, CardContent, CardHeader, CardTitle } from "../components/ui/Card";
-import { User, ChevronRight, Calendar, MapPin } from "lucide-react";
+import { Card } from "../components/ui/Card";
+import { User, ChevronRight, Calendar, MapPin, Heart, Share2, Settings, Shield, Info, LogOut } from "lucide-react";
 import { useEffect, useState } from "react";
 import { api } from "../lib/api";
 import { Button } from "../components/ui/Button";
 import { Link } from "react-router-dom";
 import type { InvitationData } from "../context/InvitationContext";
 import { useLanguage } from "../context/LanguageContext";
+import { motion, AnimatePresence } from "framer-motion";
+import { cn, isValidImageUrl } from "../lib/utils";
 
 export function Profile() {
     const { user } = useTelegram();
@@ -16,13 +18,11 @@ export function Profile() {
 
     useEffect(() => {
         const fetchInvitations = async () => {
-            console.log("DEBUG: Profile.tsx fetching invitations...");
             try {
                 const data = await api.getMyInvitations();
-                console.log("DEBUG: Profile.tsx received invitations:", data);
                 setInvitations(data || []);
             } catch (err) {
-                console.error("DEBUG: Profile.tsx failed to fetch invitations:", err);
+                console.error("Profile: Failed to fetch invitations:", err);
             } finally {
                 setLoading(false);
             }
@@ -30,89 +30,165 @@ export function Profile() {
         fetchInvitations();
     }, []);
 
+    const stats = [
+        { label: t('profile.myInvitations'), value: invitations.length, icon: Heart, color: "text-pink-500", bg: "bg-pink-50 dark:bg-pink-900/20" },
+        { label: "O'qilganlar", value: "1.2k", icon: Share2, color: "text-blue-500", bg: "bg-blue-50 dark:bg-blue-900/20" },
+    ];
+
+    const menuItems = [
+        { icon: Settings, label: "Sozlamalar", color: "text-slate-600 dark:text-slate-400" },
+        { icon: Shield, label: "Xavfsizlik", color: "text-slate-600 dark:text-slate-400" },
+        { icon: Info, label: "Dastur haqida", color: "text-slate-600 dark:text-slate-400" },
+    ];
 
     return (
-        <div className="container mx-auto px-4 py-8 max-w-2xl space-y-8">
-            <h1 className="text-3xl font-serif font-bold text-gray-900 dark:text-white">{t('profile.title')}</h1>
+        <div className="min-h-screen bg-slate-50 dark:bg-slate-950 pb-24">
+            <AnimatePresence mode="wait">
+                <motion.div
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    className="container mx-auto px-4 pt-8 max-w-2xl space-y-6"
+                >
+                    {/* Header Section */}
+                    <div className="relative rounded-[32px] overflow-hidden bg-slate-900 border border-slate-800 shadow-2xl">
+                        <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')] opacity-20" />
+                        <div className="absolute inset-0 bg-gradient-to-br from-primary-600/40 via-transparent to-slate-900/90" />
 
-            {/* User Info Card */}
-            <Card className="border-gold-200 dark:border-slate-700 overflow-hidden dark:bg-slate-800">
-                <div className="h-24 bg-gradient-to-r from-primary-500 to-gold-500 opacity-90" />
-                <CardContent className="relative pt-12 pb-6 text-center">
-                    <div className="absolute -top-12 left-1/2 -translate-x-1/2">
-                        <div className="h-24 w-24 rounded-full border-4 border-white dark:border-slate-800 bg-white shadow-lg flex items-center justify-center overflow-hidden">
-                            {user?.photo_url ? (
-                                <img src={user.photo_url} alt="Profile" className="h-full w-full object-cover" />
-                            ) : (
-                                <User className="h-12 w-12 text-gray-400" />
-                            )}
+                        <div className="relative p-8 flex flex-col items-center text-center">
+                            <motion.div
+                                whileHover={{ rotate: 5, scale: 1.05 }}
+                                className="relative mb-4"
+                            >
+                                <div className="h-28 w-28 rounded-[32px] border-4 border-white/10 p-1 bg-white/5 backdrop-blur-sm">
+                                    <div className="h-full w-full rounded-[24px] overflow-hidden bg-slate-800 flex items-center justify-center border border-white/20 shadow-inner">
+                                        {user?.photo_url ? (
+                                            <img src={user.photo_url} alt="Profile" className="h-full w-full object-cover" />
+                                        ) : (
+                                            <User className="h-14 w-14 text-slate-500" />
+                                        )}
+                                    </div>
+                                </div>
+                                <div className="absolute -bottom-1 -right-1 h-8 w-8 bg-primary-500 rounded-2xl border-4 border-slate-900 flex items-center justify-center text-white shadow-lg">
+                                    <Heart className="h-4 w-4 fill-current" />
+                                </div>
+                            </motion.div>
+
+                            <h2 className="text-2xl font-black text-white tracking-tight">
+                                {user?.first_name} {user?.last_name || ''}
+                            </h2>
+                            <p className="text-primary-300 font-medium text-sm">@{user?.username || 'taklifnoma_user'}</p>
+
+                            <div className="mt-8 flex gap-4 w-full">
+                                {stats.map((stat, i) => (
+                                    <div key={i} className="flex-1 bg-white/5 backdrop-blur-md border border-white/10 rounded-2xl p-4 transition-all hover:bg-white/10">
+                                        <div className={cn("h-8 w-8 rounded-xl flex items-center justify-center mb-2", stat.bg)}>
+                                            <stat.icon className={cn("h-4 w-4", stat.color)} />
+                                        </div>
+                                        <div className="text-xl font-black text-white">{stat.value}</div>
+                                        <div className="text-[10px] uppercase tracking-wider font-bold text-slate-400">{stat.label}</div>
+                                    </div>
+                                ))}
+                            </div>
                         </div>
                     </div>
-                    <h2 className="text-2xl font-bold text-gray-900 dark:text-white">
-                        {user?.first_name} {user?.last_name}
-                    </h2>
-                    <p className="text-gray-500 dark:text-gray-400">@{user?.username || 'user'}</p>
-                </CardContent>
-            </Card>
 
-            {/* Settings Card - Placeholder or other settings if any */}
-            {/* Keeping it for future settings, currently empty as Lang/Theme moved to Header */}
-
-            {/* My Invitations */}
-            <Card className="border-gold-100 dark:border-slate-700 shadow-sm dark:bg-slate-800">
-                <CardHeader className="pb-2 border-b border-gold-50 dark:border-slate-700">
-                    <CardTitle className="text-lg flex items-center gap-2 dark:text-gray-100">
-                        <ChevronRight className="h-5 w-5 text-gold-600 dark:text-gold-400" />
-                        {t('profile.myInvitations')}
-                    </CardTitle>
-                </CardHeader>
-                <CardContent className="p-0">
-                    {loading ? (
-                        <div className="p-8 text-center text-gray-400 italic">
-                            {t('loading')}
-                        </div>
-                    ) : invitations.length > 0 ? (
-                        <div className="divide-y divide-gold-50 dark:divide-slate-700">
-                            {invitations.map((inv) => (
-                                <Link
-                                    key={inv.id || inv._id}
-                                    to={`/invitation/${inv.id || inv._id}`}
-                                    className="p-4 flex items-center justify-between hover:bg-gold-50 dark:hover:bg-slate-700/50 transition-colors group"
-                                >
-                                    <div className="flex items-start gap-3">
-                                        <div className="h-10 w-10 rounded-lg bg-primary-100 dark:bg-primary-900/40 flex items-center justify-center flex-shrink-0">
-                                            <Calendar className="h-5 w-5 text-primary-600 dark:text-primary-400" />
-                                        </div>
-                                        <div>
-                                            <h4 className="font-bold text-gray-900 dark:text-white line-clamp-1">
-                                                {inv.brideName} {inv.brideLastname} & {inv.groomName} {inv.groomLastname}
-                                            </h4>
-                                            <div className="flex items-center gap-2 text-xs text-gray-500 dark:text-gray-400 mt-1">
-                                                <span className="flex items-center gap-1">
-                                                    <Calendar className="h-3 w-3" /> {inv.date}
-                                                </span>
-                                                <span className="flex items-center gap-1">
-                                                    <MapPin className="h-3 w-3" /> {inv.hall || inv.location}
-                                                </span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <ChevronRight className="h-5 w-5 text-gray-300 group-hover:text-primary-400 transition-colors" />
-                                </Link>
-                            ))}
-                        </div>
-                    ) : (
-                        <div className="p-12 text-center text-gray-500 space-y-4 dark:text-gray-400">
-                            <p>{t('invitationNotFound')}</p>
-                            <Link to="/create">
-                                <Button size="sm" variant="outline">
-                                    {t('createNew')}
-                                </Button>
+                    {/* My Invitations Card */}
+                    <Card className="border-none shadow-sm dark:bg-slate-900/50 rounded-[32px] overflow-hidden">
+                        <div className="p-6 border-b border-slate-50 dark:border-slate-800 flex items-center justify-between">
+                            <h3 className="text-lg font-black text-slate-900 dark:text-white flex items-center gap-2">
+                                <div className="h-2 w-2 rounded-full bg-primary-500" />
+                                {t('profile.myInvitations')}
+                            </h3>
+                            <Link to="/create" className="text-xs font-bold text-primary-500 hover:opacity-80 transition-opacity">
+                                {t('createNew')}
                             </Link>
                         </div>
-                    )}
-                </CardContent>
-            </Card>
+                        <div className="p-2 space-y-1">
+                            {loading ? (
+                                Array(2).fill(0).map((_, i) => (
+                                    <div key={i} className="h-20 bg-slate-100 dark:bg-slate-800/50 animate-pulse rounded-2xl w-full" />
+                                ))
+                            ) : invitations.length > 0 ? (
+                                invitations.map((inv, i) => (
+                                    <motion.div
+                                        key={inv.id || i}
+                                        initial={{ opacity: 0, x: -10 }}
+                                        animate={{ opacity: 1, x: 0 }}
+                                        transition={{ delay: i * 0.1 }}
+                                    >
+                                        <Link
+                                            to={`/invitation/${inv.id}`}
+                                            className="group block p-3 rounded-[24px] hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-all border border-transparent hover:border-slate-100 dark:hover:border-slate-800"
+                                        >
+                                            <div className="flex items-center gap-4">
+                                                <div className="h-14 w-14 rounded-2xl overflow-hidden bg-slate-100 dark:bg-slate-800 flex-shrink-0 border border-slate-200 dark:border-slate-700">
+                                                    {isValidImageUrl(inv.groomPictureGetUrl) ? (
+                                                        <img src={inv.groomPictureGetUrl} alt="Wedding" className="h-full w-full object-cover group-hover:scale-110 transition-transform duration-500" />
+                                                    ) : (
+                                                        <div className="h-full w-full flex items-center justify-center text-slate-400">
+                                                            <Heart className="h-6 w-6" />
+                                                        </div>
+                                                    )}
+                                                </div>
+                                                <div className="flex-1 min-w-0">
+                                                    <h4 className="font-black text-slate-900 dark:text-white text-sm truncate">
+                                                        {inv.groomName} & {inv.brideName}
+                                                    </h4>
+                                                    <div className="flex items-center gap-3 text-[11px] text-slate-500 dark:text-slate-400 mt-1 font-medium">
+                                                        <span className="flex items-center gap-1">
+                                                            <Calendar className="h-3 w-3" /> {inv.date}
+                                                        </span>
+                                                        <span className="flex items-center gap-1 truncate">
+                                                            <MapPin className="h-3 w-3" /> {inv.hall || inv.location}
+                                                        </span>
+                                                    </div>
+                                                </div>
+                                                <div className="h-9 w-9 rounded-xl bg-slate-100 dark:bg-slate-800 flex items-center justify-center text-slate-400 group-hover:bg-primary-500 group-hover:text-white transition-all shadow-sm">
+                                                    <ChevronRight className="h-4 w-4" />
+                                                </div>
+                                            </div>
+                                        </Link>
+                                    </motion.div>
+                                ))
+                            ) : (
+                                <div className="py-12 px-6 text-center space-y-4">
+                                    <div className="h-20 w-20 bg-slate-50 dark:bg-slate-800/50 rounded-[24px] flex items-center justify-center mx-auto border border-slate-100 dark:border-slate-800">
+                                        <Heart className="h-8 w-8 text-slate-300 dark:text-slate-600" />
+                                    </div>
+                                    <div className="space-y-1">
+                                        <p className="text-sm font-bold text-slate-900 dark:text-white">{t('invitationNotFound')}</p>
+                                        <p className="text-xs text-slate-500">{t('digitalWorld')}</p>
+                                    </div>
+                                    <Link to="/create">
+                                        <Button size="sm" variant="primary" className="rounded-xl px-6">
+                                            {t('createNew')}
+                                        </Button>
+                                    </Link>
+                                </div>
+                            )}
+                        </div>
+                    </Card>
+
+                    {/* Quick Menu Section */}
+                    <div className="grid grid-cols-1 gap-3">
+                        {menuItems.map((item, i) => (
+                            <button
+                                key={i}
+                                className="flex items-center justify-between p-4 bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800 rounded-[24px] hover:bg-slate-50 dark:hover:bg-slate-800 transition-all shadow-sm active:scale-[0.98]"
+                            >
+                                <div className="flex items-center gap-4">
+                                    <div className="h-10 w-10 bg-slate-50 dark:bg-slate-800 rounded-xl flex items-center justify-center">
+                                        <item.icon className={cn("h-5 w-5", item.color)} />
+                                    </div>
+                                    <span className="text-sm font-bold text-slate-700 dark:text-slate-200">{item.label}</span>
+                                </div>
+                                <ChevronRight className="h-4 w-4 text-slate-300" />
+                            </button>
+                        ))}
+                    </div>
+
+                </motion.div>
+            </AnimatePresence>
         </div>
     );
 }
