@@ -19,7 +19,7 @@ const MUSIC_MAP: Record<string, string> = {
     'music2': musicImg,
     'music3': musicDate,
 }
-import { cn } from "../lib/utils"
+import { cn, isValidImageUrl } from "../lib/utils"
 import { templates } from "../lib/templates"
 import { toPng } from 'html-to-image'
 import download from 'downloadjs'
@@ -719,7 +719,7 @@ export function Invitation() {
                                         className="flex items-center gap-2 bg-white dark:bg-slate-900 px-3 py-1.5 rounded-full border border-gray-100 dark:border-slate-800 shadow-sm hover:border-primary-200 transition-colors"
                                     >
                                         <div className="h-6 w-6 rounded-full bg-primary-100 dark:bg-primary-900/30 overflow-hidden flex items-center justify-center text-[10px] font-bold text-primary-600">
-                                            {photo ? (
+                                            {isValidImageUrl(photo) ? (
                                                 <img src={photo} alt={name} className="h-full w-full object-cover" />
                                             ) : (
                                                 name[0]?.toUpperCase() || '?'

@@ -89,7 +89,8 @@ export const translations = {
         guestWishes: "Tilaklar",
         honoredGuests: "Hurmatli mehmonlar",
         manualLocation: "To'yxona manzili (qo'lda kiritish)",
-        noOneViewedYet: "Hozircha hech kim ko'rmagan"
+        noOneViewedYet: "Hozircha hech kim ko'rmagan",
+        optional: "(Ixtiyoriy)"
     },
     ru: {
         appName: "To'ylashaylik",
@@ -179,7 +180,8 @@ export const translations = {
         guestWishes: "Пожелания",
         honoredGuests: "Почетные гости",
         manualLocation: "Адрес зала (вручную)",
-        noOneViewedYet: "Пока никто не смотрел"
+        noOneViewedYet: "Пока никто не смотрел",
+        optional: "(Необязательно)"
     },
     en: {
         appName: "To'ylashaylik",
@@ -269,6 +271,7 @@ export const translations = {
         guestWishes: "Wishes",
         honoredGuests: "Honored Guests",
         manualLocation: "Hall Address (manual)",
-        noOneViewedYet: "No one has viewed yet"
+        noOneViewedYet: "No one has viewed yet",
+        optional: "(Optional)"
     },
 };

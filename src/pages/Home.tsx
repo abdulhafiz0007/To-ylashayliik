@@ -5,7 +5,7 @@ import { Plus, Calendar, MapPin, Trash2, MoreVertical, Eye, MessageCircle } from
 import { useLanguage } from "../context/LanguageContext"
 import { useInvitation } from "../context/InvitationContext"
 import { api } from "../lib/api"
-import { cn } from "../lib/utils"
+import { cn, isValidImageUrl } from "../lib/utils"
 import { Button } from "../components/ui/Button"
 import { Card, CardContent } from "../components/ui/Card"
 import defaultGroom from "../assets/default_groom.jpg"
@@ -23,19 +23,13 @@ interface InvitationCardProps {
 }
 
 function InvitationSmallCard({ id, title, date, location, groomPicture, bridePicture, showMenu = true, onMenu }: InvitationCardProps) {
-    const [groomImg, setGroomImg] = useState(groomPicture || defaultGroom);
-    const [brideImg, setBrideImg] = useState(bridePicture || defaultBride);
+    const initialGroom = isValidImageUrl(groomPicture) ? (groomPicture as string) : defaultGroom;
+    const initialBride = isValidImageUrl(bridePicture) ? (bridePicture as string) : defaultBride;
 
-    // Helper to validate image URLs and avoid the "?" placeholder
-    const isValidUrl = (url: string | undefined): boolean => {
-        if (!url || typeof url !== 'string') return false;
-        const trimmed = url.trim().toLowerCase();
-        if (trimmed === "" || trimmed === "null" || trimmed === "undefined" || trimmed.includes("null") || trimmed.includes("undefined")) return false;
-        return trimmed.startsWith("http") || trimmed.startsWith("blob:") || trimmed.startsWith("data:") || trimmed.startsWith("/");
-    };
-
-    const finalGroomImg = isValidUrl(groomPicture) ? (groomPicture as string) : defaultGroom;
-    const finalBrideImg = isValidUrl(bridePicture) ? (bridePicture as string) : defaultBride;
+    const [groomImg, setGroomImg] = useState<string>(initialGroom);
+    const [brideImg, setBrideImg] = useState<string>(initialBride);
+    const [groomLoaded, setGroomLoaded] = useState(initialGroom === defaultGroom);
+    const [brideLoaded, setBrideLoaded] = useState(initialBride === defaultBride);
 
     return (
         <Card className="overflow-hidden border-none shadow-sm dark:bg-slate-800/50 hover:bg-slate-50 dark:hover:bg-slate-800 transition-all group relative">
@@ -45,18 +39,36 @@ function InvitationSmallCard({ id, title, date, location, groomPicture, bridePic
                     <div className="relative h-full w-full">
                         <div className="absolute top-0 right-0 h-11 w-11 rounded-xl overflow-hidden border-2 border-white dark:border-slate-800 shadow-md z-10 transform translate-x-1 -translate-y-1 bg-gray-50 dark:bg-slate-900">
                             <img
-                                src={groomImg === groomPicture ? finalGroomImg : groomImg}
+                                src={groomImg}
                                 alt="Groom"
-                                className="h-full w-full object-cover"
-                                onError={() => setGroomImg(defaultGroom)}
+                                className={cn(
+                                    "h-full w-full object-cover transition-opacity duration-300",
+                                    groomLoaded ? "opacity-100" : "opacity-0"
+                                )}
+                                onLoad={() => setGroomLoaded(true)}
+                                onError={() => {
+                                    if (groomImg !== defaultGroom) {
+                                        setGroomImg(defaultGroom);
+                                        setGroomLoaded(true);
+                                    }
+                                }}
                             />
                         </div>
                         <div className="absolute bottom-0 left-0 h-11 w-11 rounded-xl overflow-hidden border-2 border-white dark:border-slate-800 shadow-sm z-0 bg-gray-50 dark:bg-slate-900">
                             <img
-                                src={brideImg === bridePicture ? finalBrideImg : brideImg}
+                                src={brideImg}
                                 alt="Bride"
-                                className="h-full w-full object-cover"
-                                onError={() => setBrideImg(defaultBride)}
+                                className={cn(
+                                    "h-full w-full object-cover transition-opacity duration-300",
+                                    brideLoaded ? "opacity-100" : "opacity-0"
+                                )}
+                                onLoad={() => setBrideLoaded(true)}
+                                onError={() => {
+                                    if (brideImg !== defaultBride) {
+                                        setBrideImg(defaultBride);
+                                        setBrideLoaded(true);
+                                    }
+                                }}
                             />
                         </div>
                     </div>

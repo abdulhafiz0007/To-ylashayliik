@@ -3,7 +3,7 @@ import type { InvitationData } from "../context/InvitationContext"
 import type { TemplateConfig } from "../lib/templates"
 import { Clock, MapPin, Calendar, Heart, Star, Flower2, Diamond, Sparkles, Building2 } from "lucide-react"
 import { useLanguage } from "../context/LanguageContext"
-import { cn } from "../lib/utils"
+import { cn, isValidImageUrl } from "../lib/utils"
 import defaultGroom from "../assets/default_groom.jpg"
 import defaultBride from "../assets/default_bride.jpg"
 
@@ -36,21 +36,17 @@ function Photo({ src, size = 80, className = "", personType = "groom" }: {
     personType?: "groom" | "bride"
 }) {
     const fallback = personType === "bride" ? DEFAULT_BRIDE : DEFAULT_GROOM
-    const [imgSrc, setImgSrc] = useState<string>(fallback)
-
-    // Helper to validate image URLs and avoid the "?" placeholder
-    const isValidUrl = (url: string | undefined): boolean => {
-        if (!url || typeof url !== 'string') return false;
-        const trimmed = url.trim().toLowerCase();
-        if (trimmed === "" || trimmed === "null" || trimmed === "undefined" || trimmed.includes("null") || trimmed.includes("undefined")) return false;
-        return trimmed.startsWith("http") || trimmed.startsWith("blob:") || trimmed.startsWith("data:") || trimmed.startsWith("/");
-    };
+    const initialSrc = isValidImageUrl(src) ? (src as string) : fallback
+    const [imgSrc, setImgSrc] = useState<string>(initialSrc)
+    const [isLoaded, setIsLoaded] = useState(initialSrc === fallback)
 
     useEffect(() => {
-        if (isValidUrl(src)) {
+        if (isValidImageUrl(src)) {
             setImgSrc(src as string)
+            setIsLoaded(false)
         } else {
             setImgSrc(fallback)
+            setIsLoaded(true)
         }
     }, [src, fallback])
 
@@ -58,17 +54,25 @@ function Photo({ src, size = 80, className = "", personType = "groom" }: {
 
     return (
         <div
-            className={`overflow-hidden bg-gray-100/10 flex items-center justify-center ${className}`}
+            className={cn(
+                "overflow-hidden bg-gray-100/10 flex items-center justify-center transition-all duration-300",
+                className
+            )}
             style={dimStyle}
         >
             <img
                 src={imgSrc}
                 alt=""
-                className="w-full h-full object-cover"
+                className={cn(
+                    "w-full h-full object-cover transition-opacity duration-300",
+                    isLoaded ? "opacity-100" : "opacity-0"
+                )}
                 loading="eager"
+                onLoad={() => setIsLoaded(true)}
                 onError={() => {
                     if (imgSrc !== fallback) {
                         setImgSrc(fallback);
+                        setIsLoaded(true);
                     }
                 }}
             />

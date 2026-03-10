@@ -378,7 +378,7 @@ export function Create() {
                         <div className="grid grid-cols-1 gap-4">
                             <div className="space-y-2">
                                 <label className="text-sm font-medium flex items-center gap-2">
-                                    <Users className="h-4 w-4" /> {t('groomName')}
+                                    <Users className="h-4 w-4" /> {t('groomName')} <span className="text-primary-500 ml-1 font-bold">*</span>
                                 </label>
                                 <Input
                                     placeholder="Sanjar"
@@ -424,7 +424,7 @@ export function Create() {
                         <div className="grid grid-cols-1 gap-4">
                             <div className="space-y-2">
                                 <label className="text-sm font-medium flex items-center gap-2">
-                                    <Users className="h-4 w-4" /> {t('brideName')}
+                                    <Users className="h-4 w-4" /> {t('brideName')} <span className="text-primary-500 ml-1 font-bold">*</span>
                                 </label>
                                 <Input
                                     placeholder="Malika"
@@ -463,7 +463,7 @@ export function Create() {
                         <div className="grid grid-cols-2 gap-4">
                             <div className="space-y-2">
                                 <label className="text-sm font-medium flex items-center gap-2">
-                                    <Calendar className="h-4 w-4" /> {t('date')}
+                                    <Calendar className="h-4 w-4" /> {t('date')} <span className="text-primary-500 ml-1 font-bold">*</span>
                                 </label>
                                 <Input
                                     type="date"
@@ -475,7 +475,7 @@ export function Create() {
                             </div>
                             <div className="space-y-2">
                                 <label className="text-sm font-medium flex items-center gap-2">
-                                    <Clock className="h-4 w-4" /> {t('time')}
+                                    <Clock className="h-4 w-4" /> {t('time')} <span className="text-primary-500 ml-1 font-bold">*</span>
                                 </label>
                                 <Input
                                     type="time"
@@ -490,7 +490,7 @@ export function Create() {
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                             <div className="space-y-2">
                                 <label className="text-sm font-medium flex items-center gap-2">
-                                    <Building2 className="h-4 w-4" /> {t('hall')}
+                                    <Building2 className="h-4 w-4" /> {t('hall')} <span className="text-primary-500 ml-1 font-bold">*</span>
                                 </label>
                                 <Input
                                     placeholder="Zarafshon Tantanalar Saroyi"
@@ -501,7 +501,7 @@ export function Create() {
                             </div>
                             <div className="space-y-2">
                                 <label className="text-sm font-medium flex items-center gap-2">
-                                    <MapPin className="h-4 w-4" /> {t('location')}
+                                    <MapPin className="h-4 w-4" /> {t('location')} <span className="text-primary-500 ml-1 font-bold">*</span>
                                 </label>
                                 <Input
                                     placeholder="Shuhrat ko'chasi, 12-uy"
@@ -513,7 +513,7 @@ export function Create() {
 
                         <div className="space-y-2">
                             <label className="text-sm font-medium flex items-center gap-2 text-gray-500">
-                                <Map className="h-4 w-4" /> {t('viewOnMap')} (optional)
+                                <Map className="h-4 w-4" /> {t('viewOnMap')}
                             </label>
                             <div className="flex gap-2">
                                 <button
@@ -526,7 +526,6 @@ export function Create() {
                                             : "border-gold-200 dark:border-slate-700 hover:border-pink-300 dark:hover:border-pink-700 bg-white dark:bg-slate-900"
                                     )}
                                 >
-                                    <Map className={cn("h-4 w-4 shrink-0", selectedLocation ? "text-pink-500" : "text-gray-400")} />
                                     <div className="flex-1 min-w-0">
                                         {selectedLocation ? (
                                             <p className="text-sm text-gray-700 dark:text-gray-300 truncate">{selectedLocation.address}</p>
@@ -652,7 +651,7 @@ export function Create() {
 
                         <div className="space-y-2 mb-[-45px]">
                             <label className="text-sm font-medium flex items-center gap-2">
-                                <MessageSquare className="h-4 w-4" /> {t('message')}
+                                <MessageSquare className="h-4 w-4" /> {t('message')} <span className="text-primary-500 ml-1 font-bold">*</span>
                             </label>
                             <textarea
                                 className="flex min-h-[80px] w-full rounded-md border border-gold-200 dark:border-slate-700 bg-white dark:bg-slate-900 px-3 py-2 text-base focus:ring-2 focus:ring-primary-400 outline-none transition-all shadow-sm dark:text-white"
