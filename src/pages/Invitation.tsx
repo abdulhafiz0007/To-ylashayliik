@@ -567,9 +567,9 @@ export function Invitation() {
 
             {/* Actions & Wishes Section - Below Card */}
             <div className="w-full max-w-[420px] px-6 space-y-8 pb-32 relative z-10">
-                {/* Download & Share Actions (Only for Creator) */}
-                {isCreator ? (
-                    <div className="flex gap-2">
+                {/* Actions: Download & Share (Creator ALWAYS, Guest only if no Map) */}
+                {(isCreator || !hasCoords) ? (
+                    <div className="flex gap-2 mt-8">
                         <Button
                             variant="outline"
                             className="flex-1 h-12 rounded-xl bg-white/50 backdrop-blur-sm dark:bg-slate-900/50 border-pink-100 dark:border-pink-900/30 text-gray-600 dark:text-gray-300 gap-2"
@@ -588,17 +588,15 @@ export function Invitation() {
                     </div>
                 ) : (
                     /* View on Map Action (For Guests if coordinates exist) */
-                    hasCoords && (
-                        <div className="mt-8">
-                            <Button
-                                className="w-full h-14 rounded-2xl bg-[#ec4899] hover:bg-[#db2777] text-white font-bold shadow-lg shadow-pink-100 flex items-center justify-center gap-3 text-lg"
-                                onClick={handleOpenMap}
-                            >
-                                <MapPin className="h-5 w-5" />
-                                <span>{t('viewOnMap')}</span>
-                            </Button>
-                        </div>
-                    )
+                    <div className="mt-8">
+                        <Button
+                            className="w-full h-14 rounded-2xl bg-[#ec4899] hover:bg-[#db2777] text-white font-bold shadow-lg shadow-pink-100 flex items-center justify-center gap-3 text-lg"
+                            onClick={handleOpenMap}
+                        >
+                            <MapPin className="h-5 w-5" />
+                            <span>{t('viewOnMap')}</span>
+                        </Button>
+                    </div>
                 )}
 
                 {/* 📝 RSVP Section (For Guests) */}
@@ -652,28 +650,46 @@ export function Invitation() {
                     </div>
                 )}
 
-                {/* 📊 Attendance Summary (Visible to all if any responses exist) */}
+                {/* 📊 Attendance Summary (Modern Advanced Variant) */}
                 {rsvpStats.totalResponded > 0 && (
-                    <div className="bg-white/50 dark:bg-slate-900/50 backdrop-blur-sm rounded-[32px] p-6 border border-gray-100 dark:border-slate-800 shadow-sm mt-4">
-                        <div className="flex items-center gap-2 mb-4">
-                            <Users className="h-5 w-5 text-gray-400" />
-                            <h3 className="font-bold text-gray-900 dark:text-white">{t('rsvp.summary')}</h3>
-                        </div>
-                        <div className="grid grid-cols-3 gap-2">
-                            <div className="bg-white dark:bg-slate-800 p-3 rounded-2xl text-center shadow-sm">
-                                <p className="text-xl font-black text-gray-900 dark:text-white">{rsvpStats.totalResponded}</p>
-                                <p className="text-[10px] uppercase font-bold text-gray-400 mt-1">{t('rsvp.total')}</p>
+                    <motion.div
+                        initial={{ opacity: 0, y: 10 }}
+                        whileInView={{ opacity: 1, y: 0 }}
+                        className="bg-white/40 dark:bg-slate-900/40 backdrop-blur-xl rounded-[32px] p-6 border border-gray-100 dark:border-slate-800 shadow-sm mt-4"
+                    >
+                        <div className="flex items-center justify-between mb-4">
+                            <div className="flex items-center gap-2.5">
+                                <div className="p-2 bg-indigo-50 dark:bg-indigo-900/20 rounded-xl">
+                                    <Users className="h-5 w-5 text-indigo-500" />
+                                </div>
+                                <h3 className="font-extrabold text-gray-900 dark:text-white">{t('rsvp.summary')}</h3>
                             </div>
-                            <div className="bg-green-50 dark:bg-green-900/20 p-3 rounded-2xl text-center border border-green-100 dark:border-green-900/30">
+                            <span className="px-2.5 py-1 bg-gray-100 dark:bg-slate-800 rounded-full text-[10px] font-bold text-gray-500">
+                                {rsvpStats.totalResponded} {t('rsvp.total')}
+                            </span>
+                        </div>
+
+                        {/* Progress Bar */}
+                        <div className="h-2 w-full bg-gray-100 dark:bg-slate-800 rounded-full overflow-hidden mb-5">
+                            <motion.div
+                                initial={{ width: 0 }}
+                                animate={{ width: `${(rsvpStats.going / (rsvpStats.totalResponded || 1)) * 100}%` }}
+                                transition={{ duration: 1, ease: "easeOut" }}
+                                className="h-full bg-gradient-to-r from-green-400 to-emerald-500"
+                            />
+                        </div>
+
+                        <div className="grid grid-cols-2 gap-3">
+                            <div className="bg-white/60 dark:bg-slate-800/60 p-4 rounded-2xl text-center border border-green-50 dark:border-green-900/20 shadow-sm">
                                 <p className="text-xl font-black text-green-600 dark:text-green-400">{rsvpStats.going}</p>
                                 <p className="text-[10px] uppercase font-bold text-green-600/60 mt-1">{t('rsvp.willAttend')}</p>
                             </div>
-                            <div className="bg-red-50 dark:bg-red-900/20 p-3 rounded-2xl text-center border border-red-100 dark:border-red-900/30">
+                            <div className="bg-white/60 dark:bg-slate-800/60 p-4 rounded-2xl text-center border border-red-50 dark:border-red-900/20 shadow-sm">
                                 <p className="text-xl font-black text-red-600 dark:text-red-400">{rsvpStats.notGoing}</p>
                                 <p className="text-[10px] uppercase font-bold text-red-600/60 mt-1">{t('rsvp.cannotAttend')}</p>
                             </div>
                         </div>
-                    </div>
+                    </motion.div>
                 )}
 
                 {/* 💌 Send Your Wishes */}
