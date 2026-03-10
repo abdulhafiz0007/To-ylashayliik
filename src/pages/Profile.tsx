@@ -1,6 +1,6 @@
 import { useTelegram } from "../hooks/useTelegram";
 import { Card } from "../components/ui/Card";
-import { User, ChevronRight, Calendar, MapPin, Heart, Share2, Settings, Shield, Info, LogOut } from "lucide-react";
+import { User, ChevronRight, Calendar, MapPin, Heart, Share2, Settings, Shield, Info } from "lucide-react";
 import { useEffect, useState } from "react";
 import { api } from "../lib/api";
 import { Button } from "../components/ui/Button";
