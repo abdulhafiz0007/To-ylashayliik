@@ -136,20 +136,16 @@ export function Invitation() {
                     setWishes([])
                 }
 
-                // NEW: Load sights if user is the creator
+                // Load sights for everyone
                 if (data) {
-                    const tgUserId = tgUser?.id?.toString()
-                    const creatorTgId = (data.creator?.telegramId || data.creatorId)?.toString()
-                    if (tgUserId && creatorTgId && tgUserId === creatorTgId) {
-                        try {
-                            const sightsData = await api.getSights(id)
-                            const sightsArray = Array.isArray(sightsData)
-                                ? sightsData
-                                : (sightsData?.content || sightsData?.data || [])
-                            setSights(Array.isArray(sightsArray) ? sightsArray : [])
-                        } catch (err) {
-                            console.error("Failed to load sights:", err)
-                        }
+                    try {
+                        const sightsData = await api.getSights(id)
+                        const sightsArray = Array.isArray(sightsData)
+                            ? sightsData
+                            : (sightsData?.content || sightsData?.data || [])
+                        setSights(Array.isArray(sightsArray) ? sightsArray : [])
+                    } catch (err) {
+                        console.error("Failed to load sights:", err)
                     }
                 }
             }
@@ -547,7 +543,7 @@ export function Invitation() {
                 <div id="wishes" className="space-y-4 mt-[30px] scroll-mt-20">
                     <h2 className="text-left text-lg font-bold text-gray-900 dark:text-white flex items-center gap-2">
                         <Mail className="h-5 w-5 text-pink-500" />
-                        Send Your Wishes
+                        {t('sendWishes')}
                     </h2>
 
                     <div className="bg-white dark:bg-slate-900 rounded-2xl p-5 shadow-sm border border-gray-100 dark:border-slate-800 space-y-3">
@@ -577,7 +573,7 @@ export function Invitation() {
                 <div className="space-y-4">
                     <h2 className="text-left text-lg font-bold text-gray-900 dark:text-white flex items-center gap-2">
                         <Sparkles className="h-5 w-5 text-gold-500" />
-                        Guest Wishes
+                        {t('guestWishes')}
                     </h2>
 
                     {!Array.isArray(wishes) || wishes.length === 0 ? (
@@ -692,23 +688,30 @@ export function Invitation() {
 
                 {/* 👀 Who Viewed Section (Only for Creator) */}
                 {(() => {
-                    if (isCreator && sights.length > 0) {
+                    if (sights.length > 0) {
                         return (
                             <div id="sights" className="space-y-4 pt-6 border-t border-gray-100 dark:border-slate-800 scroll-mt-20">
                                 <h2 className="text-left text-lg font-bold text-gray-900 dark:text-white flex items-center gap-2">
                                     <Eye className="h-5 w-5 text-primary-500" />
-                                    Kimlar ko'rdi ({sights.length})
+                                    {t('honoredGuests')} ({sights.length})
                                 </h2>
                                 <div className="flex flex-wrap gap-2 pb-6">
                                     {sights.map((sight, idx) => {
                                         const viewer = sight.creator || sight.user
                                         const name = viewer?.firstname || viewer?.telegramUsername || viewer?.first_name || 'Mehmon'
                                         const photo = viewer?.photoUrl || viewer?.photo_url
+                                        const username = viewer?.telegramUsername || viewer?.username
+                                        const telegramId = viewer?.telegramId || viewer?.id
 
-                                        return (
+                                        const profileUrl = username
+                                            ? `https://t.me/${username}`
+                                            : telegramId
+                                                ? `tg://user?id=${telegramId}`
+                                                : null
+
+                                        const content = (
                                             <div
-                                                key={sight.id || idx}
-                                                className="flex items-center gap-2 bg-white dark:bg-slate-900 px-3 py-1.5 rounded-full border border-gray-100 dark:border-slate-800 shadow-sm"
+                                                className="flex items-center gap-2 bg-white dark:bg-slate-900 px-3 py-1.5 rounded-full border border-gray-100 dark:border-slate-800 shadow-sm hover:border-primary-200 transition-colors"
                                             >
                                                 <div className="h-6 w-6 rounded-full bg-primary-100 dark:bg-primary-900/30 overflow-hidden flex items-center justify-center text-[10px] font-bold text-primary-600">
                                                     {photo ? (
@@ -721,6 +724,14 @@ export function Invitation() {
                                                     {name}
                                                 </span>
                                             </div>
+                                        )
+
+                                        return profileUrl ? (
+                                            <a key={sight.id || idx} href={profileUrl} target="_blank" rel="noopener noreferrer">
+                                                {content}
+                                            </a>
+                                        ) : (
+                                            <div key={sight.id || idx}>{content}</div>
                                         )
                                     })}
                                 </div>

@@ -170,11 +170,14 @@ function ClassicRoyale({ invitation }: { invitation: Partial<InvitationData> }) 
                         <p className="font-black text-base leading-tight mt-0.5">{invitation.time || "18:00"}</p>
                     </div>
                 </div>
-                <div className="flex items-start justify-center gap-2.5 text-amber-800 pt-2 border-t border-amber-100/80">
-                    <MapPin className="h-4 w-4 mt-0.5 shrink-0 opacity-60" />
-                    <div className="text-center">
+                <div className="flex flex-col items-center justify-center gap-1 text-amber-800 pt-2 border-t border-amber-100/80">
+                    <div className="flex items-center gap-2">
+                        <MapPin className="h-4 w-4 shrink-0 opacity-60" />
                         <p className="font-black text-sm">{invitation.hall || "Zarafshon Saroyi"}</p>
                     </div>
+                    {invitation.location && (
+                        <p className="text-[10px] text-amber-600/70 font-medium px-4 text-center">{invitation.location}</p>
+                    )}
                 </div>
             </div>
 
@@ -250,10 +253,13 @@ function ModernMinimal({ invitation }: { invitation: Partial<InvitationData> }) 
                     <p className="text-2xl font-black text-slate-900 leading-none">{invitation.time || "18:00"}</p>
                     <p className="text-[9px] uppercase tracking-widest text-slate-500 font-black">Vaqt</p>
                 </div>
-                <div className="flex flex-col items-center py-6 gap-1 bg-slate-50/50">
-                    <p className="text-xs font-black text-slate-900 leading-tight text-center px-2">
+                <div className="flex flex-col items-center py-6 gap-1 bg-slate-50/50 min-w-0 px-2">
+                    <p className="text-xs font-black text-slate-900 leading-tight text-center truncate w-full">
                         {invitation.hall || "Zarafshon"}
                     </p>
+                    {invitation.location && (
+                        <p className="text-[9px] text-slate-400 font-medium text-center line-clamp-2">{invitation.location}</p>
+                    )}
                 </div>
             </div>
 
@@ -364,6 +370,9 @@ function GardenBliss({ invitation }: { invitation: Partial<InvitationData> }) {
                     <div className="flex-1 min-w-0">
                         <p className="text-[8px] uppercase tracking-widest text-slate-400 font-bold">Manzil</p>
                         <p className="font-black text-slate-800 text-sm truncate">{invitation.hall || "Zarafshon Saroyi"}</p>
+                        {invitation.location && (
+                            <p className="text-[10px] text-emerald-600/70 font-medium truncate">{invitation.location}</p>
+                        )}
                     </div>
                 </div>
             </div>
@@ -495,7 +504,10 @@ function MidnightStar({ invitation }: { invitation: Partial<InvitationData> }) {
                     <div className="border-t border-amber-500/20 flex items-center gap-3 px-5 py-4">
                         <MapPin className="h-4 w-4 text-amber-400 shrink-0" />
                         <div className="min-w-0 flex-1">
-                            <p className="font-black text-amber-100 text-sm">{invitation.hall || "Zarafshon Saroyi"}</p>
+                            <p className="font-black text-amber-100 text-sm truncate">{invitation.hall || "Zarafshon Saroyi"}</p>
+                            {invitation.location && (
+                                <p className="text-[10px] text-amber-500/60 font-medium truncate">{invitation.location}</p>
+                            )}
                         </div>
                     </div>
                 </div>
@@ -632,6 +644,11 @@ function ToylashaylikTheme({ invitation }: { invitation: Partial<InvitationData>
                         <p className="text-sm font-bold text-gray-800 dark:text-white truncate">
                             {invitation?.hall || 'Mumtoz to\'yxonasi'}
                         </p>
+                        {invitation?.location && (
+                            <p className="text-[11px] text-orange-600/60 dark:text-orange-400/60 font-medium truncate mt-0.5">
+                                {invitation.location}
+                            </p>
+                        )}
                     </div>
                 </div>
             </div>

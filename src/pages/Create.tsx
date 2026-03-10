@@ -503,11 +503,24 @@ export function Create() {
                                 <label className="text-sm font-medium flex items-center gap-2">
                                     <MapPin className="h-4 w-4" /> {t('location')}
                                 </label>
+                                <Input
+                                    placeholder="Shuhrat ko'chasi, 12-uy"
+                                    value={data.location || ''}
+                                    onChange={(e) => updateData({ location: e.target.value })}
+                                />
+                            </div>
+                        </div>
+
+                        <div className="space-y-2">
+                            <label className="text-sm font-medium flex items-center gap-2 text-gray-500">
+                                <Map className="h-4 w-4" /> {t('viewOnMap')} (optional)
+                            </label>
+                            <div className="flex gap-2">
                                 <button
                                     type="button"
                                     onClick={() => setShowLocationPicker(true)}
                                     className={cn(
-                                        "w-full flex items-center gap-3 h-11 px-3 rounded-md border transition-all text-left",
+                                        "flex-1 flex items-center gap-3 h-11 px-3 rounded-md border transition-all text-left",
                                         selectedLocation
                                             ? "border-pink-300 dark:border-pink-700 bg-white dark:bg-slate-900"
                                             : "border-gold-200 dark:border-slate-700 hover:border-pink-300 dark:hover:border-pink-700 bg-white dark:bg-slate-900"
@@ -523,6 +536,21 @@ export function Create() {
                                     </div>
                                     <ChevronRight className="h-4 w-4 text-gray-300 shrink-0" />
                                 </button>
+                                {selectedLocation && (
+                                    <button
+                                        type="button"
+                                        onClick={() => {
+                                            setSelectedLocation(null);
+                                            updateData({
+                                                weddingHallLatitude: undefined,
+                                                weddingHallLongitude: undefined
+                                            });
+                                        }}
+                                        className="h-11 w-11 flex items-center justify-center rounded-md border border-red-100 bg-red-50 text-red-500"
+                                    >
+                                        <X className="h-4 w-4" />
+                                    </button>
+                                )}
                             </div>
                         </div>
 
