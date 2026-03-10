@@ -104,7 +104,13 @@ export const translations = {
         },
         copyLink: "Havolani nusxalash",
         linkCopied: "Havola nusxalandi!",
-        shareInvitation: "Taklifnomani ulashish"
+        shareInvitation: "Taklifnomani ulashish",
+        viewers: "Mehmonlar",
+        delete: "O'chirish",
+        deleteConfirm: "Haqiqatdan ham o'chirmoqchimisiz?",
+        deleteBtn: "O'chirish",
+        rsvpErrorLoading: "RSVP ma'lumotlari yuklanmagan. Sahifani yangilab ko'ring.",
+        errorColon: "Xatolik: "
     },
     ru: {
         appName: "To'ylashaylik",
@@ -209,7 +215,13 @@ export const translations = {
         },
         copyLink: "Копировать ссылку",
         linkCopied: "Ссылка скопирована!",
-        shareInvitation: "Поделиться приглашением"
+        shareInvitation: "Поделиться приглашением",
+        viewers: "Посетители",
+        delete: "Удалить",
+        deleteConfirm: "Вы действительно хотите удалить?",
+        deleteBtn: "Удалить",
+        rsvpErrorLoading: "Данные RSVP не загружены. Попробуйте обновить страницу.",
+        errorColon: "Ошибка: "
     },
     en: {
         appName: "To'ylashaylik",
@@ -314,6 +326,12 @@ export const translations = {
         },
         copyLink: "Copy Link",
         linkCopied: "Link copied!",
-        shareInvitation: "Share Invitation"
+        shareInvitation: "Share Invitation",
+        viewers: "Guests",
+        delete: "Delete",
+        deleteConfirm: "Are you sure you want to delete?",
+        deleteBtn: "Delete",
+        rsvpErrorLoading: "RSVP data not loaded. Try refreshing the page.",
+        errorColon: "Error: "
     },
 };

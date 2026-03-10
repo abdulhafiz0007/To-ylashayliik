@@ -397,7 +397,7 @@ export function Home() {
                                     <div className="h-7 w-7 rounded-lg bg-blue-50 dark:bg-blue-900/20 flex items-center justify-center text-blue-500">
                                         <Eye className="h-4 w-4" />
                                     </div>
-                                    <span className="text-sm font-bold text-gray-700 dark:text-gray-200">Ko'rganlar</span>
+                                    <span className="text-sm font-bold text-gray-700 dark:text-gray-200">{t('viewers')}</span>
                                 </button>
 
                                 <button
@@ -412,7 +412,7 @@ export function Home() {
                                     <div className="h-7 w-7 rounded-lg bg-pink-50 dark:bg-pink-900/20 flex items-center justify-center text-pink-500">
                                         <MessageCircle className="h-4 w-4" />
                                     </div>
-                                    <span className="text-sm font-bold text-gray-700 dark:text-gray-200">Tilaklar</span>
+                                    <span className="text-sm font-bold text-gray-700 dark:text-gray-200">{t('guestWishes')}</span>
                                 </button>
 
                                 <button
@@ -445,7 +445,7 @@ export function Home() {
                                     <div className="h-7 w-7 rounded-lg bg-red-50 dark:bg-red-900/20 flex items-center justify-center text-red-500">
                                         <Trash2 className="h-4 w-4" />
                                     </div>
-                                    <span className="text-sm font-bold text-red-600">O'chirish</span>
+                                    <span className="text-sm font-bold text-red-600">{t('delete')}</span>
                                 </button>
                             </div>
                         </motion.div>
@@ -474,7 +474,7 @@ export function Home() {
                                 <div className="h-16 w-16 bg-red-50 dark:bg-red-900/20 rounded-2xl flex items-center justify-center mx-auto mb-6">
                                     <Trash2 className="h-8 w-8 text-red-500" />
                                 </div>
-                                <h3 className="text-xl font-black text-gray-900 dark:text-white mb-2">Haqiqatdan ham o'chirmoqchimisiz?</h3>
+                                <h3 className="text-xl font-black text-gray-900 dark:text-white mb-2">{t('deleteConfirm')}</h3>
 
                                 <div className="grid grid-cols-2 gap-3">
                                     <Button
@@ -483,7 +483,7 @@ export function Home() {
                                         onClick={() => setDeleteModal({ show: false, id: null })}
                                         disabled={isDeleting}
                                     >
-                                        Bekor qilish
+                                        {t('cancel')}
                                     </Button>
                                     <Button
                                         className="h-13 rounded-2xl font-black bg-red-500 hover:bg-red-600 text-white shadow-lg shadow-red-100 dark:shadow-none flex items-center justify-center gap-2"
@@ -493,7 +493,7 @@ export function Home() {
                                         {isDeleting ? (
                                             <div className="h-4 w-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
                                         ) : (
-                                            "O'chirish"
+                                            t('deleteBtn')
                                         )}
                                     </Button>
                                 </div>
