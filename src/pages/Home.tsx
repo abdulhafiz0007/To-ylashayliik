@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react"
 import { createPortal } from "react-dom"
-import { Link } from "react-router-dom"
+import { Link, useNavigate } from "react-router-dom"
 import { AnimatePresence, motion } from "framer-motion"
 import { Plus, Calendar, MapPin, Trash2, MoreVertical, Eye, MessageCircle, Share2 } from "lucide-react"
 import { useLanguage } from "../context/LanguageContext"
@@ -22,9 +22,10 @@ interface InvitationCardProps {
     bridePicture?: string
     showMenu?: boolean
     onMenu?: (e: React.MouseEvent, id: string | number, title: string) => void
+    onClick?: () => void
 }
 
-function InvitationSmallCard({ id, title, date, location, groomPicture, bridePicture, showMenu = true, onMenu }: InvitationCardProps) {
+function InvitationSmallCard({ id, title, date, location, groomPicture, bridePicture, showMenu = true, onMenu, onClick }: InvitationCardProps) {
     const initialGroom = isValidImageUrl(groomPicture) ? (groomPicture as string) : defaultGroom;
     const initialBride = isValidImageUrl(bridePicture) ? (bridePicture as string) : defaultBride;
 
@@ -34,7 +35,10 @@ function InvitationSmallCard({ id, title, date, location, groomPicture, bridePic
     const [brideLoaded, setBrideLoaded] = useState(initialBride === defaultBride);
 
     return (
-        <Card className="overflow-hidden border-none shadow-sm dark:bg-slate-800/50 hover:bg-slate-50 dark:hover:bg-slate-800 transition-all group relative">
+        <Card
+            className="overflow-hidden border-none shadow-sm dark:bg-slate-800/50 hover:bg-slate-50 dark:hover:bg-slate-800 transition-all group relative cursor-pointer active:scale-[0.98]"
+            onClick={onClick}
+        >
             <CardContent className="p-4 flex items-center gap-4">
                 {/* Overlapping Thumbnails */}
                 <div className="h-16 w-16 relative flex-shrink-0">
@@ -108,6 +112,7 @@ export function Home() {
     const { t } = useLanguage()
     const { receivedInvitations, refreshReceivedInvitations, currentUser } = useInvitation()
     const { tg } = useTelegram()
+    const navigate = useNavigate()
     const [activeTab, setActiveTab] = useState<'myEvents' | 'invitations'>('myEvents')
     const [invitations, setInvitations] = useState<any[]>([])
     const [loading, setLoading] = useState(true)
@@ -153,12 +158,17 @@ export function Home() {
     const handleMenu = (e: React.MouseEvent, id: string | number, title: string) => {
         e.preventDefault()
         e.stopPropagation()
+
+        // Use page coordinates to ensure it works even when scrolled
+        const x = e.pageX || e.clientX;
+        const y = e.pageY || e.clientY;
+
         setMenuModal({
             show: true,
             id,
             title,
-            x: e.clientX,
-            y: e.clientY
+            x,
+            y
         })
     }
 
@@ -300,17 +310,17 @@ export function Home() {
                                     ))
                                 ) : invitations.length > 0 ? (
                                     invitations.map((inv, i) => (
-                                        <Link key={inv.id || i} to={`/invitation/${inv.id}`}>
-                                            <InvitationSmallCard
-                                                id={inv.id || ''}
-                                                title={`${inv.groomName} & ${inv.brideName}`}
-                                                date={inv.date}
-                                                location={inv.hall || inv.location}
-                                                groomPicture={inv.groomPictureGetUrl}
-                                                bridePicture={inv.bridePictureGetUrl}
-                                                onMenu={handleMenu}
-                                            />
-                                        </Link>
+                                        <InvitationSmallCard
+                                            key={inv.id || i}
+                                            id={inv.id || ''}
+                                            title={`${inv.groomName} & ${inv.brideName}`}
+                                            date={inv.date}
+                                            location={inv.hall || inv.location}
+                                            groomPicture={inv.groomPictureGetUrl}
+                                            bridePicture={inv.bridePictureGetUrl}
+                                            onMenu={handleMenu}
+                                            onClick={() => navigate(`/invitation/${inv.id}`)}
+                                        />
                                     ))
                                 ) : (
                                     <div className="text-center py-12 space-y-4">
@@ -336,17 +346,17 @@ export function Home() {
                             >
                                 {filteredReceived.length > 0 ? (
                                     filteredReceived.map((inv, i) => (
-                                        <Link key={inv.id || i} to={`/invitation/${inv.id}`}>
-                                            <InvitationSmallCard
-                                                id={inv.id || ''}
-                                                title={`${inv.groomName} & ${inv.brideName}`}
-                                                date={inv.date}
-                                                location={inv.hall || inv.location}
-                                                groomPicture={inv.groomPictureGetUrl}
-                                                bridePicture={inv.bridePictureGetUrl}
-                                                showMenu={false}
-                                            />
-                                        </Link>
+                                        <InvitationSmallCard
+                                            key={inv.id || i}
+                                            id={inv.id || ''}
+                                            title={`${inv.groomName} & ${inv.brideName}`}
+                                            date={inv.date}
+                                            location={inv.hall || inv.location}
+                                            groomPicture={inv.groomPictureGetUrl}
+                                            bridePicture={inv.bridePictureGetUrl}
+                                            showMenu={false}
+                                            onClick={() => navigate(`/invitation/${inv.id}`)}
+                                        />
                                     ))
                                 ) : (
                                     <div className="text-center py-12 space-y-4">
@@ -382,7 +392,7 @@ export function Home() {
                             exit={{ opacity: 0, scale: 0.9, y: -10 }}
                             transition={{ type: "spring", damping: 30, stiffness: 450 }}
                             style={{
-                                top: Math.min(menuModal.y, window.innerHeight - 200),
+                                top: Math.min(menuModal.y, window.innerHeight + window.scrollY - 200),
                                 left: Math.min(menuModal.x - 170, window.innerWidth - 190)
                             }}
                             className="fixed w-44 bg-white dark:bg-slate-900 rounded-2xl overflow-hidden z-[100001] shadow-2xl border border-gray-100 dark:border-slate-800"
@@ -391,14 +401,16 @@ export function Home() {
                                 <button
                                     onClick={() => {
                                         if (menuModal.id) {
-                                            window.location.href = `/invitation/${menuModal.id}?view=sights`
+                                            navigate(`/invitation/${menuModal.id}?view=sights`)
                                             setMenuModal({ show: false, id: null, x: 0, y: 0 })
                                         }
                                     }}
                                     className="w-full h-10 rounded-xl flex items-center gap-3 px-3 hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors group"
                                 >
                                     <div className="h-7 w-7 rounded-lg bg-blue-50 dark:bg-blue-900/20 flex items-center justify-center text-blue-500">
-                                        <Eye className="h-4 w-4" />
+                                        <div className="h-7 w-7 rounded-lg bg-blue-50 dark:bg-blue-900/20 flex items-center justify-center text-blue-500">
+                                            <Eye className="h-4 w-4" />
+                                        </div>
                                     </div>
                                     <span className="text-sm font-bold text-gray-700 dark:text-gray-200">{t('honoredGuests')}</span>
                                 </button>
@@ -406,7 +418,7 @@ export function Home() {
                                 <button
                                     onClick={() => {
                                         if (menuModal.id) {
-                                            window.location.href = `/invitation/${menuModal.id}#wishes`
+                                            navigate(`/invitation/${menuModal.id}#wishes`)
                                             setMenuModal({ show: false, id: null, x: 0, y: 0 })
                                         }
                                     }}
