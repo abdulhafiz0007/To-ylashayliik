@@ -68,7 +68,6 @@ export function Invitation() {
             await api.setDesire(targetId, status)
             setUserRSVP(status)
             console.log(`[RSVP] Success! User responded: ${status}`)
-            alert(t('rsvp.confirmed'))
 
             // Refresh sights to reflect the change for everyone
             try {
@@ -80,7 +79,6 @@ export function Invitation() {
             }
         } catch (err) {
             console.error("[RSVP] Failed to set RSVP:", err)
-            alert(t('error'))
         } finally {
             setRsvpSubmitting(false)
         }
@@ -268,7 +266,7 @@ export function Invitation() {
                 download(dataUrl, 'my-wedding-invitation.png');
             } catch (err2) {
                 console.error('Fallback download also failed:', err2);
-                alert(t('downloadError'));
+                alert("Rasmni yuklab olishda xatolik yuz berdi. Iltimos, qayta urinib ko'ring.");
             }
         }
     }
@@ -277,9 +275,8 @@ export function Invitation() {
         // Construct a direct Telegram link to ensure the invitation opens in the Mini App
         const botUsername = 'etaklif_bot';
         const appShortName = 'taklifnoma';
-        const names = invitation ? `${invitation.groomName} & ${invitation.brideName}` : '...';
         const shareUrl = `https://t.me/${botUsername}/${appShortName}?startapp=inv_${id}`;
-        const shareText = t('shareMsg').replace('{names}', names);
+        const shareText = `Sizni ${invitation?.groomName} & ${invitation?.brideName}larning to'y oqshomiga taklif etamiz! 💍`;
 
         // If in Telegram WebApp, use native Telegram share via openTelegramLink
         if (tg?.openTelegramLink) {
@@ -306,7 +303,7 @@ export function Invitation() {
         } else {
             try {
                 await navigator.clipboard.writeText(shareUrl);
-                alert(t('linkCopied'));
+                alert("Taklifnoma havolasi nusxalandi!");
             } catch (err) {
                 console.error('Clipboard error:', err);
             }
@@ -537,7 +534,7 @@ export function Invitation() {
                                     onClick={() => setShowMapOptions(false)}
                                     className="w-full py-3 text-sm font-bold text-gray-400 hover:text-gray-600 transition-colors"
                                 >
-                                    {t('cancel')}
+                                    Bekor qilish
                                 </button>
                             </div>
                         </motion.div>
@@ -621,13 +618,12 @@ export function Invitation() {
                     <div className="bg-white dark:bg-slate-900 rounded-[32px] p-6 shadow-xl border border-pink-100 dark:border-pink-900/30 space-y-4">
                         <div className="text-center space-y-1">
                             <h3 className="text-lg font-black text-gray-900 dark:text-white">{t('rsvp.title')}</h3>
-                            <p className="text-sm text-gray-500">{userRSVP ? t('rsvp.confirmed') : t('waitReady')}</p>
+                            <p className="text-sm text-gray-500">{userRSVP ? t('rsvp.confirmed') : "Sizni kutamiz!"}</p>
                         </div>
 
                         <div className="grid grid-cols-2 gap-2">
                             <Button
                                 onClick={() => handleRSVP('YES')}
-                                loading={rsvpSubmitting && userRSVP !== 'NO'}
                                 disabled={rsvpSubmitting}
                                 className={cn(
                                     "h-14 rounded-2xl font-bold flex items-center justify-center gap-2 transition-all",
@@ -642,7 +638,6 @@ export function Invitation() {
 
                             <Button
                                 onClick={() => handleRSVP('NO')}
-                                loading={rsvpSubmitting && userRSVP !== 'YES'}
                                 disabled={rsvpSubmitting}
                                 className={cn(
                                     "h-14 rounded-2xl font-bold flex items-center justify-center gap-2 transition-all",
@@ -705,7 +700,7 @@ export function Invitation() {
                                 const photoUrl = creator.photoUrl || wish.photoUrl;
                                 const username = creator.telegramUsername || wish.username;
                                 const telegramId = creator.telegramId || wish.telegramId;
-                                const displayName = wish.name || creator.firstname || t('guest');
+                                const displayName = wish.name || creator.firstname || 'Mehmon';
 
                                 const hasPhoto = !!photoUrl;
                                 const profileLink = username
@@ -721,13 +716,13 @@ export function Invitation() {
                                     const date = new Date(dateStr);
                                     const diffMs = now.getTime() - date.getTime();
                                     const diffMins = Math.floor(diffMs / 60000);
-                                    if (diffMins < 1) return t('justNow');
-                                    if (diffMins < 60) return `${diffMins} ${t('minsAgo')}`;
+                                    if (diffMins < 1) return 'Hozirgina';
+                                    if (diffMins < 60) return `${diffMins} daq oldin`;
                                     const diffHours = Math.floor(diffMins / 60);
-                                    if (diffHours < 24) return `${diffHours} ${t('hoursAgo')}`;
+                                    if (diffHours < 24) return `${diffHours} soat oldin`;
                                     const diffDays = Math.floor(diffHours / 24);
-                                    if (diffDays < 30) return `${diffDays} ${t('daysAgo')}`;
-                                    return `${Math.floor(diffDays / 30)} ${t('monthsAgo')}`;
+                                    if (diffDays < 30) return `${diffDays} kun oldin`;
+                                    return `${Math.floor(diffDays / 30)} oy oldin`;
                                 };
                                 const timeAgo = getTimeAgo(wish.createdAt);
 
@@ -822,7 +817,7 @@ export function Invitation() {
                         <div className="flex flex-wrap gap-2 pb-6">
                             {sights.map((sight, idx) => {
                                 const viewer = sight.creator || sight.user
-                                const name = viewer?.firstname || viewer?.telegramUsername || viewer?.first_name || t('guest')
+                                const name = viewer?.firstname || viewer?.telegramUsername || viewer?.first_name || 'Mehmon'
                                 const photo = viewer?.photoUrl || viewer?.photo_url
                                 const username = viewer?.telegramUsername || viewer?.username
                                 const telegramId = viewer?.telegramId || viewer?.id

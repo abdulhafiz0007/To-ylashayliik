@@ -23,11 +23,11 @@ import musicAzizam from "../assets/music_azizam.mp3"
 import musicImg from "../assets/IMG_3421.mp3"
 import musicDate from "../assets/2026-02-23 09.26.00.mp3"
 
-const MUSIC_OPTIONS_KEYS = [
-    { id: 'music1', nameKey: 'music.m1', url: musicAzizam },
-    { id: 'music2', nameKey: 'music.m2', url: musicImg },
-    { id: 'music3', nameKey: 'music.m3', url: musicDate },
-    { id: 'none', nameKey: 'music.none', url: null },
+const MUSIC_OPTIONS = [
+    { id: 'music1', name: 'Musiqa 1 (Azizam)', url: musicAzizam },
+    { id: 'music2', name: 'Musiqa 2 (Vafodorim)', url: musicImg },
+    { id: 'music3', name: 'Musiqa 3 (Bizni sevgimiz boshqacha)', url: musicDate },
+    { id: 'none', name: 'Musiqasiz', url: null },
 ]
 
 const STEPS = ['groomInfo', 'brideInfo', 'weddingInfo', 'chooseTemplate'] as const;
@@ -37,10 +37,9 @@ interface CropModalProps {
     imageSrc: string
     onCropDone: (file: File, previewUrl: string) => void
     onCancel: () => void
-    t: (key: any) => string
 }
 
-function CropModal({ imageSrc, onCropDone, onCancel, t }: CropModalProps) {
+function CropModal({ imageSrc, onCropDone, onCancel }: CropModalProps) {
     const [crop, setCrop] = useState({ x: 0, y: 0 })
     const [zoom, setZoom] = useState(1)
     const [croppedArea, setCroppedArea] = useState<any>(null)
@@ -69,7 +68,7 @@ function CropModal({ imageSrc, onCropDone, onCancel, t }: CropModalProps) {
                 <button onClick={onCancel} className="p-2 rounded-full text-white/70 hover:text-white hover:bg-white/10 transition-colors">
                     <X className="h-5 w-5" />
                 </button>
-                <p className="text-white font-bold text-sm">{t('cropImage')}</p>
+                <p className="text-white font-bold text-sm">Rasmni kesish</p>
                 <div className="w-9" />
             </div>
 
@@ -114,9 +113,9 @@ function CropModal({ imageSrc, onCropDone, onCancel, t }: CropModalProps) {
                     className="w-full h-13 rounded-2xl bg-gradient-to-r from-primary-500 to-primary-600 text-white font-black text-sm shadow-xl flex items-center justify-center gap-2 disabled:opacity-60 py-4"
                 >
                     {loading ? (
-                        <span className="animate-pulse">{t('loading')}...</span>
+                        <span className="animate-pulse">Yuklanmoqda...</span>
                     ) : (
-                        <><Check className="h-4 w-4" /> {t('confirm')}</>
+                        <><Check className="h-4 w-4" /> Tasdiqlash</>
                     )}
                 </button>
             </div>
@@ -256,7 +255,7 @@ export function Create() {
             const result = await api.saveInvitation(finalData)
 
             if (!result || !result.id) {
-                setSaveError(t('saveError'))
+                setSaveError("Taklifnoma saqlanmadi. Qayta urinib ko'ring.")
                 setIsSaving(false)
                 return
             }
@@ -274,7 +273,7 @@ export function Create() {
 
             navigate(`/invitation/${invId}`)
         } catch (err: unknown) {
-            const errorMsg = err instanceof Error ? err.message : t('serverError')
+            const errorMsg = err instanceof Error ? err.message : "Server bilan bog'lanishda xatolik yuz berdi."
             setSaveError(errorMsg)
         } finally {
             setIsSaving(false)
@@ -358,7 +357,7 @@ export function Create() {
                     {hasPhoto ? t('changePhoto') : t('uploadPhoto')}
                 </Button>
                 {!hasPhoto && (
-                    <p className="text-[10px] text-slate-400 dark:text-slate-500">{t('defaultImageNote')}</p>
+                    <p className="text-[10px] text-slate-400 dark:text-slate-500">Default rasm ishlatiladi</p>
                 )}
             </div>
         )
@@ -382,7 +381,7 @@ export function Create() {
                                     <Users className="h-4 w-4 mr-2" /> {t('groomName')}<span className="text-primary-500 ml-0.5 font-bold">*</span>
                                 </label>
                                 <Input
-                                    placeholder={t('placeholders.groomName')}
+                                    placeholder="Sanjar"
                                     value={data.groomName}
                                     onChange={(e) => updateData({ groomName: e.target.value })}
                                     required
@@ -393,7 +392,7 @@ export function Create() {
                                     <Users className="h-4 w-4" /> {t('groomLastname')}
                                 </label>
                                 <Input
-                                    placeholder={t('placeholders.groomLastname')}
+                                    placeholder="Karimov"
                                     value={data.groomLastname}
                                     onChange={(e) => updateData({ groomLastname: e.target.value })}
                                 />
@@ -428,7 +427,7 @@ export function Create() {
                                     <Users className="h-4 w-4 mr-2" /> {t('brideName')}<span className="text-primary-500 ml-0.5 font-bold">*</span>
                                 </label>
                                 <Input
-                                    placeholder={t('placeholders.brideName')}
+                                    placeholder="Malika"
                                     value={data.brideName}
                                     onChange={(e) => updateData({ brideName: e.target.value })}
                                     required
@@ -439,7 +438,7 @@ export function Create() {
                                     <Users className="h-4 w-4" /> {t('brideLastname')}
                                 </label>
                                 <Input
-                                    placeholder={t('placeholders.brideLastname')}
+                                    placeholder="Ismailova"
                                     value={data.brideLastname}
                                     onChange={(e) => updateData({ brideLastname: e.target.value })}
                                 />
@@ -494,7 +493,7 @@ export function Create() {
                                     <Building2 className="h-4 w-4 mr-2" /> {t('hall')}<span className="text-primary-500 ml-0.5 font-bold">*</span>
                                 </label>
                                 <Input
-                                    placeholder={t('placeholders.hall')}
+                                    placeholder="Zarafshon Tantanalar Saroyi"
                                     value={data.hall}
                                     onChange={(e) => updateData({ hall: e.target.value })}
                                     required
@@ -505,7 +504,7 @@ export function Create() {
                                     <MapPin className="h-4 w-4 mr-2" /> {t('location')}<span className="text-primary-500 ml-0.5 font-bold">*</span>
                                 </label>
                                 <Input
-                                    placeholder={t('placeholders.location')}
+                                    placeholder="Shuhrat ko'chasi, 12-uy"
                                     value={data.location || ''}
                                     onChange={(e) => updateData({ location: e.target.value })}
                                 />
@@ -531,7 +530,7 @@ export function Create() {
                                         {selectedLocation ? (
                                             <p className="text-sm text-gray-700 dark:text-gray-300 truncate">{selectedLocation.address}</p>
                                         ) : (
-                                            <p className="text-sm text-gray-400 dark:text-gray-500">{t('selectFromMap')}</p>
+                                            <p className="text-sm text-gray-400 dark:text-gray-500">Xaritadan joy tanlang</p>
                                         )}
                                     </div>
                                     <ChevronRight className="h-4 w-4 text-gray-300 shrink-0" />
@@ -573,7 +572,7 @@ export function Create() {
                                             <Volume2 className="h-4 w-4 text-pink-500 shrink-0" />
                                         )}
                                         <p className="text-sm font-medium dark:text-white truncate">
-                                            {t(MUSIC_OPTIONS_KEYS.find(m => m.id === data.backgroundMusic)?.nameKey || 'music.none' as any)}
+                                            {MUSIC_OPTIONS.find(m => m.id === data.backgroundMusic)?.name}
                                         </p>
                                     </div>
                                     <ChevronRight className={cn("h-4 w-4 text-gray-300 shrink-0", showMusicList && "rotate-90")} />
@@ -584,7 +583,7 @@ export function Create() {
                                         className="absolute left-0 right-0 top-[calc(100%+8px)] z-50 bg-white dark:bg-slate-900 rounded-2xl shadow-2xl border border-gray-100 dark:border-slate-800 overflow-y-auto max-h-[210px]"
                                     >
                                         <div className="p-2 space-y-1">
-                                            {MUSIC_OPTIONS_KEYS.map((music) => (
+                                            {MUSIC_OPTIONS.map((music) => (
                                                 <div
                                                     key={music.id}
                                                     onClick={() => {
@@ -609,7 +608,7 @@ export function Create() {
                                                             "text-sm font-medium",
                                                             data.backgroundMusic === music.id ? "text-pink-600 dark:text-pink-400" : "text-gray-600 dark:text-gray-400"
                                                         )}>
-                                                            {t(music.nameKey as any)}
+                                                            {music.name}
                                                         </span>
                                                     </div>
 
@@ -656,7 +655,7 @@ export function Create() {
                             </label>
                             <textarea
                                 className="flex min-h-[80px] w-full rounded-md border border-gold-200 dark:border-slate-700 bg-white dark:bg-slate-900 px-3 py-2 text-base focus:ring-2 focus:ring-primary-400 outline-none transition-all shadow-sm dark:text-white"
-                                placeholder={t('placeholders.message')}
+                                placeholder="Bizning quvonchli kunimizda sizlarni mehmon qilishdan baxtiyormiz"
                                 value={data.text}
                                 onChange={(e) => updateData({ text: e.target.value })}
                             />
@@ -745,7 +744,7 @@ export function Create() {
                                                         ) : (
                                                             <>
                                                                 <Check className="h-5 w-5 stroke-[3] transition-transform group-hover/btn:scale-110" />
-                                                                <span className="tracking-tight">{t('saveDraft')}</span>
+                                                                <span className="tracking-tight">Saqlash va Yaratish</span>
                                                                 <div className="absolute inset-0 bg-white/10 opacity-0 group-hover/btn:opacity-100 transition-opacity" />
                                                             </>
                                                         )}
@@ -770,7 +769,6 @@ export function Create() {
                     imageSrc={cropSource}
                     onCropDone={handleCropDone}
                     onCancel={handleCropCancel}
-                    t={t}
                 />
             )}
 
