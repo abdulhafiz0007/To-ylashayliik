@@ -3,7 +3,7 @@ import { useParams, Link, useLocation } from "react-router-dom"
 import { useInvitation, type InvitationData } from "../context/InvitationContext"
 import { Button } from "../components/ui/Button"
 import { Input } from "../components/ui/Input"
-import { Download, Share2, Heart, Music, X, VolumeX, MapPin, Mail, Sparkles, Clock, User, Eye, ChevronRight, SendHorizontal } from 'lucide-react'
+import { Download, Share2, Heart, Music, X, VolumeX, MapPin, Mail, Sparkles, Clock, User, Eye, ChevronRight, SendHorizontal, CheckCircle2, XCircle, HelpCircle, Users } from 'lucide-react'
 
 
 // Import music assets
@@ -44,6 +44,33 @@ export function Invitation() {
     const [senderName, setSenderName] = useState("")
     const [isPlaying, setIsPlaying] = useState(false)
     const [showMapOptions, setShowMapOptions] = useState(false)
+    const [userRSVP, setUserRSVP] = useState<'GOING' | 'NOT_GOING' | 'MAYBE' | null>(null)
+    const [rsvpSubmitting, setRsvpSubmitting] = useState(false)
+
+    // Calculate RSVP Stats
+    const rsvpStats = {
+        going: sights.filter(s => s.desire === 'GOING').length,
+        notGoing: sights.filter(s => s.desire === 'NOT_GOING').length,
+        totalResponded: sights.filter(s => s.desire && s.desire !== 'null' && s.desire !== 'undefined').length
+    }
+
+    const handleRSVP = async (status: 'GOING' | 'NOT_GOING' | 'MAYBE') => {
+        if (!id || rsvpSubmitting) return
+        setRsvpSubmitting(true)
+        try {
+            await api.setDesire(id, status)
+            setUserRSVP(status)
+            // Refresh sights to reflect the change for everyone
+            const sightsData = await api.getSights(id)
+            const sightsArray = Array.isArray(sightsData) ? sightsData : (sightsData?.content || [])
+            setSights(Array.isArray(sightsArray) ? sightsArray : [])
+        } catch (err) {
+            console.error("Failed to set RSVP:", err)
+        } finally {
+            setRsvpSubmitting(false)
+        }
+    }
+
     const audioRef = useRef<HTMLAudioElement | null>(null)
 
     // Ref for the invitation card to capture as image
@@ -143,7 +170,17 @@ export function Invitation() {
                         const sightsArray = Array.isArray(sightsData)
                             ? sightsData
                             : (sightsData?.content || sightsData?.data || [])
-                        setSights(Array.isArray(sightsArray) ? sightsArray : [])
+                        const validSights = Array.isArray(sightsArray) ? sightsArray : []
+                        setSights(validSights)
+
+                        // Find current user's RSVP status
+                        if (tgUser) {
+                            const myStatus = validSights.find(s => {
+                                const v = s.creator || s.user
+                                return String(v?.telegramId || v?.id) === String(tgUser.id)
+                            })
+                            if (myStatus) setUserRSVP(myStatus.desire || null)
+                        }
                     } catch (err) {
                         console.error("Failed to load sights:", err)
                     }
@@ -539,6 +576,85 @@ export function Invitation() {
                     )
                 )}
 
+                {/* 📊 Attendance Summary (Visible to all if any responses exist) */}
+                {rsvpStats.totalResponded > 0 && (
+                    <div className="bg-white/50 dark:bg-slate-900/50 backdrop-blur-sm rounded-[32px] p-6 border border-gray-100 dark:border-slate-800 shadow-sm mt-4">
+                        <div className="flex items-center gap-2 mb-4">
+                            <Users className="h-5 w-5 text-gray-400" />
+                            <h3 className="font-bold text-gray-900 dark:text-white">{t('rsvp.summary')}</h3>
+                        </div>
+                        <div className="grid grid-cols-3 gap-2">
+                            <div className="bg-white dark:bg-slate-800 p-3 rounded-2xl text-center shadow-sm">
+                                <p className="text-xl font-black text-gray-900 dark:text-white">{rsvpStats.totalResponded}</p>
+                                <p className="text-[10px] uppercase font-bold text-gray-400 mt-1">{t('rsvp.total')}</p>
+                            </div>
+                            <div className="bg-green-50 dark:bg-green-900/20 p-3 rounded-2xl text-center border border-green-100 dark:border-green-900/30">
+                                <p className="text-xl font-black text-green-600 dark:text-green-400">{rsvpStats.going}</p>
+                                <p className="text-[10px] uppercase font-bold text-green-600/60 mt-1">{t('rsvp.willAttend')}</p>
+                            </div>
+                            <div className="bg-red-50 dark:bg-red-900/20 p-3 rounded-2xl text-center border border-red-100 dark:border-red-900/30">
+                                <p className="text-xl font-black text-red-600 dark:text-red-400">{rsvpStats.notGoing}</p>
+                                <p className="text-[10px] uppercase font-bold text-red-600/60 mt-1">{t('rsvp.cannotAttend')}</p>
+                            </div>
+                        </div>
+                    </div>
+                )}
+
+                {/* 📝 RSVP Section (For Guests) */}
+                {!isCreator && (
+                    <div className="bg-white dark:bg-slate-900 rounded-[32px] p-6 shadow-xl border border-pink-100 dark:border-pink-900/30 space-y-4">
+                        <div className="text-center space-y-1">
+                            <h3 className="text-lg font-black text-gray-900 dark:text-white">{t('rsvp.title')}</h3>
+                            <p className="text-sm text-gray-500">{userRSVP ? t('rsvp.confirmed') : "Sizni kutamiz!"}</p>
+                        </div>
+
+                        <div className="grid grid-cols-1 gap-2">
+                            <Button
+                                onClick={() => handleRSVP('GOING')}
+                                disabled={rsvpSubmitting}
+                                className={cn(
+                                    "h-12 rounded-2xl font-bold flex items-center justify-center gap-2 transition-all",
+                                    userRSVP === 'GOING'
+                                        ? "bg-green-500 text-white shadow-lg shadow-green-200"
+                                        : "bg-green-50 text-green-600 border border-green-100 hover:bg-green-100"
+                                )}
+                            >
+                                <CheckCircle2 className="h-5 w-5" />
+                                <span>{t('rsvp.going')}</span>
+                            </Button>
+
+                            <div className="grid grid-cols-2 gap-2">
+                                <Button
+                                    onClick={() => handleRSVP('NOT_GOING')}
+                                    disabled={rsvpSubmitting}
+                                    className={cn(
+                                        "h-12 rounded-2xl font-bold flex items-center justify-center gap-2 transition-all",
+                                        userRSVP === 'NOT_GOING'
+                                            ? "bg-red-500 text-white shadow-lg shadow-red-200"
+                                            : "bg-red-50 text-red-600 border border-red-100 hover:bg-red-100"
+                                    )}
+                                >
+                                    <XCircle className="h-5 w-5" />
+                                    <span>{t('rsvp.notGoing')}</span>
+                                </Button>
+                                <Button
+                                    onClick={() => handleRSVP('MAYBE')}
+                                    disabled={rsvpSubmitting}
+                                    className={cn(
+                                        "h-12 rounded-2xl font-bold flex items-center justify-center gap-2 transition-all",
+                                        userRSVP === 'MAYBE'
+                                            ? "bg-amber-500 text-white shadow-lg shadow-amber-200"
+                                            : "bg-amber-50 text-amber-600 border border-amber-100 hover:bg-amber-100"
+                                    )}
+                                >
+                                    <HelpCircle className="h-5 w-5" />
+                                    <span>{t('rsvp.maybe')}</span>
+                                </Button>
+                            </div>
+                        </div>
+                    </div>
+                )}
+
                 {/* 💌 Send Your Wishes */}
                 <div id="wishes" className="space-y-4 pt-[120px] scroll-mt-20">
                     <h2 className="text-left text-lg font-bold text-gray-900 dark:text-white flex items-center gap-2">
@@ -728,6 +844,15 @@ export function Invitation() {
                                         <span className="text-xs font-semibold text-gray-700 dark:text-gray-300">
                                             {name}
                                         </span>
+                                        {sight.desire === 'GOING' && (
+                                            <div className="h-2 w-2 rounded-full bg-green-500 shadow-[0_0_8px_rgba(34,197,94,0.6)]" title={t('rsvp.going')} />
+                                        )}
+                                        {sight.desire === 'NOT_GOING' && (
+                                            <div className="h-2 w-2 rounded-full bg-red-500 shadow-[0_0_8px_rgba(239,68,68,0.6)]" title={t('rsvp.notGoing')} />
+                                        )}
+                                        {sight.desire === 'MAYBE' && (
+                                            <div className="h-2 w-2 rounded-full bg-amber-500 shadow-[0_0_8px_rgba(245,158,11,0.6)]" title={t('rsvp.maybe')} />
+                                        )}
                                     </div>
                                 )
 

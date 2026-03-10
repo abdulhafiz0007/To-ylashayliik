@@ -90,7 +90,21 @@ export const translations = {
         honoredGuests: "Hurmatli mehmonlar",
         manualLocation: "To'yxona manzili (qo'lda kiritish)",
         noOneViewedYet: "Hozircha hech kim ko'rmagan",
-        optional: "(Ixtiyoriy)"
+        optional: "(Ixtiyoriy)",
+        rsvp: {
+            title: "Tashrifingizni tasdiqlang",
+            going: "Albatta boraman",
+            notGoing: "Borolmayman",
+            maybe: "Hali aniq emas",
+            confirmed: "Tashrifingiz tasdiqlandi!",
+            summary: "Tashrif buyuruvchilar",
+            total: "Jami",
+            willAttend: "Boradiganlar",
+            cannotAttend: "Borolmaydiganlar"
+        },
+        copyLink: "Havolani nusxalash",
+        linkCopied: "Havola nusxalandi!",
+        shareInvitation: "Taklifnomani ulashish"
     },
     ru: {
         appName: "To'ylashaylik",
@@ -181,7 +195,21 @@ export const translations = {
         honoredGuests: "Почетные гости",
         manualLocation: "Адрес зала (вручную)",
         noOneViewedYet: "Пока никто не смотрел",
-        optional: "(Необязательно)"
+        optional: "(Необязательно)",
+        rsvp: {
+            title: "Подтвердите ваше участие",
+            going: "Я приду",
+            notGoing: "Не смогу прийти",
+            maybe: "Пока не знаю",
+            confirmed: "Ваше участие подтверждено!",
+            summary: "Статистика посещений",
+            total: "Всего",
+            willAttend: "Придут",
+            cannotAttend: "Не придут"
+        },
+        copyLink: "Копировать ссылку",
+        linkCopied: "Ссылка скопирована!",
+        shareInvitation: "Поделиться приглашением"
     },
     en: {
         appName: "To'ylashaylik",
@@ -272,6 +300,20 @@ export const translations = {
         honoredGuests: "Honored Guests",
         manualLocation: "Hall Address (manual)",
         noOneViewedYet: "No one has viewed yet",
-        optional: "(Optional)"
+        optional: "(Optional)",
+        rsvp: {
+            title: "Confirm your attendance",
+            going: "I'm coming",
+            notGoing: "I can't come",
+            maybe: "Maybe",
+            confirmed: "Attendance confirmed!",
+            summary: "Attendance Summary",
+            total: "Total",
+            willAttend: "Will attend",
+            cannotAttend: "Cannot attend"
+        },
+        copyLink: "Copy Link",
+        linkCopied: "Link copied!",
+        shareInvitation: "Share Invitation"
     },
 };

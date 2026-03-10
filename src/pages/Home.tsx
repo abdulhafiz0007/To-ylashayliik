@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react"
 import { Link } from "react-router-dom"
 import { AnimatePresence, motion } from "framer-motion"
-import { Plus, Calendar, MapPin, Trash2, MoreVertical, Eye, MessageCircle } from "lucide-react"
+import { Plus, Calendar, MapPin, Trash2, MoreVertical, Eye, MessageCircle, Share2 } from "lucide-react"
 import { useLanguage } from "../context/LanguageContext"
 import { useInvitation } from "../context/InvitationContext"
 import { api } from "../lib/api"
@@ -19,7 +19,7 @@ interface InvitationCardProps {
     groomPicture?: string
     bridePicture?: string
     showMenu?: boolean
-    onMenu?: (e: React.MouseEvent, id: string | number) => void
+    onMenu?: (e: React.MouseEvent, id: string | number, title: string) => void
 }
 
 function InvitationSmallCard({ id, title, date, location, groomPicture, bridePicture, showMenu = true, onMenu }: InvitationCardProps) {
@@ -90,7 +90,7 @@ function InvitationSmallCard({ id, title, date, location, groomPicture, bridePic
                         onClick={(e) => {
                             e.preventDefault();
                             e.stopPropagation();
-                            onMenu(e, id);
+                            onMenu(e, id, title);
                         }}
                         className="p-2 text-gray-400 hover:text-primary-500 hover:bg-primary-50 dark:hover:bg-primary-900/20 rounded-xl transition-all"
                     >
@@ -110,7 +110,13 @@ export function Home() {
     const [loading, setLoading] = useState(true)
     const [deleteModal, setDeleteModal] = useState<{ show: boolean; id: string | number | null }>({ show: false, id: null })
     const [isDeleting, setIsDeleting] = useState(false)
-    const [menuModal, setMenuModal] = useState<{ show: boolean; id: string | number | null; x: number; y: number }>({ show: false, id: null, x: 0, y: 0 })
+    const [menuModal, setMenuModal] = useState<{ show: boolean, id: string | number | null, title?: string, x: number, y: number }>({
+        show: false,
+        id: null,
+        title: '',
+        x: 0,
+        y: 0
+    })
 
     // Filter received invitations to exclude user's own created invitations
     const myInvitationIds = new Set(invitations.map(inv => String(inv.id)))
@@ -141,10 +147,41 @@ export function Home() {
         }
     }
 
-    const handleMenu = (e: React.MouseEvent, id: string | number) => {
+    const handleMenu = (e: React.MouseEvent, id: string | number, title: string) => {
         e.preventDefault()
         e.stopPropagation()
-        setMenuModal({ show: true, id, x: e.clientX, y: e.clientY })
+        setMenuModal({
+            show: true,
+            id,
+            title,
+            x: e.clientX,
+            y: e.clientY
+        })
+    }
+
+    const handleShare = async (id: string | number, title: string) => {
+        const url = `${window.location.origin}/invitation/${id}`
+        const shareData = {
+            title: `To'ylashaylik - ${title}`,
+            text: `${title} taklifnomasi`,
+            url
+        };
+
+        if (navigator.share) {
+            try {
+                await navigator.share(shareData);
+            } catch (err) {
+                console.warn("Share failed, falling back to copy", err);
+                copyToClipboard(url);
+            }
+        } else {
+            copyToClipboard(url);
+        }
+    }
+
+    const copyToClipboard = (text: string) => {
+        navigator.clipboard.writeText(text);
+        alert(t('linkCopied'));
     }
 
     const confirmDelete = async () => {
@@ -312,7 +349,7 @@ export function Home() {
             {/* Action Menu Modal (Popover) */}
             <AnimatePresence>
                 {menuModal.show && (
-                    <div className="fixed inset-0 z-[10000]">
+                    <div className="fixed inset-0 z-[10050]">
                         <motion.div
                             initial={{ opacity: 0 }}
                             animate={{ opacity: 1 }}
@@ -360,6 +397,21 @@ export function Home() {
                                         <MessageCircle className="h-4 w-4" />
                                     </div>
                                     <span className="text-sm font-bold text-gray-700 dark:text-gray-200">Tilaklar</span>
+                                </button>
+
+                                <button
+                                    onClick={() => {
+                                        if (menuModal.id) {
+                                            handleShare(menuModal.id, menuModal.title || "");
+                                            setMenuModal({ show: false, id: null, x: 0, y: 0 })
+                                        }
+                                    }}
+                                    className="w-full h-10 rounded-xl flex items-center gap-3 px-3 hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors group"
+                                >
+                                    <div className="h-7 w-7 rounded-lg bg-green-50 dark:bg-green-900/20 flex items-center justify-center text-green-500">
+                                        <Share2 className="h-4 w-4" />
+                                    </div>
+                                    <span className="text-sm font-bold text-gray-700 dark:text-gray-200">{t('share')}</span>
                                 </button>
 
                                 <div className="h-px bg-gray-100 dark:bg-slate-800 mx-2 my-1" />

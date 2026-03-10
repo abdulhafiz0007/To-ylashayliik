@@ -288,6 +288,13 @@ export const api = {
 
     // Sights (New API)
     getSights: (invitationId: string | number) => fetchApi(`/api/sights/by-invitation/${invitationId}`),
+    setDesire: (invitationId: string | number, desire: 'GOING' | 'NOT_GOING' | 'MAYBE') => fetchApi('/api/sights/set-desire', {
+        method: 'POST',
+        body: JSON.stringify({
+            invitation: { id: invitationId },
+            desire
+        })
+    }),
 
     // Delete Invitation
     deleteInvitation: (id: string | number) => fetchApi(`/api/invitations/${id}`, {
