@@ -290,7 +290,7 @@ export const api = {
     getSights: (invitationId: string | number) => fetchApi(`/api/sights/by-invitation/${invitationId}`),
     getOwnSight: (invitationId: string | number) => fetchApi(`/api/sights/own-invitation-sight/${invitationId}`),
     setDesire: (sightId: number, desire: 'YES' | 'NO') => fetchApi('/api/sights/set-desire', {
-        method: 'POST',
+        method: 'PUT',
         body: JSON.stringify({
             id: sightId,
             desire
