@@ -288,10 +288,11 @@ export const api = {
 
     // Sights (New API)
     getSights: (invitationId: string | number) => fetchApi(`/api/sights/by-invitation/${invitationId}`),
-    setDesire: (invitationId: string | number, desire: 'YES' | 'NO') => fetchApi('/api/sights/set-desire', {
+    getOwnSight: (invitationId: string | number) => fetchApi(`/api/sights/own-invitation-sight/${invitationId}`),
+    setDesire: (sightId: number, desire: 'YES' | 'NO') => fetchApi('/api/sights/set-desire', {
         method: 'POST',
         body: JSON.stringify({
-            invitation: { id: typeof invitationId === 'string' ? parseInt(invitationId) : invitationId },
+            id: sightId,
             desire
         })
     }),

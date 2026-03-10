@@ -46,6 +46,7 @@ export function Invitation() {
     const [showMapOptions, setShowMapOptions] = useState(false)
     const [userRSVP, setUserRSVP] = useState<'YES' | 'NO' | null>(null)
     const [rsvpSubmitting, setRsvpSubmitting] = useState(false)
+    const [mySightId, setMySightId] = useState<number | null>(null)
 
     // Calculate RSVP Stats
     const rsvpStats = {
@@ -56,16 +57,16 @@ export function Invitation() {
 
     const handleRSVP = async (status: 'YES' | 'NO') => {
         const targetId = invitation?.id || id
-        if (!targetId || rsvpSubmitting) {
-            console.warn("[RSVP] Cannot submit: no targetId or already submitting")
+        if (!mySightId || !targetId || rsvpSubmitting) {
+            console.warn("[RSVP] Cannot submit: mySightId=", mySightId, "targetId=", targetId)
             return
         }
 
         setRsvpSubmitting(true)
-        console.log(`[RSVP] Submitting ${status} for invitation ${targetId}`)
+        console.log(`[RSVP] Submitting ${status} for sightId=${mySightId}`)
 
         try {
-            await api.setDesire(targetId, status)
+            await api.setDesire(mySightId, status)
             setUserRSVP(status)
             console.log(`[RSVP] Success! User responded: ${status}`)
 
@@ -185,17 +186,20 @@ export function Invitation() {
                             : (sightsData?.content || sightsData?.data || [])
                         const validSights = Array.isArray(sightsArray) ? sightsArray : []
                         setSights(validSights)
-
-                        // Find current user's RSVP status
-                        if (tgUser) {
-                            const myStatus = validSights.find(s => {
-                                const v = s.creator || s.user
-                                return String(v?.telegramId || v?.id) === String(tgUser.id)
-                            })
-                            if (myStatus) setUserRSVP(myStatus.desire || null)
-                        }
                     } catch (err) {
                         console.error("Failed to load sights:", err)
+                    }
+
+                    // Load current user's own sight status (separate endpoint)
+                    try {
+                        const ownSight = await api.getOwnSight(id)
+                        console.log("[RSVP] Own sight loaded:", ownSight)
+                        if (ownSight && ownSight.id) {
+                            setMySightId(ownSight.id)
+                            setUserRSVP(ownSight.desire || null)
+                        }
+                    } catch (err) {
+                        console.warn("[RSVP] Could not load own sight (may not be authenticated):", err)
                     }
                 }
             }
