@@ -68,6 +68,7 @@ export function Invitation() {
             await api.setDesire(targetId, status)
             setUserRSVP(status)
             console.log(`[RSVP] Success! User responded: ${status}`)
+            alert(t('rsvp.confirmed'))
 
             // Refresh sights to reflect the change for everyone
             try {
@@ -79,6 +80,7 @@ export function Invitation() {
             }
         } catch (err) {
             console.error("[RSVP] Failed to set RSVP:", err)
+            alert(t('error'))
         } finally {
             setRsvpSubmitting(false)
         }
@@ -625,6 +627,7 @@ export function Invitation() {
                         <div className="grid grid-cols-2 gap-2">
                             <Button
                                 onClick={() => handleRSVP('YES')}
+                                loading={rsvpSubmitting && userRSVP !== 'NO'}
                                 disabled={rsvpSubmitting}
                                 className={cn(
                                     "h-14 rounded-2xl font-bold flex items-center justify-center gap-2 transition-all",
@@ -639,6 +642,7 @@ export function Invitation() {
 
                             <Button
                                 onClick={() => handleRSVP('NO')}
+                                loading={rsvpSubmitting && userRSVP !== 'YES'}
                                 disabled={rsvpSubmitting}
                                 className={cn(
                                     "h-14 rounded-2xl font-bold flex items-center justify-center gap-2 transition-all",
