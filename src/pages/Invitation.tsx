@@ -420,7 +420,7 @@ export function Invitation() {
     const hasCoords = invitation?.weddingHallLatitude && invitation?.weddingHallLongitude
 
     return (
-        <div className="min-h-screen flex flex-col items-center relative pb-10 bg-gradient-to-b from-[#fff5f5] via-[#fffdf9] to-[#fffef2] dark:from-slate-950 dark:to-slate-900 transition-colors duration-500 overflow-y-auto overflow-x-hidden">
+        <div className="min-h-screen flex flex-col items-center relative pb-10 bg-slate-50 dark:bg-slate-900 transition-colors duration-500 overflow-y-auto overflow-x-hidden">
             {/* Music Player */}
             {musicUrl && (
                 <>
@@ -569,21 +569,21 @@ export function Invitation() {
             <div className="w-full max-w-[420px] px-6 space-y-8 pb-32 relative z-10">
                 {/* Download & Share Actions (Only for Creator) */}
                 {isCreator ? (
-                    <div className="flex gap-3 mt-8">
+                    <div className="flex gap-2">
                         <Button
-                            variant="ghost"
-                            className="flex-1 h-12 rounded-2xl bg-white/70 dark:bg-slate-900/80 backdrop-blur-xl border border-gray-100 dark:border-slate-800 font-bold text-gray-600 dark:text-gray-300 gap-2 shadow-sm"
+                            variant="outline"
+                            className="flex-1 h-12 rounded-xl bg-white/50 backdrop-blur-sm dark:bg-slate-900/50 border-pink-100 dark:border-pink-900/30 text-gray-600 dark:text-gray-300 gap-2"
                             onClick={handleDownload}
                         >
-                            <Download className="h-5 w-5 text-pink-500" />
-                            <span>{t('save')}</span>
+                            <Download className="h-4 w-4" />
+                            {t('save')}
                         </Button>
                         <Button
-                            className="flex-1 h-12 rounded-2xl bg-[#ec4899] hover:bg-[#db2777] text-white font-bold shadow-lg shadow-pink-200 gap-2"
+                            className="flex-1 h-12 rounded-xl bg-pink-500 hover:bg-pink-600 text-white shadow-lg shadow-pink-100 dark:shadow-none gap-2"
                             onClick={handleShare}
                         >
-                            <Share2 className="h-5 w-5 fill-current" />
-                            <span>{t('share')}</span>
+                            <Share2 className="h-4 w-4" />
+                            {t('share')}
                         </Button>
                     </div>
                 ) : (
@@ -591,66 +591,42 @@ export function Invitation() {
                     hasCoords && (
                         <div className="mt-8">
                             <Button
-                                className="w-full h-14 rounded-2xl bg-gradient-to-r bg-[#ec4899] hover:bg-[#db2777] text-white font-extrabold shadow-lg shadow-blue-100 flex items-center justify-center gap-3 text-lg transition-all active:scale-[0.98]"
+                                className="w-full h-14 rounded-2xl bg-[#ec4899] hover:bg-[#db2777] text-white font-bold shadow-lg shadow-pink-100 flex items-center justify-center gap-3 text-lg"
                                 onClick={handleOpenMap}
                             >
-                                <div className="bg-white/20 p-2 rounded-xl">
-                                    <MapPin className="h-6 w-6 text-white" />
-                                </div>
+                                <MapPin className="h-5 w-5" />
                                 <span>{t('viewOnMap')}</span>
                             </Button>
                         </div>
                     )
                 )}
 
-                {/* � RSVP Section (For Guests) - Now Priority #1 */}
+                {/* 📝 RSVP Section (For Guests) */}
                 {!isCreator && (
-                    <motion.div
-                        initial={{ opacity: 0, y: 20 }}
-                        whileInView={{ opacity: 1, y: 0 }}
-                        viewport={{ once: true }}
-                        className="bg-white/70 dark:bg-slate-900/70 backdrop-blur-xl rounded-[32px] p-8 shadow-2xl shadow-pink-100/50 dark:shadow-none border border-white/50 dark:border-slate-800 ring-1 ring-pink-100/50 dark:ring-slate-800/50 space-y-6"
-                    >
-                        <div className="text-center space-y-2">
-                            <div className="inline-flex items-center justify-center p-3 bg-pink-50 dark:bg-pink-900/20 rounded-2xl mb-1">
-                                <Sparkles className="h-6 w-6 text-pink-500" />
-                            </div>
-                            <h3 className="text-xl font-black text-gray-900 dark:text-white tracking-tight">{t('rsvp.title')}</h3>
-                            <p className="text-sm font-medium text-gray-500/80">
-                                {userRSVP ? t('rsvp.confirmed') : "Sizning ishtirokingiz biz uchun muhim!"}
-                            </p>
-                            {rsvpError && (
-                                <motion.p
-                                    initial={{ opacity: 0, scale: 0.9 }}
-                                    animate={{ opacity: 1, scale: 1 }}
-                                    className="text-[11px] text-red-500 mt-2 font-bold px-4 py-1.5 bg-red-50 dark:bg-red-900/20 rounded-full border border-red-100 dark:border-red-900/30 inline-block"
-                                >
-                                    {rsvpError}
-                                </motion.p>
-                            )}
+                    <div className="bg-white dark:bg-slate-900 rounded-[32px] p-6 shadow-xl border border-pink-100 dark:border-pink-900/30 space-y-4">
+                        <div className="text-center space-y-1">
+                            <h3 className="text-lg font-black text-gray-900 dark:text-white">{t('rsvp.title')}</h3>
+                            <p className="text-sm text-gray-500">{userRSVP ? t('rsvp.confirmed') : "Sizni kutamiz!"}</p>
+                            {rsvpError && <p className="text-[10px] text-red-500 mt-1 font-bold animate-pulse">{rsvpError}</p>}
                         </div>
 
-                        <div className="grid grid-cols-1 gap-3">
+                        <div className="grid grid-cols-2 gap-3">
                             <button
                                 onClick={() => handleRSVP('YES')}
                                 disabled={!!rsvpSubmitting}
                                 className={cn(
-                                    "relative h-16 rounded-[22px] font-black flex items-center justify-center gap-3 transition-all duration-500 active:scale-95 group overflow-hidden",
+                                    "h-14 rounded-2xl font-bold flex items-center justify-center gap-2 transition-all duration-300 active:scale-95",
                                     userRSVP === 'YES'
-                                        ? "bg-gradient-to-r from-green-500 to-emerald-600 text-white shadow-xl shadow-green-200 dark:shadow-green-900/40 ring-4 ring-green-100 dark:ring-green-900/30"
-                                        : "bg-white dark:bg-slate-800 text-green-600 dark:text-green-400 border-2 border-green-100 dark:border-green-900/30 hover:border-green-300 dark:hover:border-green-700 hover:bg-green-50/50 dark:hover:bg-green-900/20"
+                                        ? "bg-green-500 text-white shadow-lg shadow-green-200 dark:shadow-green-900/30 scale-[1.02] ring-2 ring-green-300"
+                                        : userRSVP === 'NO'
+                                            ? "bg-gray-100 dark:bg-slate-800 text-gray-400 dark:text-gray-500 opacity-60"
+                                            : "bg-green-50 dark:bg-green-900/20 text-green-600 dark:text-green-400 border border-green-200 dark:border-green-800 hover:bg-green-100 dark:hover:bg-green-900/40"
                                 )}
                             >
                                 {rsvpSubmitting === 'YES' ? (
-                                    <div className="w-6 h-6 border-3 border-white/30 border-t-white rounded-full animate-spin" />
+                                    <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
                                 ) : (
-                                    <>
-                                        <CheckCircle2 className={cn("h-6 w-6 transition-transform group-hover:scale-110", userRSVP === 'YES' && "fill-white/20")} />
-                                        <span className="text-base tracking-wide">{t('rsvp.going')}</span>
-                                    </>
-                                )}
-                                {userRSVP === 'YES' && (
-                                    <motion.div layoutId="rsvp-glow" className="absolute inset-0 bg-white/10 animate-pulse pointer-events-none" />
+                                    <span>{t('rsvp.going')}</span>
                                 )}
                             </button>
 
@@ -658,107 +634,76 @@ export function Invitation() {
                                 onClick={() => handleRSVP('NO')}
                                 disabled={!!rsvpSubmitting}
                                 className={cn(
-                                    "relative h-16 rounded-[22px] font-black flex items-center justify-center gap-3 transition-all duration-500 active:scale-95 group overflow-hidden",
+                                    "h-14 rounded-2xl font-bold flex items-center justify-center gap-2 transition-all duration-300 active:scale-95",
                                     userRSVP === 'NO'
-                                        ? "bg-gradient-to-r from-red-500 to-rose-600 text-white shadow-xl shadow-red-200 dark:shadow-red-900/40 ring-4 ring-red-100 dark:ring-red-900/30"
-                                        : "bg-white dark:bg-slate-800 text-red-600 dark:text-red-400 border-2 border-red-100 dark:border-red-900/30 hover:border-red-300 dark:hover:border-red-700 hover:bg-red-50/50 dark:hover:bg-red-900/20"
+                                        ? "bg-red-500 text-white shadow-lg shadow-red-200 dark:shadow-red-900/30 scale-[1.02] ring-2 ring-red-300"
+                                        : userRSVP === 'YES'
+                                            ? "bg-gray-100 dark:bg-slate-800 text-gray-400 dark:text-gray-500 opacity-60"
+                                            : "bg-red-50 dark:bg-red-900/20 text-red-600 dark:text-red-400 border border-red-200 dark:border-red-800 hover:bg-red-100 dark:hover:bg-red-900/40"
                                 )}
                             >
                                 {rsvpSubmitting === 'NO' ? (
-                                    <div className="w-6 h-6 border-3 border-white/30 border-t-white rounded-full animate-spin" />
+                                    <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
                                 ) : (
-                                    <>
-                                        <XCircle className={cn("h-6 w-6 transition-transform group-hover:scale-110", userRSVP === 'NO' && "fill-white/20")} />
-                                        <span className="text-base tracking-wide">{t('rsvp.notGoing')}</span>
-                                    </>
-                                )}
-                                {userRSVP === 'NO' && (
-                                    <motion.div layoutId="rsvp-glow" className="absolute inset-0 bg-white/10 animate-pulse pointer-events-none" />
+                                    <span>{t('rsvp.notGoing')}</span>
                                 )}
                             </button>
                         </div>
-                    </motion.div>
+                    </div>
                 )}
 
-                {/* 📊 Attendance Summary board - Now below Action */}
+                {/* 📊 Attendance Summary (Visible to all if any responses exist) */}
                 {rsvpStats.totalResponded > 0 && (
-                    <motion.div
-                        initial={{ opacity: 0 }}
-                        whileInView={{ opacity: 1 }}
-                        className="bg-white/40 dark:bg-slate-900/40 backdrop-blur-md rounded-[32px] p-8 border border-gray-100/50 dark:border-slate-800/50 shadow-inner mt-4"
-                    >
-                        <div className="flex items-center justify-between mb-6">
-                            <div className="flex items-center gap-3">
-                                <div className="p-2 bg-indigo-50 dark:bg-indigo-900/20 rounded-xl">
-                                    <Users className="h-5 w-5 text-indigo-500" />
-                                </div>
-                                <h3 className="font-extrabold text-gray-900 dark:text-white text-lg tracking-tight">{t('rsvp.summary')}</h3>
-                            </div>
-                            <span className="px-3 py-1 bg-gray-100 dark:bg-slate-800 rounded-full text-xs font-bold text-gray-500">
-                                {rsvpStats.totalResponded} {t('rsvp.total')}
-                            </span>
+                    <div className="bg-white/50 dark:bg-slate-900/50 backdrop-blur-sm rounded-[32px] p-6 border border-gray-100 dark:border-slate-800 shadow-sm mt-4">
+                        <div className="flex items-center gap-2 mb-4">
+                            <Users className="h-5 w-5 text-gray-400" />
+                            <h3 className="font-bold text-gray-900 dark:text-white">{t('rsvp.summary')}</h3>
                         </div>
-
-                        {/* Progress Bar social proof */}
-                        <div className="relative h-3 w-full bg-gray-100 dark:bg-slate-800 rounded-full overflow-hidden mb-8 ring-1 ring-gray-100 dark:ring-slate-800">
-                            <motion.div
-                                initial={{ width: 0 }}
-                                animate={{ width: `${(rsvpStats.going / (rsvpStats.totalResponded || 1)) * 100}%` }}
-                                transition={{ duration: 1, ease: "easeOut" }}
-                                className="absolute left-0 top-0 h-full bg-gradient-to-r from-green-400 to-emerald-500 shadow-sm"
-                            />
-                        </div>
-
-                        <div className="grid grid-cols-2 gap-4">
-                            <div className="bg-white/60 dark:bg-slate-800/60 p-5 rounded-3xl text-center border border-green-50 dark:border-green-900/20 shadow-sm">
-                                <p className="text-2xl font-black text-green-600 dark:text-green-400 leading-none">{rsvpStats.going}</p>
-                                <p className="text-[10px] uppercase font-heavy text-green-600/60 mt-2 tracking-widest">{t('rsvp.willAttend')}</p>
+                        <div className="grid grid-cols-3 gap-2">
+                            <div className="bg-white dark:bg-slate-800 p-3 rounded-2xl text-center shadow-sm">
+                                <p className="text-xl font-black text-gray-900 dark:text-white">{rsvpStats.totalResponded}</p>
+                                <p className="text-[10px] uppercase font-bold text-gray-400 mt-1">{t('rsvp.total')}</p>
                             </div>
-                            <div className="bg-white/60 dark:bg-slate-800/60 p-5 rounded-3xl text-center border border-red-50 dark:border-red-900/20 shadow-sm">
-                                <p className="text-2xl font-black text-red-600 dark:text-red-400 leading-none">{rsvpStats.notGoing}</p>
-                                <p className="text-[10px] uppercase font-heavy text-red-600/60 mt-2 tracking-widest">{t('rsvp.cannotAttend')}</p>
+                            <div className="bg-green-50 dark:bg-green-900/20 p-3 rounded-2xl text-center border border-green-100 dark:border-green-900/30">
+                                <p className="text-xl font-black text-green-600 dark:text-green-400">{rsvpStats.going}</p>
+                                <p className="text-[10px] uppercase font-bold text-green-600/60 mt-1">{t('rsvp.willAttend')}</p>
+                            </div>
+                            <div className="bg-red-50 dark:bg-red-900/20 p-3 rounded-2xl text-center border border-red-100 dark:border-red-900/30">
+                                <p className="text-xl font-black text-red-600 dark:text-red-400">{rsvpStats.notGoing}</p>
+                                <p className="text-[10px] uppercase font-bold text-red-600/60 mt-1">{t('rsvp.cannotAttend')}</p>
                             </div>
                         </div>
-                    </motion.div>
+                    </div>
                 )}
 
                 {/* 💌 Send Your Wishes */}
-                <div id="wishes" className="space-y-6 pt-24 scroll-mt-20">
-                    <div className="flex items-center gap-3 px-2">
-                        <div className="p-2.5 bg-pink-50 dark:bg-pink-900/20 rounded-xl shadow-sm">
-                            <Mail className="h-6 w-6 text-pink-500" />
-                        </div>
-                        <h2 className="text-xl font-black text-gray-900 dark:text-white tracking-tight">
-                            {t('sendWishes')}
-                        </h2>
-                    </div>
+                <div id="wishes" className="space-y-4 pt-24 scroll-mt-20">
+                    <h2 className="text-left text-lg font-bold text-gray-900 dark:text-white flex items-center gap-2">
+                        <Mail className="h-5 w-5 text-pink-500" />
+                        {t('sendWishes')}
+                    </h2>
 
-                    <motion.div
-                        initial={{ opacity: 0, scale: 0.98 }}
-                        whileInView={{ opacity: 1, scale: 1 }}
-                        className="bg-white/60 dark:bg-slate-900/60 backdrop-blur-xl rounded-[32px] p-7 shadow-2xl shadow-pink-100/30 dark:shadow-none border border-white/50 dark:border-slate-800 ring-1 ring-pink-100/50 dark:ring-slate-800/50 space-y-4"
-                    >
+                    <div className="bg-white dark:bg-slate-900 rounded-2xl p-5 shadow-sm border border-gray-100 dark:border-slate-800 space-y-3">
                         <Input
                             placeholder={t('name')}
                             value={senderName}
                             onChange={(e) => setSenderName(e.target.value)}
-                            className="bg-white/80 dark:bg-slate-800/80 rounded-[18px] border-2 border-gray-100/50 dark:border-slate-700 h-14 px-5 focus:ring-4 focus:ring-pink-100 dark:focus:ring-pink-900/20 focus:border-pink-300 transition-all dark:text-white outline-none font-medium"
+                            className="bg-gray-50/50 dark:bg-slate-800/50 rounded-xl border border-gray-100 dark:border-slate-700 h-11 px-4 focus:ring-2 focus:ring-pink-200 dark:text-white outline-none"
                         />
                         <textarea
                             placeholder={t('addComment')}
                             value={newWish}
                             onChange={(e) => setNewWish(e.target.value)}
-                            className="w-full min-h-[120px] bg-white/80 dark:bg-slate-800/80 rounded-[22px] border-2 border-gray-100/50 dark:border-slate-700 p-5 focus:ring-4 focus:ring-pink-100 dark:focus:ring-pink-900/20 focus:border-pink-300 transition-all resize-none text-base dark:text-white outline-none font-medium"
+                            className="w-full min-h-[80px] bg-gray-50/50 dark:bg-slate-800/50 rounded-xl border border-gray-100 dark:border-slate-700 p-4 focus:ring-2 focus:ring-pink-200 resize-none text-base dark:text-white outline-none"
                         />
                         <Button
                             onClick={handlePostWish}
-                            className="w-full h-14 rounded-2xl bg-gradient-to-r from-pink-500 to-purple-600 hover:from-pink-600 hover:to-purple-700 text-white font-extrabold shadow-lg shadow-pink-200 dark:shadow-pink-900/40 flex items-center justify-center gap-3 text-lg transition-transform active:scale-[0.98]"
+                            className="w-full h-11 rounded-xl bg-gradient-to-r from-pink-500 to-purple-500 hover:from-pink-600 hover:to-purple-600 text-white font-bold shadow-md flex items-center justify-center gap-2"
                             disabled={!newWish.trim() || !senderName.trim()}
                         >
-                            <span className="tracking-wide">{t('send')}</span>
-                            <SendHorizontal className="h-5 w-5" />
+                            {t('send')} <SendHorizontal className="h-4 w-4" />
                         </Button>
-                    </motion.div>
+                    </div>
                 </div>
 
                 {/* ✨ Guest Wishes */}
@@ -943,8 +888,6 @@ export function Invitation() {
                 </div>
             </div>
 
-            {/* Background Texture Overlay */}
-            <div className="absolute inset-x-0 top-0 h-full bg-[url('https://www.transparenttextures.com/patterns/clean-gray-paper.png')] opacity-20 pointer-events-none z-0" />
-        </div >
+        </div>
     )
 }
