@@ -6,6 +6,7 @@ import { useLanguage } from "../context/LanguageContext"
 import { useInvitation } from "../context/InvitationContext"
 import { api } from "../lib/api"
 import { cn, isValidImageUrl } from "../lib/utils"
+import { useTelegram } from "../hooks/useTelegram"
 import { Button } from "../components/ui/Button"
 import { Card, CardContent } from "../components/ui/Card"
 import defaultGroom from "../assets/default_groom.jpg"
@@ -105,6 +106,7 @@ function InvitationSmallCard({ id, title, date, location, groomPicture, bridePic
 export function Home() {
     const { t } = useLanguage()
     const { receivedInvitations, refreshReceivedInvitations, currentUser } = useInvitation()
+    const { tg } = useTelegram()
     const [activeTab, setActiveTab] = useState<'myEvents' | 'invitations'>('myEvents')
     const [invitations, setInvitations] = useState<any[]>([])
     const [loading, setLoading] = useState(true)
@@ -160,22 +162,36 @@ export function Home() {
     }
 
     const handleShare = async (id: string | number, title: string) => {
-        const url = `${window.location.origin}/invitation/${id}`
-        const shareData = {
-            title: `To'ylashaylik - ${title}`,
-            text: `${title} taklifnomasi`,
-            url
-        };
+        // Construct a direct Telegram link to ensure the invitation opens in the Mini App
+        const botUsername = 'etaklif_bot';
+        const appShortName = 'taklifnoma';
+        const shareUrl = `https://t.me/${botUsername}/${appShortName}?startapp=inv_${id}`;
+        const shareText = `Sizni ${title}larning to'y oqshomiga taklif etamiz! 💍`;
 
+        // If in Telegram WebApp, use native Telegram share via openTelegramLink
+        if (tg?.openTelegramLink) {
+            try {
+                const tgShareUrl = `https://t.me/share/url?url=${encodeURIComponent(shareUrl)}&text=${encodeURIComponent(shareText)}`;
+                tg.openTelegramLink(tgShareUrl);
+                return;
+            } catch (err) {
+                console.warn('openTelegramLink failed, falling back:', err);
+            }
+        }
+
+        // Fallback: use native share or clipboard
         if (navigator.share) {
             try {
-                await navigator.share(shareData);
+                await navigator.share({
+                    title: 'To\'y Taklifnomasi',
+                    text: shareText,
+                    url: shareUrl,
+                });
             } catch (err) {
-                console.warn("Share failed, falling back to copy", err);
-                copyToClipboard(url);
+                console.error('Error sharing:', err);
             }
         } else {
-            copyToClipboard(url);
+            copyToClipboard(shareUrl);
         }
     }
 
