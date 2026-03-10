@@ -99,7 +99,8 @@ export const translations = {
             summary: "Tashrif buyuruvchilar",
             total: "Jami",
             willAttend: "Boradiganlar",
-            cannotAttend: "Borolmaydiganlar"
+            cannotAttend: "Borolmaydiganlar",
+            notResponded: "Belgilanmagan"
         },
         copyLink: "Havolani nusxalash",
         linkCopied: "Havola nusxalandi!",
@@ -203,7 +204,8 @@ export const translations = {
             summary: "Статистика посещений",
             total: "Всего",
             willAttend: "Придут",
-            cannotAttend: "Не придут"
+            cannotAttend: "Не придут",
+            notResponded: "Не ответили"
         },
         copyLink: "Копировать ссылку",
         linkCopied: "Ссылка скопирована!",
@@ -307,7 +309,8 @@ export const translations = {
             summary: "Attendance Summary",
             total: "Total",
             willAttend: "Will attend",
-            cannotAttend: "Cannot attend"
+            cannotAttend: "Cannot attend",
+            notResponded: "Not responded"
         },
         copyLink: "Copy Link",
         linkCopied: "Link copied!",

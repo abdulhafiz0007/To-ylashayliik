@@ -44,28 +44,41 @@ export function Invitation() {
     const [senderName, setSenderName] = useState("")
     const [isPlaying, setIsPlaying] = useState(false)
     const [showMapOptions, setShowMapOptions] = useState(false)
-    const [userRSVP, setUserRSVP] = useState<'GOING' | 'NOT_GOING' | 'MAYBE' | null>(null)
+    const [userRSVP, setUserRSVP] = useState<'YES' | 'NO' | null>(null)
     const [rsvpSubmitting, setRsvpSubmitting] = useState(false)
 
     // Calculate RSVP Stats
     const rsvpStats = {
-        going: sights.filter(s => s.desire === 'GOING').length,
-        notGoing: sights.filter(s => s.desire === 'NOT_GOING').length,
-        totalResponded: sights.filter(s => s.desire === 'GOING' || s.desire === 'NOT_GOING').length
+        going: sights.filter(s => s.desire === 'YES').length,
+        notGoing: sights.filter(s => s.desire === 'NO').length,
+        totalResponded: sights.filter(s => s.desire === 'YES' || s.desire === 'NO').length
     }
 
-    const handleRSVP = async (status: 'GOING' | 'NOT_GOING') => {
-        if (!id || rsvpSubmitting) return
+    const handleRSVP = async (status: 'YES' | 'NO') => {
+        const targetId = invitation?.id || id
+        if (!targetId || rsvpSubmitting) {
+            console.warn("[RSVP] Cannot submit: no targetId or already submitting")
+            return
+        }
+
         setRsvpSubmitting(true)
+        console.log(`[RSVP] Submitting ${status} for invitation ${targetId}`)
+
         try {
-            await api.setDesire(id, status)
+            await api.setDesire(targetId, status)
             setUserRSVP(status)
+            console.log(`[RSVP] Success! User responded: ${status}`)
+
             // Refresh sights to reflect the change for everyone
-            const sightsData = await api.getSights(id)
-            const sightsArray = Array.isArray(sightsData) ? sightsData : (sightsData?.content || [])
-            setSights(Array.isArray(sightsArray) ? sightsArray : [])
+            try {
+                const sightsData = await api.getSights(targetId)
+                const sightsArray = Array.isArray(sightsData) ? sightsData : (sightsData?.content || [])
+                setSights(Array.isArray(sightsArray) ? sightsArray : [])
+            } catch (refreshErr) {
+                console.warn("[RSVP] Status saved but refresh failed:", refreshErr)
+            }
         } catch (err) {
-            console.error("Failed to set RSVP:", err)
+            console.error("[RSVP] Failed to set RSVP:", err)
         } finally {
             setRsvpSubmitting(false)
         }
@@ -610,11 +623,11 @@ export function Invitation() {
 
                         <div className="grid grid-cols-2 gap-2">
                             <Button
-                                onClick={() => handleRSVP('GOING')}
+                                onClick={() => handleRSVP('YES')}
                                 disabled={rsvpSubmitting}
                                 className={cn(
                                     "h-14 rounded-2xl font-bold flex items-center justify-center gap-2 transition-all",
-                                    userRSVP === 'GOING'
+                                    userRSVP === 'YES'
                                         ? "bg-green-500 text-white shadow-lg shadow-green-200"
                                         : "bg-green-50 text-green-600 border border-green-100 hover:bg-green-100"
                                 )}
@@ -624,11 +637,11 @@ export function Invitation() {
                             </Button>
 
                             <Button
-                                onClick={() => handleRSVP('NOT_GOING')}
+                                onClick={() => handleRSVP('NO')}
                                 disabled={rsvpSubmitting}
                                 className={cn(
                                     "h-14 rounded-2xl font-bold flex items-center justify-center gap-2 transition-all",
-                                    userRSVP === 'NOT_GOING'
+                                    userRSVP === 'NO'
                                         ? "bg-red-500 text-white shadow-lg shadow-red-200"
                                         : "bg-red-50 text-red-600 border border-red-100 hover:bg-red-100"
                                 )}
@@ -829,12 +842,12 @@ export function Invitation() {
                                         <span className="text-xs font-semibold text-gray-700 dark:text-gray-300">
                                             {name}
                                         </span>
-                                        {sight.desire === 'GOING' ? (
+                                        {sight.desire === 'YES' ? (
                                             <div className="h-2 w-2 rounded-full bg-green-500 shadow-[0_0_8px_rgba(34,197,94,0.6)]" title={t('rsvp.going')} />
-                                        ) : sight.desire === 'NOT_GOING' ? (
+                                        ) : sight.desire === 'NO' ? (
                                             <div className="h-2 w-2 rounded-full bg-red-500 shadow-[0_0_8px_rgba(239,68,68,0.6)]" title={t('rsvp.notGoing')} />
                                         ) : (
-                                            <div className="h-2 w-2 rounded-full bg-amber-500 shadow-[0_0_8px_rgba(245,158,11,0.6)]" title="Hali aniq emas" />
+                                            <div className="h-2 w-2 rounded-full bg-amber-500 shadow-[0_0_8px_rgba(245,158,11,0.6)]" title={t('rsvp.notResponded')} />
                                         )}
                                     </div>
                                 )
