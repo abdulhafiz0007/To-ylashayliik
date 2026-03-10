@@ -23,26 +23,40 @@ interface InvitationCardProps {
 }
 
 function InvitationSmallCard({ id, title, date, location, groomPicture, bridePicture, showMenu = true, onMenu }: InvitationCardProps) {
+    const [groomImg, setGroomImg] = useState(groomPicture || defaultGroom);
+    const [brideImg, setBrideImg] = useState(bridePicture || defaultBride);
+
+    // Helper to validate image URLs and avoid the "?" placeholder
+    const isValidUrl = (url: string | undefined): boolean => {
+        if (!url || typeof url !== 'string') return false;
+        const trimmed = url.trim().toLowerCase();
+        if (trimmed === "" || trimmed === "null" || trimmed === "undefined" || trimmed.includes("null") || trimmed.includes("undefined")) return false;
+        return trimmed.startsWith("http") || trimmed.startsWith("blob:") || trimmed.startsWith("data:") || trimmed.startsWith("/");
+    };
+
+    const finalGroomImg = isValidUrl(groomPicture) ? (groomPicture as string) : defaultGroom;
+    const finalBrideImg = isValidUrl(bridePicture) ? (bridePicture as string) : defaultBride;
+
     return (
         <Card className="overflow-hidden border-none shadow-sm dark:bg-slate-800/50 hover:bg-slate-50 dark:hover:bg-slate-800 transition-all group relative">
             <CardContent className="p-4 flex items-center gap-4">
                 {/* Overlapping Thumbnails */}
                 <div className="h-16 w-16 relative flex-shrink-0">
                     <div className="relative h-full w-full">
-                        <div className="absolute top-0 right-0 h-11 w-11 rounded-xl overflow-hidden border-2 border-white dark:border-slate-800 shadow-md z-10 transform translate-x-1 -translate-y-1">
+                        <div className="absolute top-0 right-0 h-11 w-11 rounded-xl overflow-hidden border-2 border-white dark:border-slate-800 shadow-md z-10 transform translate-x-1 -translate-y-1 bg-gray-50 dark:bg-slate-900">
                             <img
-                                src={groomPicture || defaultGroom}
+                                src={groomImg === groomPicture ? finalGroomImg : groomImg}
                                 alt="Groom"
                                 className="h-full w-full object-cover"
-                                onError={(e) => { e.currentTarget.src = defaultGroom; }}
+                                onError={() => setGroomImg(defaultGroom)}
                             />
                         </div>
-                        <div className="absolute bottom-0 left-0 h-11 w-11 rounded-xl overflow-hidden border-2 border-white dark:border-slate-800 shadow-sm z-0">
+                        <div className="absolute bottom-0 left-0 h-11 w-11 rounded-xl overflow-hidden border-2 border-white dark:border-slate-800 shadow-sm z-0 bg-gray-50 dark:bg-slate-900">
                             <img
-                                src={bridePicture || defaultBride}
+                                src={brideImg === bridePicture ? finalBrideImg : brideImg}
                                 alt="Bride"
                                 className="h-full w-full object-cover"
-                                onError={(e) => { e.currentTarget.src = defaultBride; }}
+                                onError={() => setBrideImg(defaultBride)}
                             />
                         </div>
                     </div>
@@ -78,7 +92,7 @@ function InvitationSmallCard({ id, title, date, location, groomPicture, bridePic
 
 export function Home() {
     const { t } = useLanguage()
-    const { receivedInvitations, refreshReceivedInvitations } = useInvitation()
+    const { receivedInvitations, refreshReceivedInvitations, currentUser } = useInvitation()
     const [activeTab, setActiveTab] = useState<'myEvents' | 'invitations'>('myEvents')
     const [invitations, setInvitations] = useState<any[]>([])
     const [loading, setLoading] = useState(true)
@@ -104,7 +118,7 @@ export function Home() {
     useEffect(() => {
         fetchMyInvitations()
         refreshReceivedInvitations()
-    }, [])
+    }, [currentUser]) // Re-fetch when user identity is confirmed
 
     const handleTabChange = (tab: 'myEvents' | 'invitations') => {
         setActiveTab(tab)

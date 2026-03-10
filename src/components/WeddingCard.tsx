@@ -1,3 +1,4 @@
+import { useState, useEffect } from "react"
 import type { InvitationData } from "../context/InvitationContext"
 import type { TemplateConfig } from "../lib/templates"
 import { Clock, MapPin, Calendar, Heart, Star, Flower2, Diamond, Sparkles, Building2 } from "lucide-react"
@@ -35,18 +36,24 @@ function Photo({ src, size = 80, className = "", personType = "groom" }: {
     personType?: "groom" | "bride"
 }) {
     const fallback = personType === "bride" ? DEFAULT_BRIDE : DEFAULT_GROOM
+    const [imgSrc, setImgSrc] = useState<string>(fallback)
 
-    const trimmedSrc = typeof src === 'string' ? src.trim() : src
-    const isValidSrc = !!trimmedSrc &&
-        typeof trimmedSrc === 'string' &&
-        trimmedSrc !== "" &&
-        trimmedSrc !== "null" &&
-        trimmedSrc !== "undefined" &&
-        !trimmedSrc.toLowerCase().includes("null") &&
-        !trimmedSrc.toLowerCase().includes("undefined") &&
-        (trimmedSrc.startsWith("http") || trimmedSrc.startsWith("blob:") || trimmedSrc.startsWith("data:") || trimmedSrc.startsWith("/"))
+    // Helper to validate image URLs and avoid the "?" placeholder
+    const isValidUrl = (url: string | undefined): boolean => {
+        if (!url || typeof url !== 'string') return false;
+        const trimmed = url.trim().toLowerCase();
+        if (trimmed === "" || trimmed === "null" || trimmed === "undefined" || trimmed.includes("null") || trimmed.includes("undefined")) return false;
+        return trimmed.startsWith("http") || trimmed.startsWith("blob:") || trimmed.startsWith("data:") || trimmed.startsWith("/");
+    };
 
-    const finalSrc = isValidSrc ? (trimmedSrc as string) : fallback
+    useEffect(() => {
+        if (isValidUrl(src)) {
+            setImgSrc(src as string)
+        } else {
+            setImgSrc(fallback)
+        }
+    }, [src, fallback])
+
     const dimStyle = typeof size === 'number' ? { width: size, height: size } : {}
 
     return (
@@ -55,14 +62,13 @@ function Photo({ src, size = 80, className = "", personType = "groom" }: {
             style={dimStyle}
         >
             <img
-                src={finalSrc}
+                src={imgSrc}
                 alt=""
                 className="w-full h-full object-cover"
                 loading="eager"
-                onError={(e) => {
-                    const target = e.target as HTMLImageElement;
-                    if (target.src !== fallback) {
-                        target.src = fallback;
+                onError={() => {
+                    if (imgSrc !== fallback) {
+                        setImgSrc(fallback);
                     }
                 }}
             />

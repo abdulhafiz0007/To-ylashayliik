@@ -83,12 +83,13 @@ export const translations = {
         dateOfBirth: "Tug'ilgan sana",
         premiumDesigns: "Premium dizaynlar",
         digitalWorld: "Elegant va raqamli taklifnomalar olami",
-        noReceivedInvitations: "Hozircha qabul qilingan taklifnomalar yo'q",
+        noReceivedInvitations: "Hozircha qabul qilingan tilaklar yo'q",
         viewOnMap: "Xaritada ko'rish",
         sendWishes: "Tilaklaringizni yuboring",
-        guestWishes: "Mehmonlar tilaklari",
+        guestWishes: "Tilaklar",
         honoredGuests: "Hurmatli mehmonlar",
-        manualLocation: "To'yxona manzili (qo'lda kiritish)"
+        manualLocation: "To'yxona manzili (qo'lda kiritish)",
+        noOneViewedYet: "Hozircha hech kim ko'rmagan"
     },
     ru: {
         appName: "To'ylashaylik",
@@ -175,9 +176,10 @@ export const translations = {
         noReceivedInvitations: "Принятых приглашений пока нет",
         viewOnMap: "Посмотреть на карте",
         sendWishes: "Отправьте свои пожелания",
-        guestWishes: "Пожелания гостей",
+        guestWishes: "Пожелания",
         honoredGuests: "Почетные гости",
-        manualLocation: "Адрес зала (вручную)"
+        manualLocation: "Адрес зала (вручную)",
+        noOneViewedYet: "Пока никто не смотрел"
     },
     en: {
         appName: "To'ylashaylik",
@@ -264,8 +266,9 @@ export const translations = {
         noReceivedInvitations: "No received invitations yet",
         viewOnMap: "View on Map",
         sendWishes: "Send Your Wishes",
-        guestWishes: "Guest Wishes",
+        guestWishes: "Wishes",
         honoredGuests: "Honored Guests",
-        manualLocation: "Hall Address (manual)"
+        manualLocation: "Hall Address (manual)",
+        noOneViewedYet: "No one has viewed yet"
     },
 };

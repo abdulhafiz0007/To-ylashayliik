@@ -540,7 +540,7 @@ export function Invitation() {
                 )}
 
                 {/* 💌 Send Your Wishes */}
-                <div id="wishes" className="space-y-4 mt-[30px] scroll-mt-20">
+                <div id="wishes" className="space-y-4 pt-[120px] scroll-mt-20">
                     <h2 className="text-left text-lg font-bold text-gray-900 dark:text-white flex items-center gap-2">
                         <Mail className="h-5 w-5 text-pink-500" />
                         {t('sendWishes')}
@@ -686,60 +686,62 @@ export function Invitation() {
                     )}
                 </div>
 
-                {/* 👀 Who Viewed Section (Only for Creator) */}
-                {(() => {
-                    if (sights.length > 0) {
-                        return (
-                            <div id="sights" className="space-y-4 pt-6 border-t border-gray-100 dark:border-slate-800 scroll-mt-20">
-                                <h2 className="text-left text-lg font-bold text-gray-900 dark:text-white flex items-center gap-2">
-                                    <Eye className="h-5 w-5 text-primary-500" />
-                                    {t('honoredGuests')} ({sights.length})
-                                </h2>
-                                <div className="flex flex-wrap gap-2 pb-6">
-                                    {sights.map((sight, idx) => {
-                                        const viewer = sight.creator || sight.user
-                                        const name = viewer?.firstname || viewer?.telegramUsername || viewer?.first_name || 'Mehmon'
-                                        const photo = viewer?.photoUrl || viewer?.photo_url
-                                        const username = viewer?.telegramUsername || viewer?.username
-                                        const telegramId = viewer?.telegramId || viewer?.id
+                {/* 👀 Who Viewed Section (Honored Guests) */}
+                <div id="sights" className="space-y-4 pt-10 border-t border-gray-100 dark:border-slate-800 scroll-mt-20">
+                    <h2 className="text-left text-lg font-bold text-gray-900 dark:text-white flex items-center gap-2">
+                        <Eye className="h-5 w-5 text-primary-500" />
+                        {t('honoredGuests')} ({sights.length})
+                    </h2>
 
-                                        const profileUrl = username
-                                            ? `https://t.me/${username}`
-                                            : telegramId
-                                                ? `tg://user?id=${telegramId}`
-                                                : null
+                    {sights.length === 0 ? (
+                        <div className="py-8 text-center bg-white/50 dark:bg-slate-900/50 rounded-2xl border border-dashed border-gray-200 dark:border-slate-800">
+                            <p className="text-sm text-gray-400 italic">
+                                {t('noOneViewedYet')}
+                            </p>
+                        </div>
+                    ) : (
+                        <div className="flex flex-wrap gap-2 pb-6">
+                            {sights.map((sight, idx) => {
+                                const viewer = sight.creator || sight.user
+                                const name = viewer?.firstname || viewer?.telegramUsername || viewer?.first_name || 'Mehmon'
+                                const photo = viewer?.photoUrl || viewer?.photo_url
+                                const username = viewer?.telegramUsername || viewer?.username
+                                const telegramId = viewer?.telegramId || viewer?.id
 
-                                        const content = (
-                                            <div
-                                                className="flex items-center gap-2 bg-white dark:bg-slate-900 px-3 py-1.5 rounded-full border border-gray-100 dark:border-slate-800 shadow-sm hover:border-primary-200 transition-colors"
-                                            >
-                                                <div className="h-6 w-6 rounded-full bg-primary-100 dark:bg-primary-900/30 overflow-hidden flex items-center justify-center text-[10px] font-bold text-primary-600">
-                                                    {photo ? (
-                                                        <img src={photo} alt={name} className="h-full w-full object-cover" />
-                                                    ) : (
-                                                        name[0]?.toUpperCase() || '?'
-                                                    )}
-                                                </div>
-                                                <span className="text-xs font-semibold text-gray-700 dark:text-gray-300">
-                                                    {name}
-                                                </span>
-                                            </div>
-                                        )
+                                const profileUrl = username
+                                    ? `https://t.me/${username}`
+                                    : telegramId
+                                        ? `tg://user?id=${telegramId}`
+                                        : null
 
-                                        return profileUrl ? (
-                                            <a key={sight.id || idx} href={profileUrl} target="_blank" rel="noopener noreferrer">
-                                                {content}
-                                            </a>
-                                        ) : (
-                                            <div key={sight.id || idx}>{content}</div>
-                                        )
-                                    })}
-                                </div>
-                            </div>
-                        )
-                    }
-                    return null
-                })()}
+                                const content = (
+                                    <div
+                                        className="flex items-center gap-2 bg-white dark:bg-slate-900 px-3 py-1.5 rounded-full border border-gray-100 dark:border-slate-800 shadow-sm hover:border-primary-200 transition-colors"
+                                    >
+                                        <div className="h-6 w-6 rounded-full bg-primary-100 dark:bg-primary-900/30 overflow-hidden flex items-center justify-center text-[10px] font-bold text-primary-600">
+                                            {photo ? (
+                                                <img src={photo} alt={name} className="h-full w-full object-cover" />
+                                            ) : (
+                                                name[0]?.toUpperCase() || '?'
+                                            )}
+                                        </div>
+                                        <span className="text-xs font-semibold text-gray-700 dark:text-gray-300">
+                                            {name}
+                                        </span>
+                                    </div>
+                                )
+
+                                return profileUrl ? (
+                                    <a key={sight.id || idx} href={profileUrl} target="_blank" rel="noopener noreferrer">
+                                        {content}
+                                    </a>
+                                ) : (
+                                    <div key={sight.id || idx}>{content}</div>
+                                )
+                            })}
+                        </div>
+                    )}
+                </div>
             </div>
 
             {/* Background Texture Overlay */}
