@@ -45,8 +45,9 @@ export function Invitation() {
     const [isPlaying, setIsPlaying] = useState(false)
     const [showMapOptions, setShowMapOptions] = useState(false)
     const [userRSVP, setUserRSVP] = useState<'YES' | 'NO' | null>(null)
-    const [rsvpSubmitting, setRsvpSubmitting] = useState(false)
+    const [rsvpSubmitting, setRsvpSubmitting] = useState<'YES' | 'NO' | null>(null)
     const [mySightId, setMySightId] = useState<number | null>(null)
+    const [rsvpError, setRsvpError] = useState<string | null>(null)
 
     // Calculate RSVP Stats
     const rsvpStats = {
@@ -57,20 +58,25 @@ export function Invitation() {
 
     const handleRSVP = async (status: 'YES' | 'NO') => {
         const targetId = invitation?.id || id
-        if (!mySightId || !targetId || rsvpSubmitting) {
-            console.warn("[RSVP] Cannot submit: mySightId=", mySightId, "targetId=", targetId)
+        if (!targetId || rsvpSubmitting) return
+
+        if (!mySightId) {
+            console.warn("[RSVP] Cannot submit: mySightId is missing")
+            setRsvpError("RSVP ma'lumotlari yuklanmagan. Sahifani yangilab ko'ring.")
             return
         }
 
-        setRsvpSubmitting(true)
-        console.log(`[RSVP] Submitting ${status} for sightId=${mySightId}`)
+        setRsvpSubmitting(status)
+        setRsvpError(null)
+
+        console.log(`[RSVP] Submitting status=${status} for sightId=${mySightId}`)
 
         try {
-            await api.setDesire(mySightId, status)
+            const result = await api.setDesire(mySightId, status)
+            console.log(`[RSVP] Response:`, result)
             setUserRSVP(status)
-            console.log(`[RSVP] Success! User responded: ${status}`)
 
-            // Refresh sights to reflect the change for everyone
+            // Refresh sights stats for the entire invitation
             try {
                 const sightsData = await api.getSights(targetId)
                 const sightsArray = Array.isArray(sightsData) ? sightsData : (sightsData?.content || [])
@@ -78,10 +84,12 @@ export function Invitation() {
             } catch (refreshErr) {
                 console.warn("[RSVP] Status saved but refresh failed:", refreshErr)
             }
-        } catch (err) {
-            console.error("[RSVP] Failed to set RSVP:", err)
+        } catch (err: any) {
+            console.error("[RSVP] Failed:", err)
+            const msg = err?.message || String(err)
+            setRsvpError(`Xatolik: ${msg}`)
         } finally {
-            setRsvpSubmitting(false)
+            setRsvpSubmitting(null)
         }
     }
 
@@ -190,7 +198,9 @@ export function Invitation() {
                     }
 
                     // Step 4: AFTER invitation is loaded (sight record now exists),
-                    // fetch the current user's own sight to get their sight ID + desire
+                    // fetch the current user's own sight to get their sight ID + desire.
+                    // We add a tiny delay to ensure the backend record is fully committed.
+                    await new Promise(r => setTimeout(r, 500))
                     try {
                         const ownSight = await api.getOwnSight(id)
                         console.log("[RSVP] Own sight loaded:", ownSight)
@@ -623,12 +633,13 @@ export function Invitation() {
                         <div className="text-center space-y-1">
                             <h3 className="text-lg font-black text-gray-900 dark:text-white">{t('rsvp.title')}</h3>
                             <p className="text-sm text-gray-500">{userRSVP ? t('rsvp.confirmed') : "Sizni kutamiz!"}</p>
+                            {rsvpError && <p className="text-[10px] text-red-500 mt-1 font-bold animate-pulse">{rsvpError}</p>}
                         </div>
 
                         <div className="grid grid-cols-2 gap-3">
                             <button
                                 onClick={() => handleRSVP('YES')}
-                                disabled={rsvpSubmitting}
+                                disabled={!!rsvpSubmitting}
                                 className={cn(
                                     "h-14 rounded-2xl font-bold flex items-center justify-center gap-2 transition-all duration-300 active:scale-95",
                                     userRSVP === 'YES'
@@ -638,8 +649,8 @@ export function Invitation() {
                                             : "bg-green-50 dark:bg-green-900/20 text-green-600 dark:text-green-400 border border-green-200 dark:border-green-800 hover:bg-green-100 dark:hover:bg-green-900/40"
                                 )}
                             >
-                                {rsvpSubmitting && userRSVP !== 'YES' ? (
-                                    <div className="w-5 h-5 border-2 border-green-300 border-t-green-600 rounded-full animate-spin" />
+                                {rsvpSubmitting === 'YES' ? (
+                                    <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
                                 ) : (
                                     <CheckCircle2 className={cn("h-5 w-5", userRSVP === 'YES' && "fill-white/30")} />
                                 )}
@@ -648,7 +659,7 @@ export function Invitation() {
 
                             <button
                                 onClick={() => handleRSVP('NO')}
-                                disabled={rsvpSubmitting}
+                                disabled={!!rsvpSubmitting}
                                 className={cn(
                                     "h-14 rounded-2xl font-bold flex items-center justify-center gap-2 transition-all duration-300 active:scale-95",
                                     userRSVP === 'NO'
@@ -658,8 +669,8 @@ export function Invitation() {
                                             : "bg-red-50 dark:bg-red-900/20 text-red-600 dark:text-red-400 border border-red-200 dark:border-red-800 hover:bg-red-100 dark:hover:bg-red-900/40"
                                 )}
                             >
-                                {rsvpSubmitting && userRSVP !== 'NO' ? (
-                                    <div className="w-5 h-5 border-2 border-red-300 border-t-red-600 rounded-full animate-spin" />
+                                {rsvpSubmitting === 'NO' ? (
+                                    <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
                                 ) : (
                                     <XCircle className={cn("h-5 w-5", userRSVP === 'NO' && "fill-white/30")} />
                                 )}
