@@ -3,7 +3,7 @@ import { useParams, Link, useLocation } from "react-router-dom"
 import { useInvitation, type InvitationData } from "../context/InvitationContext"
 import { Button } from "../components/ui/Button"
 import { Input } from "../components/ui/Input"
-import { Download, Share2, Heart, Music, X, VolumeX, MapPin, Mail, Sparkles, Clock, User, Eye, ChevronRight, SendHorizontal, CheckCircle2, XCircle, Users } from 'lucide-react'
+import { Download, Share2, Heart, Music, X, VolumeX, MapPin, Mail, Sparkles, Clock, User, Eye, ChevronRight, SendHorizontal, Users } from 'lucide-react'
 
 
 // Import music assets
