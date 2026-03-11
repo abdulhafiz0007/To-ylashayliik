@@ -1,6 +1,6 @@
 import { useTelegram } from "../hooks/useTelegram";
 import { Card } from "../components/ui/Card";
-import { User, ChevronRight, Calendar, MapPin, Heart, Share2, Settings, Shield, Info } from "lucide-react";
+import { ChevronRight, Calendar, MapPin, Heart } from "lucide-react";
 import { useEffect, useState } from "react";
 import { api } from "../lib/api";
 import { Button } from "../components/ui/Button";
@@ -32,14 +32,8 @@ export function Profile() {
 
     const stats = [
         { label: t('profile.myInvitations'), value: invitations.length, icon: Heart, color: "text-pink-500", bg: "bg-pink-50 dark:bg-pink-900/20" },
-        { label: "O'qilganlar", value: "1.2k", icon: Share2, color: "text-blue-500", bg: "bg-blue-50 dark:bg-blue-900/20" },
     ];
 
-    const menuItems = [
-        { icon: Settings, label: "Sozlamalar", color: "text-slate-600 dark:text-slate-400" },
-        { icon: Shield, label: "Xavfsizlik", color: "text-slate-600 dark:text-slate-400" },
-        { icon: Info, label: "Dastur haqida", color: "text-slate-600 dark:text-slate-400" },
-    ];
 
     return (
         <div className="min-h-screen bg-slate-50 dark:bg-slate-950 pb-24">
@@ -64,7 +58,11 @@ export function Profile() {
                                         {user?.photo_url ? (
                                             <img src={user.photo_url} alt="Profile" className="h-full w-full object-cover" />
                                         ) : (
-                                            <User className="h-14 w-14 text-slate-500" />
+                                            <img
+                                                src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png"
+                                                alt="Profile Placeholder"
+                                                className="h-full w-full object-cover opacity-50 grayscale"
+                                            />
                                         )}
                                     </div>
                                 </div>
@@ -125,9 +123,11 @@ export function Profile() {
                                                     {isValidImageUrl(inv.groomPictureGetUrl) ? (
                                                         <img src={inv.groomPictureGetUrl} alt="Wedding" className="h-full w-full object-cover group-hover:scale-110 transition-transform duration-500" />
                                                     ) : (
-                                                        <div className="h-full w-full flex items-center justify-center text-slate-400">
-                                                            <Heart className="h-6 w-6" />
-                                                        </div>
+                                                        <img
+                                                            src="https://images.unsplash.com/photo-1511795409834-ef04bbd61622?q=80&w=200&auto=format&fit=crop"
+                                                            alt="Wedding Placeholder"
+                                                            className="h-full w-full object-cover group-hover:scale-110 transition-transform duration-500"
+                                                        />
                                                     )}
                                                 </div>
                                                 <div className="flex-1 min-w-0">
@@ -169,23 +169,6 @@ export function Profile() {
                         </div>
                     </Card>
 
-                    {/* Quick Menu Section */}
-                    <div className="grid grid-cols-1 gap-3">
-                        {menuItems.map((item, i) => (
-                            <button
-                                key={i}
-                                className="flex items-center justify-between p-4 bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800 rounded-[24px] hover:bg-slate-50 dark:hover:bg-slate-800 transition-all shadow-sm active:scale-[0.98]"
-                            >
-                                <div className="flex items-center gap-4">
-                                    <div className="h-10 w-10 bg-slate-50 dark:bg-slate-800 rounded-xl flex items-center justify-center">
-                                        <item.icon className={cn("h-5 w-5", item.color)} />
-                                    </div>
-                                    <span className="text-sm font-bold text-slate-700 dark:text-slate-200">{item.label}</span>
-                                </div>
-                                <ChevronRight className="h-4 w-4 text-slate-300" />
-                            </button>
-                        ))}
-                    </div>
 
                 </motion.div>
             </AnimatePresence>
