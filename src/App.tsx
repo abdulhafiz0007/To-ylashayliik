@@ -17,6 +17,7 @@ import { useInvitation } from "./context/InvitationContext"
 import { ErrorBoundary } from "./components/ErrorBoundary"
 
 import { TemplatePreview } from "./pages/TemplatePreview"
+import { TelegramBackButton } from "./components/TelegramBackButton"
 
 function AuthInitializer() {
   const { user: tgUser } = useTelegram()
@@ -94,6 +95,7 @@ function App() {
             <AuthInitializer />
             <BrowserRouter>
               <TelegramDeeplinkHandler />
+              <TelegramBackButton />
               <Layout>
                 <Routes>
                   <Route path="/" element={<Home />} />

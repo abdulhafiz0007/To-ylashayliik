@@ -41,10 +41,30 @@ export function useTelegram() {
         tg?.switchInlineQuery(query, chooseTypes);
     }
 
+    const showBackButton = () => {
+        tg?.BackButton?.show();
+    };
+
+    const hideBackButton = () => {
+        tg?.BackButton?.hide();
+    };
+
+    const onBackClick = (callback: () => void) => {
+        tg?.BackButton?.onClick(callback);
+    };
+
+    const offBackClick = (callback: () => void) => {
+        tg?.BackButton?.offClick(callback);
+    };
+
     return {
         onClose,
         onExpand,
         onReady,
+        showBackButton,
+        hideBackButton,
+        onBackClick,
+        offBackClick,
         switchInlineQuery,
         tg,
         isTelegram: !!window.Telegram?.WebApp?.initData,
