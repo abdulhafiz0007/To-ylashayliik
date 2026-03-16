@@ -294,7 +294,7 @@ function ModernMinimal({ invitation }: { invitation: Partial<InvitationData> }) 
                 date={invitation.date || "2026-08-28"}
                 time={invitation.time || "18:00"}
                 variant="modern"
-                className="mt-6"
+                className="mt-6 mb-6"
             />
 
             {/* Footer bar */}
@@ -382,7 +382,7 @@ function GardenBliss({ invitation }: { invitation: Partial<InvitationData> }) {
             </p>
 
             {/* Wedding info cards */}
-            <div className="w-full px-5 space-y-3">
+            <div className="w-full px-5 space-y-3 mt-8">
                 <div className="bg-white rounded-2xl px-5 py-4 border border-pink-100 shadow-sm flex items-center gap-4">
                     <div className="w-10 h-10 rounded-full bg-pink-50 border border-pink-200 flex items-center justify-center shrink-0">
                         <Calendar className="h-4 w-4 text-pink-500" />
@@ -414,7 +414,7 @@ function GardenBliss({ invitation }: { invitation: Partial<InvitationData> }) {
                 date={invitation.date || "2026-08-28"}
                 time={invitation.time || "18:00"}
                 variant="garden"
-                className="my-6"
+                className="my-6 mt-[50px]"
             />
 
             {/* Footer floral */}
@@ -707,14 +707,15 @@ function ToylashaylikTheme({ invitation }: { invitation: Partial<InvitationData>
                         )}
                     </div>
                 </div>
-
-                {/* Countdown */}
-                <Countdown
-                    date={invitation.date || "2026-08-28"}
-                    time={invitation.time || "18:00"}
-                    className="mt-4"
-                />
             </div>
+
+            {/* Countdown */}
+            <Countdown
+                date={invitation.date || "2026-08-28"}
+                time={invitation.time || "18:00"}
+                className="mt-8 mb-4"
+            />
+
         </div>
     )
 }
