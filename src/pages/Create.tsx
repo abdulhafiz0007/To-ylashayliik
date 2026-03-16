@@ -129,6 +129,7 @@ export function Create() {
     const { data, updateData, resetData, error: contextError } = useInvitation()
     const { t } = useLanguage()
     const { user: tgUser } = useTelegram()
+    const today = new Date().toISOString().split('T')[0]
 
     const [currentStep, setCurrentStep] = useState(0)
     const [isSaving, setIsSaving] = useState(false)
@@ -406,6 +407,7 @@ export function Create() {
                                     value={data.groomDateOfBirth || ''}
                                     onChange={(e) => updateData({ groomDateOfBirth: e.target.value })}
                                     className="dark:bg-slate-900 dark:border-slate-700"
+                                    min="1900-01-01"
                                 />
                             </div>
                         </div>
@@ -452,6 +454,7 @@ export function Create() {
                                     value={data.brideDateOfBirth || ''}
                                     onChange={(e) => updateData({ brideDateOfBirth: e.target.value })}
                                     className="dark:bg-slate-900 dark:border-slate-700"
+                                    min="1900-01-01"
                                 />
                             </div>
                         </div>
@@ -471,6 +474,7 @@ export function Create() {
                                     onChange={(e) => updateData({ date: e.target.value })}
                                     required
                                     className="dark:bg-slate-900 dark:border-slate-700"
+                                    min={today}
                                 />
                             </div>
                             <div className="space-y-2">
@@ -655,7 +659,7 @@ export function Create() {
                             </label>
                             <textarea
                                 className="flex min-h-[80px] w-full rounded-md border border-gold-200 dark:border-slate-700 bg-white dark:bg-slate-900 px-3 py-2 text-base focus:ring-2 focus:ring-primary-400 outline-none transition-all shadow-sm dark:text-white"
-                                placeholder="Bizning quvonchli kunimizda sizlarni mehmon qilishdan baxtiyormiz"
+                                placeholder="Bizning quvonchli kunimizda sizni ham ko'rishdan xursand bo'lamiz!"
                                 value={data.text}
                                 onChange={(e) => updateData({ text: e.target.value })}
                             />

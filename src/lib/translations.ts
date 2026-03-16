@@ -110,7 +110,15 @@ export const translations = {
         deleteConfirm: "Haqiqatdan ham o'chirmoqchimisiz?",
         deleteBtn: "O'chirish",
         rsvpErrorLoading: "RSVP ma'lumotlari yuklanmagan. Sahifani yangilab ko'ring.",
-        errorColon: "Xatolik: "
+        errorColon: "Xatolik: ",
+        countdown: {
+            title: "To'ygacha qolgan vaqt",
+            days: "Kun",
+            hours: "Soat",
+            minutes: "Daqiqa",
+            seconds: "Soniya",
+            weddingDay: "To'y kuni!"
+        }
     },
     ru: {
         appName: "To'ylashaylik",
@@ -221,7 +229,15 @@ export const translations = {
         deleteConfirm: "Вы действительно хотите удалить?",
         deleteBtn: "Удалить",
         rsvpErrorLoading: "Данные RSVP не загружены. Попробуйте обновить страницу.",
-        errorColon: "Ошибка: "
+        errorColon: "Ошибка: ",
+        countdown: {
+            title: "Время до свадьбы",
+            days: "Дней",
+            hours: "Часов",
+            minutes: "Минут",
+            seconds: "Секунд",
+            weddingDay: "День свадьбы!"
+        }
     },
     en: {
         appName: "To'ylashaylik",
@@ -332,6 +348,14 @@ export const translations = {
         deleteConfirm: "Are you sure you want to delete?",
         deleteBtn: "Delete",
         rsvpErrorLoading: "RSVP data not loaded. Try refreshing the page.",
-        errorColon: "Error: "
+        errorColon: "Error: ",
+        countdown: {
+            title: "Time until wedding",
+            days: "Days",
+            hours: "Hours",
+            minutes: "Minutes",
+            seconds: "Seconds",
+            weddingDay: "Wedding Day!"
+        }
     },
 };

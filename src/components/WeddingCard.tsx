@@ -6,6 +6,7 @@ import { useLanguage } from "../context/LanguageContext"
 import { cn, isValidImageUrl } from "../lib/utils"
 import defaultGroom from "../assets/default_groom.jpg"
 import defaultBride from "../assets/default_bride.jpg"
+import { Countdown } from "./Countdown"
 
 interface WeddingCardProps {
     invitation: Partial<InvitationData>
@@ -159,8 +160,8 @@ function ClassicRoyale({ invitation }: { invitation: Partial<InvitationData> }) 
             </div>
 
             {/* Invitation text */}
-            <p className="text-[10px] text-slate-500 text-center px-10 leading-relaxed italic mb-6">
-                {invitation.text || "Allohning izni bilan ikki qalbning to'yiga siz azizlarni taklif etamiz."}
+            <p className="text-[10px] text-slate-500 text-center px-10 leading-relaxed italic mb-4">
+                {invitation.text || "Bizning quvonchli kunimizda sizni ham ko'rishdan xursand bo'lamiz!"}
             </p>
 
             {/* Wedding details */}
@@ -190,6 +191,14 @@ function ClassicRoyale({ invitation }: { invitation: Partial<InvitationData> }) 
                     )}
                 </div>
             </div>
+
+            {/* Countdown */}
+            <Countdown
+                date={invitation.date || "2026-08-28"}
+                time={invitation.time || "18:00"}
+                variant="classic"
+                className="mt-6 mb-2"
+            />
 
             {/* Footer */}
             <div className="mt-auto pt-6 pb-8">
@@ -246,32 +255,47 @@ function ModernMinimal({ invitation }: { invitation: Partial<InvitationData> }) 
                 <h2 className="text-3xl font-black text-slate-900 tracking-tight leading-none">
                     {invitation.brideName?.split(' ')[0] || "Malika"}
                 </h2>
+
                 <p className="text-[10px] text-slate-400 mt-4 leading-relaxed max-w-[240px]">
-                    {invitation.text || "Ikki qalbning birikishiga guvoh bo'lishingizni so'raymiz."}
+                    {invitation.text || "Bizning quvonchli kunimizda sizni ham ko'rishdan xursand bo'lamiz!"}
                 </p>
             </div>
 
-            {/* Details row */}
-            <div className="grid grid-cols-3 border-b border-slate-100">
-                <div className="flex flex-col items-center py-6 gap-1 border-r border-slate-100 bg-slate-50/50">
-                    <Calendar className="h-4 w-4 text-slate-400 mb-1" />
-                    <p className="text-2xl font-black text-slate-900 leading-none">{getDay(invitation.date)}</p>
-                    <p className="text-[9px] uppercase tracking-widest text-slate-500 font-black">{getMonth(invitation.date)}</p>
+            {/* Details Section */}
+            <div className="flex flex-col border-b border-slate-100 w-full">
+                {/* Date & Time Row */}
+                <div className="flex border-b border-slate-100">
+                    <div className="flex-1 flex flex-col items-center py-6 gap-1 border-r border-slate-100 bg-slate-50/50">
+                        <Calendar className="h-4 w-4 text-slate-400 mb-1" />
+                        <p className="text-2xl font-black text-slate-900 leading-none">{getDay(invitation.date)}</p>
+                        <p className="text-[9px] uppercase tracking-widest text-slate-500 font-black">{getMonth(invitation.date)}</p>
+                    </div>
+                    <div className="flex-1 flex flex-col items-center py-6 gap-1">
+                        <Clock className="h-4 w-4 text-slate-400 mb-1" />
+                        <p className="text-2xl font-black text-slate-900 leading-none">{invitation.time || "18:00"}</p>
+                        <p className="text-[9px] uppercase tracking-widest text-slate-500 font-black">Vaqt</p>
+                    </div>
                 </div>
-                <div className="flex flex-col items-center py-6 gap-1 border-r border-slate-100">
-                    <Clock className="h-4 w-4 text-slate-400 mb-1" />
-                    <p className="text-2xl font-black text-slate-900 leading-none">{invitation.time || "18:00"}</p>
-                    <p className="text-[9px] uppercase tracking-widest text-slate-500 font-black">Vaqt</p>
-                </div>
-                <div className="flex flex-col items-center py-6 gap-1 bg-slate-50/50 min-w-0 px-2">
-                    <p className="text-xs font-black text-slate-900 leading-tight text-center truncate w-full">
+
+                {/* Location Row */}
+                <div className="flex flex-col items-center py-8 gap-2 bg-slate-50/30 px-6 text-center">
+                    <MapPin className="h-5 w-5 text-slate-400 mb-1" />
+                    <p className="text-base font-black text-slate-900 leading-tight w-full">
                         {invitation.hall || "Zarafshon"}
                     </p>
                     {invitation.location && (
-                        <p className="text-[9px] text-slate-400 font-medium text-center line-clamp-2">{invitation.location}</p>
+                        <p className="text-[11px] text-slate-500 font-medium w-full max-w-[280px] leading-relaxed mt-1">{invitation.location}</p>
                     )}
                 </div>
             </div>
+
+            {/* Countdown */}
+            <Countdown
+                date={invitation.date || "2026-08-28"}
+                time={invitation.time || "18:00"}
+                variant="modern"
+                className="mt-6"
+            />
 
             {/* Footer bar */}
             <div className="mt-auto bg-slate-950 py-6 flex items-center justify-center">
@@ -294,44 +318,42 @@ function GardenBliss({ invitation }: { invitation: Partial<InvitationData> }) {
             {/* Floral decoration top */}
             <div className="w-full h-2 bg-gradient-to-r from-pink-300 via-rose-200 to-emerald-200" />
 
-            {/* Overlapping circles header */}
-            <div className="flex flex-col items-center mt-8 mb-4">
-                <div className="flex items-start justify-center">
-                    {/* Groom */}
-                    <div className="flex flex-col items-center z-10">
-                        <div className="relative" style={{ width: 88, height: 88 }}>
-                            <div className="absolute inset-0 rounded-full border-4 border-pink-200 bg-pink-50 shadow-inner" />
+            {/* Avatar Section */}
+            <div className="flex items-center justify-center mt-8 mb-4 gap-2">
+                {/* Groom */}
+                <div className="flex flex-col items-center z-10">
+                    <div className="relative p-1 bg-white/50 backdrop-blur-sm rounded-full shadow-[0_8px_30px_rgb(0,0,0,0.06)]">
+                        <div className="relative w-[100px] h-[100px] rounded-full border-4 border-pink-200 bg-pink-50 overflow-hidden shadow-inner flex items-center justify-center">
                             <Photo
                                 src={invitation.groomPictureGetUrl}
-                                className="rounded-full border-2 border-white absolute inset-1"
+                                className="w-full h-full object-cover"
                                 size="full"
                             />
                         </div>
-                        <div className="text-center mt-2">
-                            <p className="text-[8px] text-emerald-600 uppercase tracking-[0.3em] font-bold">Kuyov</p>
+                        <div className="absolute -bottom-2 left-1/2 -translate-x-1/2 bg-emerald-500 text-white text-[9px] uppercase tracking-[0.2em] font-bold px-3 py-1 rounded-full whitespace-nowrap shadow-md">
+                            Kuyov
                         </div>
                     </div>
+                </div>
 
-                    {/* Heart center — overlapping */}
-                    <div className="z-20 -mx-3 mt-8">
-                        <div className="w-10 h-10 bg-white rounded-full border-2 border-pink-200 flex items-center justify-center shadow-md">
-                            <Flower2 className="h-5 w-5 text-pink-400" />
-                        </div>
-                    </div>
+                {/* Heart Center */}
+                <div className="px-1 text-pink-400 z-20 flex flex-col items-center justify-center">
+                    <Heart className="h-8 w-8 fill-current drop-shadow-sm" />
+                </div>
 
-                    {/* Bride */}
-                    <div className="flex flex-col items-center z-10">
-                        <div className="relative" style={{ width: 88, height: 88 }}>
-                            <div className="absolute inset-0 rounded-full border-4 border-emerald-200 bg-emerald-50 shadow-inner" />
+                {/* Bride */}
+                <div className="flex flex-col items-center z-10">
+                    <div className="relative p-1 bg-white/50 backdrop-blur-sm rounded-full shadow-[0_8px_30px_rgb(0,0,0,0.06)]">
+                        <div className="relative w-[100px] h-[100px] rounded-full border-4 border-emerald-200 bg-emerald-50 overflow-hidden shadow-inner flex items-center justify-center">
                             <Photo
                                 src={invitation.bridePictureGetUrl}
-                                className="rounded-full border-2 border-white absolute inset-1"
+                                className="w-full h-full object-cover"
                                 size="full"
                                 personType="bride"
                             />
                         </div>
-                        <div className="text-center mt-2">
-                            <p className="text-[8px] text-pink-500 uppercase tracking-[0.3em] font-bold">Kelin</p>
+                        <div className="absolute -bottom-2 left-1/2 -translate-x-1/2 bg-pink-500 text-white text-[9px] uppercase tracking-[0.2em] font-bold px-3 py-1 rounded-full whitespace-nowrap shadow-md">
+                            Kelin
                         </div>
                     </div>
                 </div>
@@ -355,8 +377,8 @@ function GardenBliss({ invitation }: { invitation: Partial<InvitationData> }) {
             </div>
 
             {/* Message */}
-            <p className="text-[10px] text-slate-500 text-center px-10 leading-relaxed italic mb-6">
-                {invitation.text || "Baxtimizni siz azizlar bilan ulashishdan mamnunmiz."}
+            <p className="text-[10px] text-slate-500 text-center px-10 leading-relaxed italic mb-4">
+                {invitation.text || "Bizning quvonchli kunimizda sizni ham ko'rishdan xursand bo'lamiz!"}
             </p>
 
             {/* Wedding info cards */}
@@ -386,6 +408,14 @@ function GardenBliss({ invitation }: { invitation: Partial<InvitationData> }) {
                     </div>
                 </div>
             </div>
+
+            {/* Countdown */}
+            <Countdown
+                date={invitation.date || "2026-08-28"}
+                time={invitation.time || "18:00"}
+                variant="garden"
+                className="my-6"
+            />
 
             {/* Footer floral */}
             <div className="mt-auto pt-6 pb-6 flex items-center gap-2 opacity-50">
@@ -491,8 +521,8 @@ function MidnightStar({ invitation }: { invitation: Partial<InvitationData> }) {
             <div className="w-3/4 h-px bg-gradient-to-r from-transparent via-amber-500/50 to-transparent mb-6" />
 
             {/* Message */}
-            <p className="text-[10px] text-slate-400 text-center px-10 leading-relaxed italic mb-6">
-                {invitation.text || "Muhtaram mehmonlar, sizlarni to'y bazmi uchun taklif etamiz."}
+            <p className="text-[10px] text-slate-400 text-center px-10 leading-relaxed italic mb-4">
+                {invitation.text || "Bizning quvonchli kunimizda sizni ham ko'rishdan xursand bo'lamiz!"}
             </p>
 
             {/* Details row */}
@@ -522,6 +552,14 @@ function MidnightStar({ invitation }: { invitation: Partial<InvitationData> }) {
                     </div>
                 </div>
             </div>
+
+            {/* Countdown */}
+            <Countdown
+                date={invitation.date || "2026-08-28"}
+                time={invitation.time || "18:00"}
+                variant="midnight"
+                className="mb-8"
+            />
 
             {/* Footer */}
             <div className="mt-auto pb-8 flex flex-col items-center gap-2">
@@ -611,8 +649,16 @@ function ToylashaylikTheme({ invitation }: { invitation: Partial<InvitationData>
                     )}>&</span>
                     <span>{invitation?.brideName || 'Malika'}</span>
                 </h1>
-                <p className="text-[11px] text-pink-600/70 dark:text-pink-400/70 font-medium italic">
+
+                <p className="text-[11px] text-pink-600/70 dark:text-pink-400/70 font-medium italic mt-2">
                     Oilalari sizni to'yga taklif qiladi
+                </p>
+            </div>
+
+            {/* Invitation Text */}
+            <div className="text-center px-8 mb-8">
+                <p className="text-[12px] text-gray-500 dark:text-gray-400 italic leading-relaxed">
+                    {invitation.text || "Bizning quvonchli kunimizda sizni ham ko'rishdan xursand bo'lamiz!"}
                 </p>
             </div>
 
@@ -661,6 +707,13 @@ function ToylashaylikTheme({ invitation }: { invitation: Partial<InvitationData>
                         )}
                     </div>
                 </div>
+
+                {/* Countdown */}
+                <Countdown
+                    date={invitation.date || "2026-08-28"}
+                    time={invitation.time || "18:00"}
+                    className="mt-4"
+                />
             </div>
         </div>
     )

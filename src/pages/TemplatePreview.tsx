@@ -32,7 +32,7 @@ export function TemplatePreview() {
         time: "18:00",
         hall: "Zarafshon Tantanalar Saroyi",
         location: "Toshkent shahri, Yunusobod tumani",
-        text: "Allohning izni bilan, qalblarimiz birikadigan ushbu fayzli oqshomda siz azizlarni go'zal to'y bazmimizda kutib qolamiz.",
+        text: "Bizning quvonchli kunimizda sizni ham ko'rishdan xursand bo'lamiz!",
     }
 
     const handleUseTemplate = () => {
